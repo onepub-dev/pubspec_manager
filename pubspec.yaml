@@ -5,8 +5,7 @@ description: Read, write and modify a pubspec.yaml including retention
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies: 
-  dcli: 2.3.0
-  dcli_core: 2.3.0
+  fsm2: ^2.0.7
   meta: ^1.9.1
   path: ^1.8.3
   pub_semver: ^2.1.4
