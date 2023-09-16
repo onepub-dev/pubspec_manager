@@ -1,0 +1,9 @@
+export 'src/dependency.dart';
+export 'src/environment.dart';
+export 'src/git_dependency.dart';
+export 'src/hosted_dependency.dart';
+export 'src/path_dependency.dart';
+export 'src/pub_hosted_dependency.dart';
+export 'src/pub_spec_exception.dart';
+export 'src/pubspec.dart';
+export 'src/version.dart';

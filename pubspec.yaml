@@ -1,0 +1,16 @@
+name: eric
+version: 1.0.0-beta.1
+description: Read, write and modify a pubspec.yaml including retention 
+  and modifications of comments and out of spec content.
+environment: 
+  sdk: '>=3.0.0 <4.0.0'
+dependencies: 
+  dcli: 2.3.0
+  dcli_core: 2.3.0
+  meta: ^1.9.1
+  path: ^1.8.3
+  pub_semver: ^2.1.4
+  strings: ^2.0.2
+dev_dependencies: 
+  lint_hard: ^3.0.0
+  test: ^1.24.6
