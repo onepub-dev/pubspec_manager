@@ -33,7 +33,9 @@ class DocumentWriter {
   void write(String pathTo) {
     final file = File(pathTo);
     final sorted = lines.keys.toList()..sort((a, b) => a - b);
-    file.deleteSync();
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
     for (final lineNo in sorted) {
       final line = lines[lineNo];
       file.writeAsStringSync('${line!.render()} $_lineTerminator',
