@@ -22,8 +22,7 @@ void main() {
         equals('2.3.1'));
   });
   test('hosted dependency ...', () async {
-    const content =
-        '''
+    const content = '''
 name: one
 description: something : and something else
 environment:

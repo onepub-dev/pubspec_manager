@@ -5,8 +5,7 @@ import 'package:path/path.dart' hide equals;
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:test/test.dart';
 
-const goodContent =
-    '''
+const goodContent = '''
 name: pubspec3
 version: 0.0.1
 description: A simple command-line application created by dcli

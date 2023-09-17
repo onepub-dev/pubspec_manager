@@ -1,8 +1,7 @@
 import 'package:eric/eric.dart';
 import 'package:test/test.dart';
 
-const content =
-    '''
+const content = '''
 name: pubspec3
 version: 0.0.1
 description: A simple command-line application created by dcli

@@ -5,8 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('document ...', () async {
-    const pubspec =
-        '''
+    const pubspec = '''
 name: pubspec3
 version: 0.0.1
 description: A simple command-line application created by dcli
