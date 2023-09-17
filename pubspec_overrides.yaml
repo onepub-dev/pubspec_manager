@@ -1,0 +1,3 @@
+dependency_overrides:
+  fsm2:
+    path: ../fsm2
