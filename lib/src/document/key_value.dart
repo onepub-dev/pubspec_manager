@@ -2,6 +2,8 @@ import '../pub_spec_exception.dart';
 import 'line.dart';
 
 class KeyValue {
+  KeyValue._internal(this.key, this.value);
+
   KeyValue.fromLine(Line line) {
     var content = line.text;
     if (line.inlineComment != null) {
@@ -16,6 +18,10 @@ class KeyValue {
     key = content.substring(0, delimiter).trim();
     value = content.substring(delimiter + 1).trim();
   }
+
+  KeyValue copy({String? key, String? value}) =>
+      KeyValue._internal(key ?? this.key, value ?? this.value);
+
   late final String key;
   late final String value;
 }

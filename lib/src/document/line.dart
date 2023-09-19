@@ -146,7 +146,7 @@ class Line implements Renderer {
   /// is thrown.
   String get value => keyValue.value;
 
-  set value(String value) => keyValue.value = value;
+  set value(String value) => _keyValue = keyValue.copy(value: value);
 
   /// a short hand way of getting the key component
   /// of a line of type [LineType.key].
@@ -154,7 +154,7 @@ class Line implements Renderer {
   /// is thrown.
   String get key => keyValue.key;
 
-  set key(String key) => keyValue.key = key;
+  set key(String key) => _keyValue = keyValue.copy(key: key);
 
   /// Find the child of the current line that has the given [key]
   /// Return null if the [key] can't be found.
