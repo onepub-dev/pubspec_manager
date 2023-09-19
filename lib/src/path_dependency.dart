@@ -16,7 +16,7 @@ import 'document/section.dart';
 class PathDependency extends Section implements Dependency {
   PathDependency.fromLine(this._line) {
     _name = _line.key;
-    _version = Version.parse(_line.value);
+    _version = sm.Version.parse(_line.value);
     comments = Comments(this);
   }
   static const key = 'path';

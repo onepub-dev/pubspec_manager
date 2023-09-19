@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:eric/src/pubspec.dart';
-import 'package:path/path.dart' hide equals;
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:test/test.dart';
 
@@ -46,12 +45,10 @@ void main() {
     });
 
     test('save', () {
-      final pubspec = PubSpec.fromString(goodContent);
+      final pubspec = PubSpec.fromString(goodContent)
+        ..save(directory: Directory.systemTemp.path);
 
-      final path = join(Directory.systemTemp.path, 'pubspec.yaml');
-      pubspec.save(path);
-
-      print(File(path).readAsStringSync());
+      print(File(pubspec.loadedFrom).readAsStringSync());
     });
   });
 }

@@ -12,7 +12,7 @@ import 'document/section.dart';
 ///   dcli: ^3.0.1
 class PubHostedDependency extends Section implements Dependency {
   PubHostedDependency(String name, String versionConstraint) : _name = name {
-    _versionConstraint = Version.parse(versionConstraint);
+    _versionConstraint = sm.Version.parse(versionConstraint);
     comments = Comments.empty(this);
   }
 

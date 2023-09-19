@@ -6,7 +6,7 @@ import '../eric.dart';
 import 'dependencies.dart';
 import 'document/document.dart';
 import 'document/document_writer.dart';
-import 'document/line.dart';
+import 'document/line_detached.dart';
 import 'document/line_section.dart';
 import 'document/line_type.dart';
 import 'document/multi_line.dart';
@@ -19,9 +19,9 @@ class PubSpec {
     dependencies = Dependencies(this, 'dependencies');
 
     document
-      ..append(Line.forInsertion(document, 'name:$name'))
-      ..append(Line.forInsertion(document, 'version:$version'))
-      ..append(Line.forInsertion(document, 'description:$description'));
+      ..append(LineDetached('name:$name'))
+      ..append(LineDetached('version:$version'))
+      ..append(LineDetached('description:$description'));
 
     environment = Environment.missing(document);
     homepage = LineSection.missing(document, 'homepage');
@@ -68,18 +68,30 @@ class PubSpec {
   /// Loads the pubspec.yaml file from the given [directory].
   /// If you pass [filename] then it can be loaded from
   /// a non-standard filename.
+  /// If you don't pass [filename] then we will attempt to load
+  /// the pubspec from the file 'pubspec.yaml'.
+  ///
+  /// If the pubspec is not found in the given directory we search
+  /// up the directory tree looking for it.
+  ///
+  /// If you don't provide a[directory] then we start the search
+  /// from the current working directory.
   factory PubSpec.fromFile(
-      {String directory = '.', String filename = 'pubspec.yaml'}) {
-    final loadedFrom = findPubSpecFile(directory, filename);
+      {String? directory, String filename = 'pubspec.yaml'}) {
+    final loadedFrom =
+        _findPubSpecFile(directory ?? Directory.current.path, filename);
     final content = File(loadedFrom).readAsStringSync();
 
-    final pubspec = PubSpec.fromString(content).._loadedFrom = loadedFrom;
+    final pubspec = PubSpec.fromString(content)
+      .._loadedFromDirectory = dirname(loadedFrom)
+      .._loadedFromFilename = basename(loadedFrom);
     return pubspec;
   }
 
-  // the path the pubspec.yaml was loaded from
+  // the path the pubspec.yaml was loaded from (including the filename)
   // If the pubpsec wasn't loaded from a file then this will be null.
-  String? _loadedFrom;
+  String? _loadedFromDirectory;
+  String? _loadedFromFilename;
 
   /// [Document] that holds the lines read from the pubspec.yaml
   late Document document;
@@ -105,6 +117,9 @@ class PubSpec {
   late final SimpleSection screenshots;
   late final SimpleSection topics;
 
+  String get loadedFrom =>
+      join(_loadedFromDirectory ?? '.', _loadedFromFilename);
+
   /// Initialises a dependencies section based in the passed [key].
   /// There are three dependencies sections in a pubspec.yaml
   /// * dependencies
@@ -127,9 +142,10 @@ class PubSpec {
     return dependencies;
   }
 
-  /// Save the pubspec.yaml to [pathTo].
-  void save({String? pathTo}) {
-    pathTo ??= _loadedFrom ?? join('.', 'pubspec.yaml');
+  /// Save the pubspec.yaml to [directory].
+  void save({String? directory, String? filename}) {
+    directory ??= _loadedFromDirectory ?? '.';
+    filename ??= _loadedFromFilename ?? join('.', 'pubspec.yaml');
 
     /// whilst the calls to [render] are ordered (for easy reading)
     /// the underlying lines control the order
@@ -153,7 +169,7 @@ class PubSpec {
       ..render(screenshots)
       ..render(topics)
       ..renderMissing()
-      ..write(pathTo);
+      ..write(directory);
   }
 
   @override
@@ -166,9 +182,29 @@ class PubSpec {
     return content.toString();
   }
 
-  /// TODO: search up the directory tree (starting from [directory]to find
-  /// a file with the name [filename] which will normally bye
+  /// search up the directory tree (starting from [directory]to find
+  /// a file with the name [filename] which will normally be
   /// pubspec.yaml
-  static String findPubSpecFile(String directory, String filename) =>
-      join(directory, filename);
+  static String _findPubSpecFile(String directory, String filename) {
+    var path = join(directory, filename);
+    var parent = directory;
+    var found = true;
+    while (!File(path).existsSync()) {
+      if (isRoot(parent)) {
+        found = false;
+        break;
+      }
+      parent = dirname(parent);
+    }
+    path = join(parent, filename);
+
+    if (!found) {
+      throw NotFoundException(join(directory, filename));
+    }
+
+    return path;
+  }
+
+  static bool isRoot(String path) =>
+      path.startsWith('/') || path.startsWith(RegExp(r'[a-z]:\\'));
 }

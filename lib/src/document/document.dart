@@ -5,6 +5,7 @@ import 'package:strings/strings.dart';
 import '../../eric.dart';
 import 'key_value.dart';
 import 'line.dart';
+import 'line_detached.dart';
 import 'line_section.dart';
 import 'line_type.dart';
 import 'multi_line.dart';
@@ -167,9 +168,10 @@ class Document {
   /// Appends the passed line to the end of the document.
   /// The lines [Line.lineNo] will be updated to reflect
   /// the actual line number in the document.
-  void append(Line line) {
-    line.lineNo = lines.length + 1;
-    lines.add(line);
+  Line append(LineDetached line) {
+    final attached = line.attach(this)..lineNo = lines.length + 1;
+    lines.add(attached);
+    return attached;
   }
 
   /// Inserts [line] into the document as indicated

@@ -9,15 +9,6 @@ import 'document/line_section.dart';
 import 'pub_spec_exception.dart';
 
 class Version extends LineSection {
-  // factory Version(PubSpec pubspec, String version) {
-  //   final line = Line.forInsertion(pubspec.document, 'version: $version');
-  //   return Version.fromLine(line);
-  // }
-
-  factory Version.parse(String version) =>
-      Version.fromLine(Line.forInsertion(version), required: true);
-
-      
   // not part of the public interface
   Version.fromLine(this.line, {bool required = false}) : super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
@@ -37,6 +28,18 @@ class Version extends LineSection {
   Version.missing(Document document)
       : line = Line.missing(document),
         super.missing(document, 'version');
+  // factory Version(PubSpec pubspec, String version) {
+  //   final line = Line.forInsertion(pubspec.document, 'version: $version');
+  //   return Version.fromLine(line);
+  // }
+
+  static sm.VersionConstraint parse(String version) {
+    try {
+      return sm.VersionConstraint.parse(version);
+    } on FormatException catch (e) {
+      throw VersionException.global(e.message);
+    }
+  }
 
   @override
   late Line line;
@@ -53,6 +56,9 @@ class Version extends LineSection {
 
   @override
   String toString() => line.value;
+
+  @override
+  set value(String version) => line.value = version;
 
   @override
   bool operator ==(Object other) =>
@@ -104,14 +110,6 @@ class Version extends LineSection {
 
   static void validate(String version) {
     parse(version);
-  }
-
-  static sm.VersionConstraint parse(String version) {
-    try {
-      return sm.VersionConstraint.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException.global(e.message);
-    }
   }
 }
 

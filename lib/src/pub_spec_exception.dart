@@ -39,3 +39,7 @@ Line Content: ${Strings.orElse(line!.text, "<empty>")}
     return error.toString();
   }
 }
+
+class NotFoundException extends PubSpecException {
+  NotFoundException(super.message) : super.global();
+}

@@ -1,5 +1,7 @@
 import 'package:fsm2/fsm2.dart';
 
+import 'state.dart';
+
 /// Classify a character into an event type.
 Event classify(int c) {
   if (c == codeUnit('"')) {

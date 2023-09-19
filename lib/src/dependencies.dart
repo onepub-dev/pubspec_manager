@@ -2,6 +2,7 @@ import '../eric.dart';
 import 'document/comments.dart';
 import 'document/document.dart';
 import 'document/line.dart';
+import 'document/line_detached.dart';
 import 'document/section.dart';
 
 /// Used to hold a list of [Dependency]s from
@@ -10,9 +11,8 @@ import 'document/section.dart';
 class Dependencies extends Section {
   /// Create a new dependencies section
   Dependencies(this._pubspec, this.name) {
-    line = Line.forInsertion(_pubspec.document, '$name:');
     missing = false;
-    _pubspec.document.append(line);
+    _pubspec.document.append(LineDetached('$name:'));
     comments = Comments.empty(this);
   }
 
@@ -74,8 +74,7 @@ class Dependencies extends Section {
       missing = false;
       if (attach) {
         // create the section.
-        line = Line.forInsertion(_pubspec.document, name);
-        document.append(line);
+        line = document.append(LineDetached(name));
       }
     } else {
       if (_dependencies.isEmpty) {

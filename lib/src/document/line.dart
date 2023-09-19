@@ -146,6 +146,8 @@ class Line implements Renderer {
   /// is thrown.
   String get value => keyValue.value;
 
+  set value(String value) => keyValue.value = value;
+
   /// a short hand way of getting the key component
   /// of a line of type [LineType.key].
   /// If the line is not of type [LineType.key] then a [PubSpecException]
