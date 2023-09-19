@@ -13,6 +13,12 @@ class Version extends LineSection {
   //   final line = Line.forInsertion(pubspec.document, 'version: $version');
   //   return Version.fromLine(line);
   // }
+
+  factory Version.parse(String version) =>
+      Version.fromLine(Line.forInsertion(version), required: true);
+
+      
+  // not part of the public interface
   Version.fromLine(this.line, {bool required = false}) : super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
       if (required) {

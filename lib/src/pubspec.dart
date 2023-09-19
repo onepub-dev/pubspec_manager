@@ -68,12 +68,18 @@ class PubSpec {
   /// Loads the pubspec.yaml file from the given [directory].
   /// If you pass [filename] then it can be loaded from
   /// a non-standard filename.
-  factory PubSpec.fromFile(String directory,
-      {String filename = 'pubspec.yaml'}) {
-    final content = File(join(directory, filename)).readAsStringSync();
+  factory PubSpec.fromFile(
+      {String directory = '.', String filename = 'pubspec.yaml'}) {
+    final loadedFrom = findPubSpecFile(directory, filename);
+    final content = File(loadedFrom).readAsStringSync();
 
-    return PubSpec.fromString(content);
+    final pubspec = PubSpec.fromString(content).._loadedFrom = loadedFrom;
+    return pubspec;
   }
+
+  // the path the pubspec.yaml was loaded from
+  // If the pubpsec wasn't loaded from a file then this will be null.
+  String? _loadedFrom;
 
   /// [Document] that holds the lines read from the pubspec.yaml
   late Document document;
@@ -122,7 +128,9 @@ class PubSpec {
   }
 
   /// Save the pubspec.yaml to [pathTo].
-  void save(String pathTo) {
+  void save({String? pathTo}) {
+    pathTo ??= _loadedFrom ?? join('.', 'pubspec.yaml');
+
     /// whilst the calls to [render] are ordered (for easy reading)
     /// the underlying lines control the order
     /// that each section is written to disk.
@@ -157,4 +165,10 @@ class PubSpec {
     }
     return content.toString();
   }
+
+  /// TODO: search up the directory tree (starting from [directory]to find
+  /// a file with the name [filename] which will normally bye
+  /// pubspec.yaml
+  static String findPubSpecFile(String directory, String filename) =>
+      join(directory, filename);
 }
