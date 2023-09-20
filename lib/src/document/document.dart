@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:strings/strings.dart';
 
-import '../../eric.dart';
+import '../pubspec_exception.dart';
 import 'key_value.dart';
 import 'line.dart';
 import 'line_detached.dart';

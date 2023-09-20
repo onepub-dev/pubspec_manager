@@ -19,9 +19,9 @@ dev_dependencies:
 void main() {
   test('dependency append', () async {
     const version = '1.5.1';
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final devDependencies = pubspec.devDependencies
-      ..append(PubHostedDependency('test', version));
+      ..append(PubHostedDependency(name: 'test', version: version));
     expect(devDependencies.contains('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
@@ -29,7 +29,7 @@ void main() {
     expect(testDep.versionConstraint.toString(), equals(version));
 
     final dependencies = pubspec.dependencies
-      ..append(PubHostedDependency('dcli_core', version));
+      ..append(PubHostedDependency(name: 'dcli_core', version: version));
     expect(dependencies.contains('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
@@ -39,14 +39,14 @@ void main() {
   });
 
   test('dependency remove last', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final dependencies = pubspec.dependencies..remove('money');
     final dcli = dependencies['money'];
     expect(dcli == null, isTrue);
   });
 
   test('dependency remove first', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final dependencies = pubspec.dependencies..remove('dcli');
     final dcli = dependencies['dcli'];
     expect(dcli == null, isTrue);
@@ -54,7 +54,7 @@ void main() {
   });
 
   test('dependency add comment', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
     dcli!.comments.append('Hellow World for dcli');
@@ -63,7 +63,7 @@ void main() {
   });
 
   test('dependency removeAll comments', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final document = pubspec.document;
     expect(document.lines.length, equals(13));
 
@@ -75,7 +75,7 @@ void main() {
   });
 
   test('dependency removeAt comments', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final document = pubspec.document;
     expect(document.lines.length, equals(13));
 
@@ -89,7 +89,7 @@ void main() {
   });
 
   test('dependency removeAt invalid ', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
 
@@ -97,7 +97,7 @@ void main() {
     expect(() => dcli.comments.removeAt(0), throwsA(isA<RangeError>()));
   });
   test('dependency removeAll empty list ', () async {
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     final document = pubspec.document;
 
     final dependencies = pubspec.dependencies;

@@ -1,11 +1,4 @@
-import 'package:pub_semver/pub_semver.dart';
-import 'package:strings/strings.dart';
-
-import '../../eric.dart';
-import '../document/comments.dart';
-import '../document/document.dart';
-import '../document/line.dart';
-import '../document/section.dart';
+part of 'internal_parts.dart';
 
 /// Git style dependency.
 class GitDependency extends Section implements Dependency {
@@ -15,7 +8,7 @@ class GitDependency extends Section implements Dependency {
 
   /// Load the git dependency details starting
   /// from [line].
-  GitDependency.fromLine(Line line) : _line = line {
+  GitDependency._fromLine(Line line) : _line = line {
     _name = _line.key;
     details = GitDetails.fromLine(_line);
 
@@ -45,10 +38,10 @@ class GitDependency extends Section implements Dependency {
   List<Line> get lines => [...comments.lines, _line, ...details.lines];
 
   @override
-  void attach(PubSpec pubspec, int lineNo) {
+  void _attach(Pubspec pubspec, int lineNo) {
     _line = Line.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insert(_line, lineNo);
-    details.attach(pubspec, lineNo);
+    details._attach(pubspec, lineNo);
   }
 
   @override
@@ -58,7 +51,11 @@ class GitDependency extends Section implements Dependency {
   Document get document => line.document;
 
   @override
-  VersionConstraint get versionConstraint => VersionConstraint.any;
+  sm.VersionConstraint get versionConstraint => sm.VersionConstraint.any;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }
 
 /// Holds the details of a git dependency.
@@ -88,7 +85,7 @@ class GitDetails {
         if (pathLine != null) pathLine!
       ];
 
-  void attach(PubSpec pubspec, int lineNo) {
+  void _attach(Pubspec pubspec, int lineNo) {
     if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
       lineNo++;
     }
@@ -100,7 +97,7 @@ class GitDetails {
     }
   }
 
-  bool _attachLine(PubSpec pubspec, int lineNo,
+  bool _attachLine(Pubspec pubspec, int lineNo,
       {required String key, required String? value}) {
     var attached = false;
     if (value != null) {

@@ -6,7 +6,7 @@ import 'pubspec_test.dart';
 
 void main() {
   test('pub hosted dependency ...', () async {
-    final pubspec = PubSpec.fromString(goodContent);
+    final pubspec = Pubspec.fromString(goodContent);
     expect(pubspec.dependencies.length, equals(2));
 
     final one = pubspec.dependencies.list.first;
@@ -32,14 +32,14 @@ dependencies:
     hosted: https://onepub.dev
     version: 1.1.1
 ''';
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = Pubspec.fromString(content);
     expect(pubspec.dependencies.length, equals(1));
 
     final one = pubspec.dependencies.list.first;
-    expect(one is HostedDependencyImpl, isTrue);
+    expect(one is HostedDependency, isTrue);
     expect(one.name, equals('dcli'));
     expect(
-        (one as HostedDependencyImpl).versionConstraint,
+        (one as HostedDependency).versionConstraint,
         equals(Version.parseVersionConstraint(
             Line.test(pubspec.document, 'verson:1.1.1'), '1.1.1')));
     expect(one.hostedUrl, equals('https://onepub.dev'));

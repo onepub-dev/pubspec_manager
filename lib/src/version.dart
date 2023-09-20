@@ -1,16 +1,11 @@
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
-import 'package:pub_semver/pub_semver.dart' as sm;
-import 'package:strings/strings.dart';
+part of 'internal_parts.dart';
 
-import '../document/document.dart';
-import '../document/line.dart';
-import '../document/line_section.dart';
-import '../pubspec_exception.dart';
-
+/// Holds a dependency version
 class Version extends LineSection {
   // not part of the public interface
-  Version.fromLine(this.line, {bool required = false}) : super.fromLine(line) {
+  Version._fromLine(this.line, {bool required = false}) : super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
       if (required) {
         throw PubSpecException(line, 'Required version missing.');
@@ -25,7 +20,7 @@ class Version extends LineSection {
     _version = parseVersionConstraint(line, line.value);
   }
 
-  Version.missing(Document document)
+  Version._missing(Document document)
       : line = Line.missing(document),
         super.missing(document, 'version');
   // factory Version(PubSpec pubspec, String version) {

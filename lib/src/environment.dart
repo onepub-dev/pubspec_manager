@@ -1,8 +1,4 @@
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/section.dart';
+part of 'internal_parts.dart';
 
 /// Holds the details of the environment section.
 /// i.e. flutter and sdk versions.
@@ -15,13 +11,13 @@ class Environment extends Section {
   /// given [environment].
   Environment.fromLine(this.environment) {
     final sdkLine = environment.findRequiredKeyChild('sdk');
-    sdk = Version.fromLine(sdkLine, required: true);
+    sdk = Version._fromLine(sdkLine, required: true);
 
     final flutterLine = environment.findKeyChild('flutter');
     if (flutterLine != null) {
-      flutter = Version.fromLine(flutterLine, required: true);
+      flutter = Version._fromLine(flutterLine, required: true);
     } else {
-      flutter = Version.missing(document);
+      flutter = Version._missing(document);
     }
 
     comments = Comments(this);
@@ -46,4 +42,8 @@ class Environment extends Section {
 
   @override
   List<Line> get lines => [environment, ...sdk.lines, ...flutter.lines];
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }

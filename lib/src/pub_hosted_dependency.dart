@@ -1,31 +1,30 @@
-import 'package:pub_semver/pub_semver.dart' as sm;
-
-import '../../eric.dart';
-import '../document/comments.dart';
-import '../document/document.dart';
-import '../document/line.dart';
-import '../document/section.dart';
+part of 'internal_parts.dart';
 
 /// A dependench hosted on pub.dev.
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
 class PubHostedDependency extends Section implements Dependency {
-  PubHostedDependency(String name, String versionConstraint) : _name = name {
-    _versionConstraint = sm.Version.parse(versionConstraint);
+  PubHostedDependency({required String name, required String version})
+      : _name = name {
+    try {
+      _versionConstraint = sm.Version.parse(version);
+    } on FormatException catch (e) {
+      throw VersionException(e.message);
+    }
     comments = Comments.empty(this);
   }
 
-  PubHostedDependency.fromLine(Line line) : _line = line {
+  PubHostedDependency._fromLine(Line line) : _line = line {
     // the line is of the form '<name>: <version>'
-    final _version = Version.fromLine(line);
+    final _version = Version._fromLine(line);
     _name = _version.line.key;
     _versionConstraint = _version.constraint;
     comments = Comments(this);
   }
 
   @override
-  void attach(PubSpec pubspec, int lineNo) {
+  void _attach(Pubspec pubspec, int lineNo) {
     _line = Line.forInsertion(pubspec.document, '  $name: $versionConstraint');
     pubspec.document.insert(_line, lineNo);
   }
@@ -62,4 +61,8 @@ class PubHostedDependency extends Section implements Dependency {
 
   @override
   late final Comments comments;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }

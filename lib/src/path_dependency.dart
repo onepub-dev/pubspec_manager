@@ -1,10 +1,4 @@
-import 'package:pub_semver/pub_semver.dart' as sm;
-
-import '../../eric.dart';
-import '../document/comments.dart';
-import '../document/document.dart';
-import '../document/line.dart';
-import '../document/section.dart';
+part of 'internal_parts.dart';
 
 /// represents a dependency that has a 'path' key
 /// A path dependency is located on the local file
@@ -14,7 +8,7 @@ import '../document/section.dart';
 /// dependencies:
 ///   dcli: ^2.3.1
 class PathDependency extends Section implements Dependency {
-  PathDependency.fromLine(this._line) {
+  PathDependency._fromLine(this._line) {
     _name = _line.key;
     _version = sm.Version.parse(_line.value);
     comments = Comments(this);
@@ -48,11 +42,15 @@ class PathDependency extends Section implements Dependency {
   late final Comments comments;
 
   @override
-  void attach(PubSpec pubspec, int lineNo) {
+  void _attach(Pubspec pubspec, int lineNo) {
     _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
     pubspec.document.insert(_line, lineNo);
   }
 
   @override
   int get lineNo => _line.lineNo;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }

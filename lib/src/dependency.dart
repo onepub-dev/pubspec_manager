@@ -1,27 +1,22 @@
-import 'package:pub_semver/pub_semver.dart';
-
-import '../../eric.dart';
-import '../document/line.dart';
-import '../document/line_type.dart';
-import '../document/section.dart';
+part of 'internal_parts.dart';
 
 /// Base class for each of the [Dependency] types.
 abstract class Dependency extends Section {
   /// Loads a dependency located at [line].
-  factory Dependency.loadFrom(Line line) {
+  factory Dependency._loadFrom(Line line) {
     final children = line.childrenOf(type: LineType.key);
 
     if (children.isEmpty) {
       // pub hosted is the default and the only type
       // that has no children
-      return PubHostedDependency.fromLine(line);
+      return PubHostedDependency._fromLine(line);
     }
 
     /// So not a pub hosted dep, we use the main key
     /// from each of the dependency types to discover
     /// which type of dependeny we have.
     final depTypeLine = line.findOneOf(
-        [HostedDependencyImpl.key, PathDependency.key, GitDependency.key]);
+        [HostedDependency.key, PathDependency.key, GitDependency.key]);
 
     // none of the children had one of the expected keys.
     if (depTypeLine == null) {
@@ -33,12 +28,12 @@ abstract class Dependency extends Section {
 
     /// We know the type of dependency so lets load the details.
     switch (depTypeLine.key) {
-      case HostedDependencyImpl.key:
-        return HostedDependencyImpl.fromLine(line);
+      case HostedDependency.key:
+        return HostedDependency._fromLine(line);
       case PathDependency.key:
-        return PathDependency.fromLine(line);
+        return PathDependency._fromLine(line);
       case GitDependency.key:
-        return GitDependency.fromLine(line);
+        return GitDependency._fromLine(line);
     }
 
     throw PubSpecException(
@@ -52,11 +47,12 @@ abstract class Dependency extends Section {
   int get lineNo;
 
   /// Returns the version constraint for the dependencies
-  /// For dependencies that don't have a version constraint [GitDependency] or
-  /// [PathDependency] [VersionConstraint.any] will be returned.
+  /// For dependencies that don't have a version constraint such as
+  ///  [GitDependency] or [PathDependency] then [sm.VersionConstraint.any]
+  ///  will be returned.
   /// For dependencies that do allow a version, if the version is empty
-  /// the [VersionConstraint.any] will be returned.
-  VersionConstraint get versionConstraint;
+  /// the [sm.VersionConstraint.any] will be returned.
+  sm.VersionConstraint get versionConstraint;
 
-  void attach(PubSpec pubspec, int lineNo);
+  void _attach(Pubspec pubspec, int lineNo);
 }

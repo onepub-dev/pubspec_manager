@@ -1,22 +1,15 @@
-import 'dart:io';
+part of 'internal_parts.dart';
 
-import 'package:path/path.dart';
-
-import '../eric.dart';
-import 'internal/dependencies.dart';
-import 'document/document.dart';
-import 'document/document_writer.dart';
-import 'document/line_detached.dart';
-import 'document/line_section.dart';
-import 'document/line_type.dart';
-import 'document/multi_line.dart';
-import 'document/simple_section.dart';
-
-class PubSpec {
+/// A representation of the loaded or created
+/// pubspec.yaml.
+/// All operations start here.
+///
+class Pubspec {
   /// Create an in memory pubspec.yaml.
+  ///
   /// It can be saved to disk by calling [save].
-  PubSpec(this.name, this.version, this.description, this.environment) {
-    dependencies = Dependencies(this, 'dependencies');
+  Pubspec(this.name, this.version, this.description, this.environment) {
+    dependencies = Dependencies._(this, 'dependencies');
 
     document
       ..append(LineDetached('name:$name'))
@@ -28,9 +21,9 @@ class PubSpec {
     repository = LineSection.missing(document, 'repository');
     issueTracker = LineSection.missing(document, 'issueTracker');
     documentation = LineSection.missing(document, 'documentation');
-    dependencies = Dependencies.missing(this, 'dependencies');
-    devDependencies = Dependencies.missing(this, 'dev_dependencies');
-    dependencyOverrides = Dependencies.missing(this, 'dependency_overrides');
+    dependencies = Dependencies._missing(this, 'dependencies');
+    devDependencies = Dependencies._missing(this, 'dev_dependencies');
+    dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
     platforms = SimpleSection.missing(document, 'platforms');
     executables = SimpleSection.missing(document, 'executables');
     funding = SimpleSection.missing(document, 'funding');
@@ -39,12 +32,12 @@ class PubSpec {
     topics = SimpleSection.missing(document, 'topics');
   }
 
-  /// Loads the content of a pubspec.yaml from [content].
-  PubSpec.fromString(String content) {
+  /// Loads the content of a pubspec.yaml from the string [content].
+  Pubspec.fromString(String content) {
     document = Document.loadFromString(content);
 
     name = document.getLineForRequiredKey('name');
-    version = Version.fromLine(document.getLineForRequiredKey('version'));
+    version = Version._fromLine(document.getLineForRequiredKey('version'));
     description = document.getMultiLineForRequiredKey('description');
     environment =
         Environment.fromLine(document.getLineForRequiredKey('environment'));
@@ -68,21 +61,29 @@ class PubSpec {
   /// Loads the pubspec.yaml file from the given [directory].
   /// If you pass [filename] then it can be loaded from
   /// a non-standard filename.
+  ///
   /// If you don't pass [filename] then we will attempt to load
   /// the pubspec from the file 'pubspec.yaml'.
   ///
   /// If the pubspec is not found in the given directory we search
   /// up the directory tree looking for it.
   ///
-  /// If you don't provide a[directory] then we start the search
+  /// If you don't provide a [directory] then we start the search
   /// from the current working directory.
-  factory PubSpec.fromFile(
+  ///
+  /// ```dart
+  /// Pubspec.fromFile()
+  ///   ..dependencies
+  ///     .append(HostedDependency(name: 'onepub', url:'https://onepub.dev'))
+  ///   ..save();
+  /// ```
+  factory Pubspec.fromFile(
       {String? directory, String filename = 'pubspec.yaml'}) {
     final loadedFrom =
         _findPubSpecFile(directory ?? Directory.current.path, filename);
     final content = File(loadedFrom).readAsStringSync();
 
-    final pubspec = PubSpec.fromString(content)
+    final pubspec = Pubspec.fromString(content)
       .._loadedFromDirectory = dirname(loadedFrom)
       .._loadedFromFilename = basename(loadedFrom);
     return pubspec;
@@ -121,6 +122,7 @@ class PubSpec {
       join(_loadedFromDirectory ?? '.', _loadedFromFilename);
 
   /// Initialises a dependencies section based in the passed [key].
+  ///
   /// There are three dependencies sections in a pubspec.yaml
   /// * dependencies
   /// * dev_dependencies
@@ -128,24 +130,37 @@ class PubSpec {
   Dependencies _initDependencies(String key) {
     final line = document.findTopLevelKey(key);
     if (line == null) {
-      return Dependencies.missing(this, key);
+      return Dependencies._missing(this, key);
     }
 
-    final dependencies = Dependencies.fromLine(this, line);
+    final dependencies = Dependencies._fromLine(this, line);
 
     for (final child in line.childrenOf()) {
       if (child.type != LineType.key) {
         continue;
       }
-      dependencies.append(Dependency.loadFrom(child), attach: false);
+      dependencies.append(Dependency._loadFrom(child), attach: false);
     }
     return dependencies;
   }
 
-  /// Save the pubspec.yaml to [directory].
+  /// Save the pubspec.yaml to [directory] with the given [filename].
+  ///
+  /// If you don't pass in the [directory] then
+  /// we will save the pubspec back to the same
+  /// location it was loaded from. If the
+  /// pubspec wasn't loaded (but created) then
+  /// we save the pubspec.yaml to the current directory.
+  /// You may provide [filename] if you need to save
+  /// the pubspec to a file other than 'pubspec.yaml'.
   void save({String? directory, String? filename}) {
     directory ??= _loadedFromDirectory ?? '.';
-    filename ??= _loadedFromFilename ?? join('.', 'pubspec.yaml');
+    filename ??= _loadedFromFilename ?? 'pubspec.yaml';
+
+    /// after we save we update the loaded from to
+    /// reflect the possibly modified location.
+    _loadedFromDirectory = directory;
+    _loadedFromFilename = filename;
 
     /// whilst the calls to [render] are ordered (for easy reading)
     /// the underlying lines control the order

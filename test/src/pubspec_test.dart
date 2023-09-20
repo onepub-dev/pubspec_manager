@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eric/src/pubspec.dart';
+import 'package:eric/eric.dart';
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:test/test.dart';
 
@@ -31,7 +31,7 @@ executables:
 void main() {
   group('pubspec', () {
     test('pubspec ...', () async {
-      final pubspec = PubSpec.fromString(goodContent);
+      final pubspec = Pubspec.fromString(goodContent);
 
       expect(pubspec.name.value, equals('pubspec3'));
       expect(pubspec.version.value, equals('0.0.1'));
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('save', () {
-      final pubspec = PubSpec.fromString(goodContent)
+      final pubspec = Pubspec.fromString(goodContent)
         ..save(directory: Directory.systemTemp.path);
 
       print(File(pubspec.loadedFrom).readAsStringSync());

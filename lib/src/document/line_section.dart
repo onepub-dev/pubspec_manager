@@ -25,4 +25,8 @@ class LineSection extends Line implements Section {
 
   @override
   late final Comments comments;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }

@@ -1,24 +1,19 @@
-import '../../eric.dart';
-import '../document/comments.dart';
-import '../document/document.dart';
-import '../document/line.dart';
-import '../document/line_detached.dart';
-import '../document/section.dart';
+part of 'internal_parts.dart';
 
 /// Used to hold a list of [Dependency]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Dependencies extends Section {
   /// Create a new dependencies section
-  Dependencies(this._pubspec, this.name) {
+  Dependencies._(this._pubspec, this.name) {
     missing = false;
     _pubspec.document.append(LineDetached('$name:'));
     comments = Comments.empty(this);
   }
 
-  Dependencies.missing(this._pubspec, this.name) : super.missing();
+  Dependencies._missing(this._pubspec, this.name) : super.missing();
 
-  Dependencies.fromLine(this._pubspec, this.line) {
+  Dependencies._fromLine(this._pubspec, this.line) {
     missing = false;
     name = line.key;
     comments = Comments(this);
@@ -32,7 +27,7 @@ class Dependencies extends Section {
   late final String name;
 
   /// reference to the pubspec that has these dependencies.
-  final PubSpec _pubspec;
+  final Pubspec _pubspec;
 
   final List<Dependency> _dependencies = <Dependency>[];
 
@@ -80,14 +75,14 @@ class Dependencies extends Section {
       if (_dependencies.isEmpty) {
         insertAt = line.lineNo + 1;
       } else {
-        insertAt = _dependencies.last.lineNo + 1;
+        insertAt = _dependencies.last.lastLineNo + 1;
       }
     }
 
     _dependencies.add(dependency);
 
     if (attach) {
-      dependency.attach(_pubspec, insertAt);
+      dependency._attach(_pubspec, insertAt);
     }
   }
 
@@ -116,8 +111,14 @@ class Dependencies extends Section {
 
   @override
   Document get document => line.document;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
 }
 
+/// Thrown when you try to access a dependency by name
+/// and that dependency doesn't exist.
 class DependencyNotFound extends PubSpecException {
   DependencyNotFound(Document super.document, super.message)
       : super.forDocument();

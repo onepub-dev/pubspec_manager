@@ -14,10 +14,10 @@ abstract class Section {
   /// An missing section doesn't appear in the pubspec.yaml
   bool missing;
 
-  /// Returns the line that marks the start of a segment.
-  /// When determining the start of a segment we ignore
+  /// Returns the line that marks the start of a section.
+  /// When determining the start of a section we ignore
   /// any comments and blank lines even though they are considered
-  /// as part of the segment.
+  /// as part of the section.
   Line get line;
 
   /// returns the list of lines associated with this section
@@ -31,4 +31,7 @@ abstract class Section {
 
   /// The [Document] that contains this section.
   Document get document;
+
+  /// The last line number used by this  section
+  int get lastLineNo;
 }
