@@ -1,10 +1,10 @@
 import 'package:pub_semver/pub_semver.dart' as sm;
 
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/comments.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/section.dart';
 
 /// a hosted dependency which takes the form:
 /// dependencies:
@@ -12,8 +12,8 @@ import 'document/section.dart';
 ///     hosted: https://onepub.dev
 ///     version: ^2.3.1
 /// If no version is specified then 'any' is assumed.
-class HostedDependency extends Section implements Dependency {
-  HostedDependency.fromLine(this._line) {
+class HostedDependencyImpl extends Section implements Dependency {
+  HostedDependencyImpl.fromLine(this._line) {
     _name = _line.key;
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
     hostedUrl = _hostedUrlLine.value;

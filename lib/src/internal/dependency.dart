@@ -1,9 +1,9 @@
 import 'package:pub_semver/pub_semver.dart';
 
-import '../eric.dart';
-import 'document/line.dart';
-import 'document/line_type.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/line.dart';
+import '../document/line_type.dart';
+import '../document/section.dart';
 
 /// Base class for each of the [Dependency] types.
 abstract class Dependency extends Section {
@@ -21,7 +21,7 @@ abstract class Dependency extends Section {
     /// from each of the dependency types to discover
     /// which type of dependeny we have.
     final depTypeLine = line.findOneOf(
-        [HostedDependency.key, PathDependency.key, GitDependency.key]);
+        [HostedDependencyImpl.key, PathDependency.key, GitDependency.key]);
 
     // none of the children had one of the expected keys.
     if (depTypeLine == null) {
@@ -33,8 +33,8 @@ abstract class Dependency extends Section {
 
     /// We know the type of dependency so lets load the details.
     switch (depTypeLine.key) {
-      case HostedDependency.key:
-        return HostedDependency.fromLine(line);
+      case HostedDependencyImpl.key:
+        return HostedDependencyImpl.fromLine(line);
       case PathDependency.key:
         return PathDependency.fromLine(line);
       case GitDependency.key:

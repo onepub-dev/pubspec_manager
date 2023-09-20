@@ -1,10 +1,10 @@
 import 'package:pub_semver/pub_semver.dart' as sm;
 
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/comments.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/section.dart';
 
 /// represents a dependency that has a 'path' key
 /// A path dependency is located on the local file

@@ -1,10 +1,10 @@
 import 'package:pub_semver/pub_semver.dart' as sm;
 
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/comments.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/section.dart';
 
 /// A dependench hosted on pub.dev.
 /// A pub hosted dependency is of the form

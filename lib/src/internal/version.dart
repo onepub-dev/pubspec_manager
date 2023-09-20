@@ -3,10 +3,10 @@
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:strings/strings.dart';
 
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/line_section.dart';
-import 'pub_spec_exception.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/line_section.dart';
+import '../pubspec_exception.dart';
 
 class Version extends LineSection {
   // not part of the public interface
@@ -37,7 +37,7 @@ class Version extends LineSection {
     try {
       return sm.VersionConstraint.parse(version);
     } on FormatException catch (e) {
-      throw VersionException.global(e.message);
+      throw VersionException(e.message);
     }
   }
 
@@ -58,7 +58,14 @@ class Version extends LineSection {
   String toString() => line.value;
 
   @override
-  set value(String version) => line.value = version;
+  set value(String version) {
+    try {
+      sm.VersionConstraint.parse(version);
+    } on FormatException catch (e) {
+      throw VersionException('The passed version is invalid: ${e.message}');
+    }
+    line.value = version;
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -111,8 +118,4 @@ class Version extends LineSection {
   static void validate(String version) {
     parse(version);
   }
-}
-
-class VersionException extends PubSpecException {
-  VersionException.global(super.message) : super.global();
 }

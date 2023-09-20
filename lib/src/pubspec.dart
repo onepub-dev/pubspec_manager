@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 
 import '../eric.dart';
-import 'dependencies.dart';
+import 'internal/dependencies.dart';
 import 'document/document.dart';
 import 'document/document_writer.dart';
 import 'document/line_detached.dart';
@@ -169,7 +169,7 @@ class PubSpec {
       ..render(screenshots)
       ..render(topics)
       ..renderMissing()
-      ..write(directory);
+      ..write(join(directory, filename));
   }
 
   @override

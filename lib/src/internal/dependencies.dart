@@ -1,9 +1,9 @@
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/line_detached.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/comments.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/line_detached.dart';
+import '../document/section.dart';
 
 /// Used to hold a list of [Dependency]s from
 /// a single dependency section in the pubspec.yaml

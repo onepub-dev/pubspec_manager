@@ -40,6 +40,12 @@ Line Content: ${Strings.orElse(line!.text, "<empty>")}
   }
 }
 
+/// Thrown a pubspec file can't be found.
 class NotFoundException extends PubSpecException {
   NotFoundException(super.message) : super.global();
+}
+
+/// Thrown when an invalid version is passed.
+class VersionException extends PubSpecException {
+  VersionException(super.message) : super.global();
 }

@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../pub_spec_exception.dart';
+import '../pubspec_exception.dart';
 import 'document.dart';
 import 'key_value.dart';
 import 'line_type.dart';

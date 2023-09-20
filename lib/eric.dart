@@ -1,9 +1,9 @@
-export 'src/dependency.dart';
+export 'src/internal/dependency.dart';
 export 'src/environment.dart';
-export 'src/git_dependency.dart';
-export 'src/hosted_dependency.dart';
-export 'src/path_dependency.dart';
-export 'src/pub_hosted_dependency.dart';
-export 'src/pub_spec_exception.dart';
+export 'src/internal/git_dependency.dart';
+export 'src/internal/hosted_dependency_impl.dart';
+export 'src/internal/path_dependency.dart';
+export 'src/internal/pub_hosted_dependency.dart';
 export 'src/pubspec.dart';
-export 'src/version.dart';
+export 'src/pubspec_exception.dart';
+export 'src/internal/version.dart';

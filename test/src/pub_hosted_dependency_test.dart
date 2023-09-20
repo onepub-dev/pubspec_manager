@@ -36,10 +36,10 @@ dependencies:
     expect(pubspec.dependencies.length, equals(1));
 
     final one = pubspec.dependencies.list.first;
-    expect(one is HostedDependency, isTrue);
+    expect(one is HostedDependencyImpl, isTrue);
     expect(one.name, equals('dcli'));
     expect(
-        (one as HostedDependency).versionConstraint,
+        (one as HostedDependencyImpl).versionConstraint,
         equals(Version.parseVersionConstraint(
             Line.test(pubspec.document, 'verson:1.1.1'), '1.1.1')));
     expect(one.hostedUrl, equals('https://onepub.dev'));

@@ -1,11 +1,11 @@
 import 'package:pub_semver/pub_semver.dart';
 import 'package:strings/strings.dart';
 
-import '../eric.dart';
-import 'document/comments.dart';
-import 'document/document.dart';
-import 'document/line.dart';
-import 'document/section.dart';
+import '../../eric.dart';
+import '../document/comments.dart';
+import '../document/document.dart';
+import '../document/line.dart';
+import '../document/section.dart';
 
 /// Git style dependency.
 class GitDependency extends Section implements Dependency {
