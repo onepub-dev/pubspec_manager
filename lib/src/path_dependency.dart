@@ -7,50 +7,21 @@ part of 'internal_parts.dart';
 /// A path dependency takes the form of:
 /// dependencies:
 ///   dcli: ^2.3.1
-class PathDependency extends Section implements Dependency {
-  PathDependency._fromLine(this._line) {
-    _name = _line.key;
-    _version = sm.Version.parse(_line.value);
-    comments = Comments(this);
-  }
+class PathDependency implements Dependency {
+  PathDependency(this._name, {Version? version})
+      : _version = version ?? Version.empty();
   static const key = 'path';
 
-  late final Line _line;
-
-  late String _name;
-  late sm.VersionConstraint _version;
+  late final String _name;
+  late final Version _version;
 
   @override
   String get name => _name;
 
   @override
-  sm.VersionConstraint get versionConstraint =>
-      _version == sm.VersionConstraint.empty
-          ? sm.VersionConstraint.any
-          : _version;
+  Version get version => _version;
 
   @override
-  Line get line => _line;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line];
-
-  @override
-  late final Comments comments;
-
-  @override
-  void _attach(Pubspec pubspec, int lineNo) {
-    _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
-    pubspec.document.insert(_line, lineNo);
-  }
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  DependencyAttached _attach(Pubspec pubspec, int lineNo) =>
+      PathDependencyAttached._attach(pubspec, lineNo, this);
 }

@@ -1,61 +1,28 @@
 part of 'internal_parts.dart';
 
 /// Git style dependency.
-class GitDependency extends Section implements Dependency {
+class GitDependency implements Dependency {
   GitDependency(String name, {String? url, String? ref, String? path})
       : _name = name,
         details = GitDetails(url: url, ref: ref, path: path);
 
-  /// Load the git dependency details starting
-  /// from [line].
-  GitDependency._fromLine(Line line) : _line = line {
-    _name = _line.key;
-    details = GitDetails.fromLine(_line);
+  GitDependency._fromDetails(this._name, this.details);
 
-    if (Strings.isNotBlank(_line.value) && details.refLine != null) {
-      throw PubSpecException(_line,
-          '''The git dependency for '$_name has the url specified twice. ''');
-    }
-
-    comments = Comments(this);
-  }
   static const key = 'git';
 
-  late final Line _line;
-  late String _name;
-  late final GitDetails details;
+  final String _name;
 
   @override
-  String get name => _line.key;
+  String get name => _name;
+
+  GitDetails details;
 
   @override
-  Line get line => _line;
+  Version get version => Version.empty();
 
   @override
-  late final Comments comments;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line, ...details.lines];
-
-  @override
-  void _attach(Pubspec pubspec, int lineNo) {
-    _line = Line.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insert(_line, lineNo);
-    details._attach(pubspec, lineNo);
-  }
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  sm.VersionConstraint get versionConstraint => sm.VersionConstraint.any;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  DependencyAttached _attach(Pubspec pubspec, int lineNo) =>
+      GitDependencyAttached._attach(pubspec, lineNo, this);
 }
 
 /// Holds the details of a git dependency.
@@ -85,26 +52,26 @@ class GitDetails {
         if (pathLine != null) pathLine!
       ];
 
-  void _attach(Pubspec pubspec, int lineNo) {
-    if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
-      lineNo++;
-    }
-    if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
-      lineNo++;
-    }
-    if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
-      lineNo++;
-    }
-  }
+  // void _attach(Pubspec pubspec, int lineNo) {
+  //   if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
+  //     lineNo++;
+  //   }
+  //   if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
+  //     lineNo++;
+  //   }
+  //   if (_attachLine(pubspec, lineNo, key: 'url', value: url)) {
+  //     lineNo++;
+  //   }
+  // }
 
-  bool _attachLine(Pubspec pubspec, int lineNo,
-      {required String key, required String? value}) {
-    var attached = false;
-    if (value != null) {
-      final _line = Line.forInsertion(pubspec.document, '    $key: $value');
-      pubspec.document.insert(_line, lineNo);
-      attached = true;
-    }
-    return attached;
-  }
+  // bool _attachLine(Pubspec pubspec, int lineNo,
+  //     {required String key, required String? value}) {
+  //   var attached = false;
+  //   if (value != null) {
+  //     final _line = Line.forInsertion(pubspec.document, '    $key: $value');
+  //     pubspec.document.insert(_line, lineNo);
+  //     attached = true;
+  //   }
+  //   return attached;
+  // }
 }

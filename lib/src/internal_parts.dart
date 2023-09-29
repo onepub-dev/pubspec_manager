@@ -20,10 +20,17 @@ import 'document/simple_section.dart';
 
 part 'dependencies.dart';
 part 'dependency.dart';
+part 'dependency_attached.dart';
 part 'environment.dart';
+part 'environment_attached.dart';
 part 'git_dependency.dart';
+part 'git_dependency_attached.dart';
 part 'hosted_dependency.dart';
+part 'hosted_dependency_attached.dart';
 part 'path_dependency.dart';
+part 'path_dependency_attached.dart';
 part 'pub_hosted_dependency.dart';
+part 'pub_hosted_dependency_attached.dart';
 part 'pubspec.dart';
 part 'version.dart';
+part 'version_attached.dart';

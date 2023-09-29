@@ -1,3 +1,8 @@
+# 1.0.0-alpha.3
+Restructured the dependencies to provide a more fluid api that
+gets close to looking declarative.
+Split every dep into a dep and a dep attached so we didn't have to
+deal with nulls and the user had a cleaner view of the public apis.
 # 1.0.0-alpha.2
 - core functions are working - you can read/write a pubspec and make basic mods.
 - working on decluttering the public API.

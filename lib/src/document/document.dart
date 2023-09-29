@@ -105,18 +105,18 @@ class Document {
   // that is a child of the passed line which has the
   // given [key].  If no matching child is found then
   // null is returned.
-  Line? findKeyChild(Line line, String key) {
+  Line findKeyChild(Line line, String key) {
     for (final child in childrenOf(line)) {
       if (child.keyValue.key == key) {
         return child;
       }
     }
-    return null;
+    return Line.missing(this, LineType.key);
   }
 
   /// Finds the first root key with the name [key]
   /// returns null if [key] was not found.
-  Line? findTopLevelKey(String key) {
+  Line findTopLevelKey(String key) {
     for (final child in lines) {
       if (child.indent != 0) {
         continue;
@@ -129,7 +129,7 @@ class Document {
         return child;
       }
     }
-    return null;
+    return Line.missing(this, LineType.key);
   }
 
   /// Returns the list child for [parent].
@@ -171,6 +171,7 @@ class Document {
   Line append(LineDetached line) {
     final attached = line.attach(this)..lineNo = lines.length + 1;
     lines.add(attached);
+    _validate();
     return attached;
   }
 
@@ -186,6 +187,7 @@ class Document {
       final _line = lines.elementAt(i);
       _line.lineNo++;
     }
+    _validate();
   }
 
   /// Removes all of the given [lines] from the
@@ -196,12 +198,26 @@ class Document {
       lines.remove(line);
     }
     _reindex();
+    _validate();
   }
 
   void _reindex() {
     var lineNo = 1;
     for (final line in lines) {
       line.lineNo = lineNo++;
+    }
+  }
+
+  void _validate() {
+    var expectedLineNo = 1;
+    for (final line in lines) {
+      if (line.lineNo != expectedLineNo) {
+        throw PubSpecException(line, '''
+Oops you found a bug. Expected $expectedLineNo found: ${line.lineNo}
+with content:
+$line ''');
+      }
+      expectedLineNo++;
     }
   }
 }

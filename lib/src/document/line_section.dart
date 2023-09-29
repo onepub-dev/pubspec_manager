@@ -1,5 +1,7 @@
 import 'comments.dart';
+import 'document.dart';
 import 'line.dart';
+import 'line_type.dart';
 import 'section.dart';
 
 /// Used to hold a single line that cannot have
@@ -10,7 +12,8 @@ class LineSection extends Line implements Section {
         super.copy() {
     comments = Comments(this);
   }
-  LineSection.missing(super.document, this.key) : super.missing() {
+  LineSection.missing(Document document, this.key)
+      : super.missing(document, LineType.key) {
     comments = Comments.empty(this);
   }
 

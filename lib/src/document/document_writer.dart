@@ -53,7 +53,7 @@ class DocumentWriter {
   }
 
   /// Any lines which are independent of known keys will not have
-  /// been rendered so know we render them verbatum.
+  /// been rendered so now we render them verbatum.
   void renderMissing() {
     final missing = <int, Line>{};
     for (var lineNo = 1; lineNo <= document.lines.length; lineNo++) {

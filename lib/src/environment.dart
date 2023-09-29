@@ -2,48 +2,28 @@ part of 'internal_parts.dart';
 
 /// Holds the details of the environment section.
 /// i.e. flutter and sdk versions.
-class Environment extends Section {
-  Environment.missing(Document document)
-      : environment = Line.missing(document),
-        super.missing();
-
-  /// Load the environment [Section] starting from the
-  /// given [environment].
-  Environment.fromLine(this.environment) {
-    final sdkLine = environment.findRequiredKeyChild('sdk');
-    sdk = Version._fromLine(sdkLine, required: true);
-
-    final flutterLine = environment.findKeyChild('flutter');
-    if (flutterLine != null) {
-      flutter = Version._fromLine(flutterLine, required: true);
-    } else {
-      flutter = Version._missing(document);
-    }
-
-    comments = Comments(this);
+///
+class Environment {
+  /// Creates an environment key with an [sdk] version constraint and/or
+  /// a [flutter] version constraint.
+  /// ```dart
+  /// Environment(sdk: '>3.0.0 <=4.0.0')
+  /// ```
+  Environment({String? sdk, String? flutter}) {
+    _sdk = Version.parse(sdk);
+    _flutter = Version.parse(flutter);
   }
 
-  /// The starting line of the environment section.
-  Line environment;
-  late final Version sdk;
-  late final Version flutter;
+  // Used to indicate that an environment wasn't specified
+  Environment.missing();
 
-  @override
-  Line get line => environment;
+  Version get sdk => _sdk;
 
-  @override
-  late final Comments comments;
+  Version get flutter => _flutter;
 
-  @override
-  String toString() => environment.value;
+  EnvironmentAttached _attach(Pubspec pubspec, int lineNo) =>
+      EnvironmentAttached._attach(pubspec, lineNo, this);
 
-  @override
-  Document get document => line.document;
-
-  @override
-  List<Line> get lines => [environment, ...sdk.lines, ...flutter.lines];
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  late final Version _sdk;
+  late final Version _flutter;
 }

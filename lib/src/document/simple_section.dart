@@ -1,6 +1,7 @@
 import 'comments.dart';
 import 'document.dart';
 import 'line.dart';
+import 'line_type.dart';
 import 'section.dart';
 
 class SimpleSection extends Section {
@@ -16,7 +17,7 @@ class SimpleSection extends Section {
   }
 
   SimpleSection.missing(Document document, this._key)
-      : line = Line.missing(document),
+      : line = Line.missing(document, LineType.key),
         _children = <Line>[],
         super.missing() {
     comments = Comments.empty(this);

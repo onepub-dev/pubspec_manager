@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_returning_this
+
 import '../../eric.dart';
 import 'document.dart';
 import 'line.dart';
@@ -63,7 +65,7 @@ class Comments {
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
-  void append(String comment, {bool attach = true}) {
+  Comments append(String comment, {bool attach = true}) {
     final document = section.line.document;
     final line = Line.forInsertion(document, '#$comment');
     _lines.add(line);
@@ -71,6 +73,7 @@ class Comments {
     if (attach) {
       document.insert(line, section.line.lineNo);
     }
+    return this;
   }
 
   /// removes the comment a offset [index] in the list
