@@ -16,6 +16,9 @@ class Comments {
 
   Comments.empty(this.section) : _lines = <Line>[];
 
+  /// The section these comments are attached to.
+  Section section;
+
   /// Gets the set of comments that suffix the passed in [section]
   /// This will include any blank lines upto the end of the prior
   /// section.
@@ -46,13 +49,6 @@ class Comments {
     return suffix;
   }
 
-  // Comments.fromLine(this._pubspec, this.line) {
-  //   name = line.key;
-  // }
-
-  /// The section these comments are attached to.
-  Section section;
-
   /// All of the lines that make up this comment.
   late final List<Line> _lines;
 
@@ -65,14 +61,11 @@ class Comments {
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
-  Comments append(String comment, {bool attach = true}) {
+  Comments append(String comment) {
     final document = section.line.document;
     final line = Line.forInsertion(document, '#$comment');
     _lines.add(line);
-
-    if (attach) {
-      document.insert(line, section.line.lineNo);
-    }
+    document.insert(line, section.line.lineNo);
     return this;
   }
 
@@ -108,9 +101,3 @@ class DependencyNotFound extends PubSpecException {
 class OutOfBoundsException extends PubSpecException {
   OutOfBoundsException(super.line, super.message);
 }
-
-// List<String> commentsAsString(Section section) {
-//   final lines = commentsAsLine(section);
-
-//   return lines.map((line) => line.text).toList();
-// }

@@ -22,11 +22,11 @@ class Pubspec {
     this.description = MultiLine.fromLine(
         document.append(LineDetached('description: $description')));
 
-    _environment = environment._attach(this, document.lines.length);
+    _environment = environment._attach(this, document.lines.length + 1);
     homepage = LineSection.missing(document, 'homepage');
     repository = LineSection.missing(document, 'repository');
     issueTracker = LineSection.missing(document, 'issueTracker');
-    documentation = LineSection.missing(document, 'documentation');
+    documentation = DocumentationAttached.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
@@ -51,7 +51,8 @@ class Pubspec {
     homepage = document.getLineForKey('homepage');
     repository = document.getLineForKey('repository');
     issueTracker = document.getLineForKey('issueTracker');
-    documentation = document.getLineForKey('documentation');
+    documentation = DocumentationAttached._fromLine(
+        document.getLineForKey(DocumentationAttached._key));
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
@@ -120,7 +121,7 @@ class Pubspec {
   late final LineSection homepage;
   late final LineSection repository;
   late final LineSection issueTracker;
-  late final LineSection documentation;
+  late final DocumentationAttached documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
   late final Dependencies dependencyOverrides;
@@ -133,6 +134,8 @@ class Pubspec {
 
   EnvironmentAttached get environment => _environment;
 
+  /// If the pubspec hasn't been loaded from or
+  /// save to a file then './pubspec.yaml' is returned.
   String get loadedFrom =>
       join(_loadedFromDirectory ?? '.', _loadedFromFilename);
 

@@ -12,19 +12,6 @@ import 'multi_line.dart';
 import 'simple_section.dart';
 
 class Document {
-  /// Load the pubspec.yaml from [content]
-  /// into an ordered list of [Line]s.
-  factory Document.loadFromString(String content) {
-    var lines = content.split('\n');
-    if (lines.isNotEmpty && Strings.isBlank(lines.last)) {
-      // if the last char was \n then split returns an extra empty line
-      lines = lines.sublist(0, lines.length - 1);
-    }
-
-    final doc = Document.loadFromLines(lines)..pathTo = '<from String>';
-    return doc;
-  }
-
   /// Load the pubspec.yaml from the file located at [pathTo]
   /// into a an ordered list of [Line]s.
   factory Document.loadFrom(String pathTo) {
@@ -41,6 +28,19 @@ class Document {
       lines.add(Line(this, line, lineNo++));
     }
     pathTo = '<from lines>';
+  }
+
+  /// Load the pubspec.yaml from [content]
+  /// into an ordered list of [Line]s.
+  factory Document.loadFromString(String content) {
+    var lines = content.split('\n');
+    if (lines.isNotEmpty && Strings.isBlank(lines.last)) {
+      // if the last char was \n then split returns an extra empty line
+      lines = lines.sublist(0, lines.length - 1);
+    }
+
+    final doc = Document.loadFromLines(lines)..pathTo = '<from String>';
+    return doc;
   }
 
   /// The set of lines that hold the pubspec.yaml

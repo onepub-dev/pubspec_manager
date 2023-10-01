@@ -16,11 +16,13 @@ import 'document/line_section.dart';
 import 'document/line_type.dart';
 import 'document/multi_line.dart';
 import 'document/section.dart';
+import 'document/section_single_line.dart';
 import 'document/simple_section.dart';
 
 part 'dependencies.dart';
 part 'dependency.dart';
 part 'dependency_attached.dart';
+part 'documentation.dart';
 part 'environment.dart';
 part 'environment_attached.dart';
 part 'git_dependency.dart';

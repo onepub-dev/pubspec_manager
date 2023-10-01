@@ -5,6 +5,7 @@ repository: https://github.com/onepub-dev/eric
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies: 
+  # finite state machine
   fsm2: ^3.0.0
   meta: ^1.9.1
   path: ^1.8.3

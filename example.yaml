@@ -1,11 +1,13 @@
 name: new eric 
 version: 1.0.0-alpha.2 
+description: An example 
 environment:  
   sdk: >3.0.0 <=4.0.0 
   flutter: any 
-description: An example 
+#This is the doco 
+documentation: https://onepub.dev 
 dependencies:  
-#DCLI for do file system stuff 
+#DCLI to do file system stuff 
 #Hello world 
   dcli:  
     hosted: https://onepub.dev 
