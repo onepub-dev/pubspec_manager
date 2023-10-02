@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_returning_this
 
 import '../../eric.dart';
-import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';
 import 'section.dart';
@@ -63,7 +62,8 @@ class Comments {
   /// method adds the '#'.
   Comments append(String comment) {
     final document = section.line.document;
-    final line = Line.forInsertion(document, '#$comment');
+    final line = Line.forInsertion(
+        document, '${' ' * section.line.indent * 2}# $comment');
     _lines.add(line);
     document.insert(line, section.line.lineNo);
     return this;
@@ -91,13 +91,4 @@ class Comments {
     section.document.removeAll(_lines);
     _lines.removeRange(0, _lines.length);
   }
-}
-
-class DependencyNotFound extends PubSpecException {
-  DependencyNotFound(Document super.document, super.message)
-      : super.forDocument();
-}
-
-class OutOfBoundsException extends PubSpecException {
-  OutOfBoundsException(super.line, super.message);
 }

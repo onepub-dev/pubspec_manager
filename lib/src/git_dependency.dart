@@ -21,7 +21,8 @@ class GitDependency implements Dependency {
   Version get version => Version.empty();
 
   @override
-  DependencyAttached _attach(Pubspec pubspec, int lineNo) =>
+  DependencyAttached _attach(
+          Dependencies dependencies, Pubspec pubspec, int lineNo) =>
       GitDependencyAttached._attach(pubspec, lineNo, this);
 }
 

@@ -3,13 +3,13 @@ part of 'internal_parts.dart';
 /// Base class for each of the [Dependency] types.
 abstract class DependencyAttached extends Section {
   /// Loads a dependency located at [line].
-  factory DependencyAttached._loadFrom(Line line) {
+  factory DependencyAttached._loadFrom(Dependencies dependencies, Line line) {
     final children = line.childrenOf(type: LineType.key);
 
     if (children.isEmpty) {
       // pub hosted is the default and the only type
       // that has no children
-      return PubHostedDependencyAttached._fromLine(line);
+      return PubHostedDependencyAttached._fromLine(dependencies, line);
     }
 
     /// So not a pub hosted dep, we use the main key
@@ -29,11 +29,11 @@ abstract class DependencyAttached extends Section {
     /// We know the type of dependency so lets load the details.
     switch (depTypeLine.key) {
       case HostedDependency.key:
-        return HostedDependencyAttached._fromLine(line);
+        return HostedDependencyAttached._fromLine(dependencies, line);
       case PathDependency.key:
-        return PathDependencyAttached._fromLine(line);
+        return PathDependencyAttached._fromLine(dependencies, line);
       case GitDependency.key:
-        return GitDependencyAttached._fromLine(line);
+        return GitDependencyAttached._fromLine(dependencies, line);
     }
 
     throw PubSpecException(
@@ -53,4 +53,6 @@ abstract class DependencyAttached extends Section {
   /// For dependencies that do allow a version, if the version is empty
   /// the [sm.VersionConstraint.any] will be returned.
   Version get version;
+
+  DependencyAttached append(Dependency pubHostedDependency);
 }

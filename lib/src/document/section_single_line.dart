@@ -30,3 +30,7 @@ class SectionSingleLine extends SimpleSection {
   @override
   final String key;
 }
+
+abstract class SingleLine {
+  String get value;
+}

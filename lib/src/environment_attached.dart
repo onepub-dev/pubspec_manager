@@ -74,4 +74,6 @@ class EnvironmentAttached extends Section {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  static const String _key = 'environment';
 }

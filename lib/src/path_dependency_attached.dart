@@ -8,7 +8,7 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli: ^2.3.1
 class PathDependencyAttached extends Section implements DependencyAttached {
-  PathDependencyAttached._fromLine(this._line) {
+  PathDependencyAttached._fromLine(this._dependencies, this._line) {
     final name = _line.key;
     final version = Version(_line.value);
     dependency = PathDependency(name, version: version);
@@ -23,6 +23,7 @@ class PathDependencyAttached extends Section implements DependencyAttached {
     comments = Comments(this);
   }
 
+  late final Dependencies _dependencies;
   late PathDependency dependency;
 
   /// Line that contained the dependency declaration
@@ -52,4 +53,10 @@ class PathDependencyAttached extends Section implements DependencyAttached {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  @override
+  DependencyAttached append(Dependency dependency) {
+    _dependencies.append(dependency);
+    return this;
+  }
 }

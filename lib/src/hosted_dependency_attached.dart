@@ -8,7 +8,7 @@ part of 'internal_parts.dart';
 /// If no version is specified then 'any' is assumed.
 class HostedDependencyAttached extends Section implements DependencyAttached {
   /// build a hosted dependency from a line in the document
-  HostedDependencyAttached._fromLine(this._line) {
+  HostedDependencyAttached._fromLine(this._dependencies, this._line) {
     final name = _line.key;
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
     final hostedUrl = _hostedUrlLine.value;
@@ -44,6 +44,7 @@ class HostedDependencyAttached extends Section implements DependencyAttached {
     comments = Comments(this);
   }
 
+  late final Dependencies _dependencies;
   late HostedDependency _dependency;
   late Line _line;
   late Line _hostedUrlLine;
@@ -80,4 +81,11 @@ class HostedDependencyAttached extends Section implements DependencyAttached {
   /// The last line number used by this  section_versionLine
   @override
   int get lastLineNo => lines.last.lineNo;
+
+    @override
+  DependencyAttached append(Dependency dependency) {
+    _dependencies.append(dependency);
+    return this;
+  }
+
 }

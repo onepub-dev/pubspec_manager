@@ -4,7 +4,8 @@ part of 'internal_parts.dart';
 class GitDependencyAttached extends Section implements DependencyAttached {
   /// Load the git dependency details starting
   /// from [line].
-  GitDependencyAttached._fromLine(Line line) : _line = line {
+  GitDependencyAttached._fromLine(this._dependencies, Line line)
+      : _line = line {
     final name = _line.key;
     final details = GitDetails.fromLine(_line);
 
@@ -23,6 +24,8 @@ class GitDependencyAttached extends Section implements DependencyAttached {
     pubspec.document.insert(_line, lineNo);
     comments = Comments(this);
   }
+
+  late final Dependencies _dependencies;
 
   late final GitDependency dependency;
 
@@ -53,4 +56,10 @@ class GitDependencyAttached extends Section implements DependencyAttached {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  @override
+  DependencyAttached append(Dependency dependency) {
+    _dependencies.append(dependency);
+    return this;
+  }
 }

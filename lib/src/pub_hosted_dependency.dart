@@ -5,8 +5,12 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli: ^3.0.1
 class PubHostedDependency implements Dependency {
-  PubHostedDependency({required String name, required String version})
-      : _name = name {
+  PubHostedDependency({
+    required String name,
+    required String version,
+    List<String>? comments,
+  })  : _name = name,
+        _comments = comments ?? <String>[] {
     try {
       _version = Version(version);
     } on FormatException catch (e) {
@@ -14,8 +18,10 @@ class PubHostedDependency implements Dependency {
     }
   }
 
-  late String _name;
-  late Version _version;
+  late final List<String> _comments;
+
+  late final String _name;
+  late final Version _version;
 
   set name(String name) {
     _name = name;
@@ -28,6 +34,14 @@ class PubHostedDependency implements Dependency {
   Version get version => _version;
 
   @override
-  DependencyAttached _attach(Pubspec pubspec, int lineNo) =>
-      PubHostedDependencyAttached._attach(pubspec, lineNo, this);
+  DependencyAttached _attach(
+      Dependencies dependencies, Pubspec pubspec, int lineNo) {
+    final attached = PubHostedDependencyAttached._attach(
+        dependencies, pubspec, lineNo, this);
+    // ignore: prefer_foreach
+    for (final comment in _comments) {
+      attached.comments.append(comment);
+    }
+    return attached;
+  }
 }

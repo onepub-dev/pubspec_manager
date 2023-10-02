@@ -23,9 +23,9 @@ class Pubspec {
         document.append(LineDetached('description: $description')));
 
     _environment = environment._attach(this, document.lines.length + 1);
-    homepage = LineSection.missing(document, 'homepage');
-    repository = LineSection.missing(document, 'repository');
-    issueTracker = LineSection.missing(document, 'issueTracker');
+    homepage = HomepageAttached.missing(document);
+    repository = RepositoryAttached.missing(document);
+    issueTracker = IssueTrackerAttached.missing(document);
     documentation = DocumentationAttached.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
@@ -47,10 +47,13 @@ class Pubspec {
         VersionAttached._fromLine(document.getLineForRequiredKey('version'));
     description = document.getMultiLineForRequiredKey('description');
     _environment = EnvironmentAttached.fromLine(
-        document.getLineForRequiredKey('environment'));
-    homepage = document.getLineForKey('homepage');
-    repository = document.getLineForKey('repository');
-    issueTracker = document.getLineForKey('issueTracker');
+        document.getLineForRequiredKey(EnvironmentAttached._key));
+    homepage = HomepageAttached._fromLine(
+        document.getLineForKey(HomepageAttached._key));
+    repository = RepositoryAttached._fromLine(
+        document.getLineForKey(RepositoryAttached._key));
+    issueTracker = IssueTrackerAttached._fromLine(
+        document.getLineForKey(IssueTrackerAttached._key));
     documentation = DocumentationAttached._fromLine(
         document.getLineForKey(DocumentationAttached._key));
 
@@ -118,9 +121,9 @@ class Pubspec {
   late MultiLine description;
   late EnvironmentAttached _environment;
 
-  late final LineSection homepage;
-  late final LineSection repository;
-  late final LineSection issueTracker;
+  late final HomepageAttached homepage;
+  late final RepositoryAttached repository;
+  late final IssueTrackerAttached issueTracker;
   late final DocumentationAttached documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
@@ -157,7 +160,8 @@ class Pubspec {
       if (child.type != LineType.key) {
         continue;
       }
-      dependencies.appendAttached(DependencyAttached._loadFrom(child));
+      dependencies
+          .appendAttached(DependencyAttached._loadFrom(dependencies, child));
     }
     return dependencies;
   }

@@ -6,16 +6,17 @@ class Documentation implements SingleLine {
 
   String url;
 
-  DocumentationAttached attach(Pubspec pubspec, int lineNo) =>
-      DocumentationAttached._attach(pubspec, lineNo, this);
+  // DocumentationAttached attach(Pubspec pubspec, int lineNo) =>
+  //     DocumentationAttached.attach(pubspec, lineNo, this);
 
   @override
   String get value => url;
 }
 
 class DocumentationAttached extends SectionSingleLine {
-  DocumentationAttached._attach(Pubspec pubspec, int lineNo, this.documentation)
-      : super.attach(_key, pubspec, lineNo, documentation);
+  // DocumentationAttached._attach(Pubspec pubspec, int lineNo,
+  // this.documentation)
+  //     : super.attach(_key, pubspec, lineNo, documentation);
 
   DocumentationAttached._fromLine(Line line)
       : documentation = Documentation(line.value),
@@ -25,13 +26,11 @@ class DocumentationAttached extends SectionSingleLine {
       : documentation = Documentation.missing(),
         super.missing(_key, document);
 
-  DocumentationAttached url(String url) {
+  @override
+  // ignore: avoid_renaming_method_parameters
+  DocumentationAttached set(String url) {
     documentation.url = url;
-
-    if (missing) {
-      // we now need to attach ourself.
-      set(url);
-    }
+    super.set(url);
 
     // ignore: avoid_returning_this
     return this;
@@ -41,8 +40,4 @@ class DocumentationAttached extends SectionSingleLine {
   final Documentation documentation;
 
   static const String _key = 'documentation';
-}
-
-abstract class SingleLine {
-  String get value;
 }

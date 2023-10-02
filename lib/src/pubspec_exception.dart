@@ -49,3 +49,14 @@ class NotFoundException extends PubSpecException {
 class VersionException extends PubSpecException {
   VersionException(super.message) : super.global();
 }
+
+/// Thrown when you try to access a dependency by name
+/// and that dependency doesn't exist.
+class DependencyNotFound extends PubSpecException {
+  DependencyNotFound(Document super.document, super.message)
+      : super.forDocument();
+}
+
+class OutOfBoundsException extends PubSpecException {
+  OutOfBoundsException(super.line, super.message);
+}

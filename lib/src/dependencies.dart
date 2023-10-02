@@ -83,7 +83,7 @@ class Dependencies extends Section {
     } else {
       insertAt = _dependencies.last.lastLineNo + 1;
     }
-    final attached = dependency._attach(_pubspec, insertAt);
+    final attached = dependency._attach(this, _pubspec, insertAt);
 
     _dependencies.add(attached);
 
@@ -123,11 +123,4 @@ class Dependencies extends Section {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
-}
-
-/// Thrown when you try to access a dependency by name
-/// and that dependency doesn't exist.
-class DependencyNotFound extends PubSpecException {
-  DependencyNotFound(Document super.document, super.message)
-      : super.forDocument();
 }

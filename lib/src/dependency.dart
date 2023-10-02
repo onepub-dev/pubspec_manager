@@ -13,5 +13,6 @@ abstract class Dependency {
   /// the [sm.VersionConstraint.any] will be returned.
   Version get version;
 
-  DependencyAttached _attach(Pubspec pubspec, int lineNo);
+  DependencyAttached _attach(
+      Dependencies dependencies, Pubspec pubspec, int lineNo);
 }

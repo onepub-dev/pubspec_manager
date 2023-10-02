@@ -120,7 +120,7 @@ class Line implements Renderer {
 
   /// calculate how far the line is idented.
   /// zero based.
-  /// An indentation of 2 is returned as indent level 1.
+  /// An indentation of 2 characters is returned as indent level 1.
   int _indent(String line) {
     var i = 0;
     for (; i < line.length; i++) {

@@ -22,6 +22,7 @@ class PathDependency implements Dependency {
   Version get version => _version;
 
   @override
-  DependencyAttached _attach(Pubspec pubspec, int lineNo) =>
+  DependencyAttached _attach(
+          Dependencies dependencies, Pubspec pubspec, int lineNo) =>
       PathDependencyAttached._attach(pubspec, lineNo, this);
 }
