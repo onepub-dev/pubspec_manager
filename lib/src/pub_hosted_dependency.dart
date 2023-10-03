@@ -4,14 +4,13 @@ part of 'internal_parts.dart';
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
+///
 class PubHostedDependency extends Section implements Dependency {
-  PubHostedDependency({required String name, required String version})
+  /// If you don't pass in a [version] then the version will
+  /// be left empty when you save
+  PubHostedDependency({required String name, String version = 'any'})
       : _name = name {
-    try {
-      _versionConstraint = sm.Version.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException(e.message);
-    }
+    _versionConstraint = Version.parse(version);
     comments = Comments.empty(this);
   }
 
@@ -65,4 +64,10 @@ class PubHostedDependency extends Section implements Dependency {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set version(String version) {
+    _versionConstraint.toString();
+  }
 }

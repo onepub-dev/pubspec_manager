@@ -3,21 +3,23 @@ part of 'internal_parts.dart';
 /// Used to hold a list of [Dependency]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Dependencies extends Section with IterableMixin<Dependency> {
+class Executables extends Section with IterableMixin<Executable> {
   /// Create a new dependencies section
-  Dependencies._(this._pubspec, this.name) {
+  Executables._(this._pubspec, this.name) {
     missing = false;
     _pubspec.document.append(LineDetached('$name:'));
     comments = Comments.empty(this);
   }
 
-  Dependencies._missing(this._pubspec, this.name) : super.missing();
+  Executables._missing(this._pubspec) : super.missing();
 
-  Dependencies._fromLine(this._pubspec, this.line) {
+  Executables._fromLine(this._pubspec, this.line) {
     missing = false;
     name = line.key;
     comments = Comments(this);
   }
+
+  static const String key = 'executables';
 
   @override
   late final Line line;
@@ -29,14 +31,14 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// reference to the pubspec that has these dependencies.
   final Pubspec _pubspec;
 
-  final List<Dependency> _dependencies = <Dependency>[];
+  final List<Executable> _executables = <Executable>[];
 
   /// List of the dependencies
-  List<Dependency> get list => List.unmodifiable(_dependencies);
+  List<Executable> get list => List.unmodifiable(_executables);
 
   /// the number of dependencies in this section
   @override
-  int get length => _dependencies.length;
+  int get length => _executables.length;
 
   @override
   List<Line> get lines {
@@ -44,27 +46,27 @@ class Dependencies extends Section with IterableMixin<Dependency> {
     if (missing) {
       return lines;
     }
-    for (final dependency in _dependencies) {
-      lines.addAll(dependency.lines);
+    for (final executable in _executables) {
+      lines.addAll(executable.lines);
     }
     return lines;
   }
 
-  /// returns the [Dependency] with the given [name]
+  /// returns the [Executable] with the given [name]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
-  Dependency? operator [](String name) {
-    for (final dependency in _dependencies) {
-      if (dependency.name == name) {
-        return dependency;
+  Executable? operator [](String name) {
+    for (final executable in _executables) {
+      if (executable.name == name) {
+        return executable;
       }
     }
     return null;
   }
 
-  /// Add [dependency] to the PubSpec
+  /// Add [executable] to the PubSpec
   /// after the last dependency.
-  Dependencies append(Dependency dependency, {bool attach = true}) {
+  Executables append(Executable executable, {bool attach = true}) {
     var insertAt = 0;
     if (missing) {
       missing = false;
@@ -73,35 +75,35 @@ class Dependencies extends Section with IterableMixin<Dependency> {
         line = document.append(LineDetached(name));
       }
     } else {
-      if (_dependencies.isEmpty) {
+      if (_executables.isEmpty) {
         insertAt = line.lineNo + 1;
       } else {
-        insertAt = _dependencies.last.lastLineNo + 1;
+        insertAt = _executables.last.lastLineNo + 1;
       }
     }
 
-    _dependencies.add(dependency);
+    _executables.add(executable);
 
     if (attach) {
-      dependency._attach(_pubspec, insertAt);
+      executable._attach(_pubspec, insertAt);
     }
     // ignore: avoid_returning_this
     return this;
   }
 
-  /// Remove a dependency from the section
-  /// Throws a [DependencyNotFound] exception if the
-  /// dependency doesn't exist.
+  /// Remove an executable from the list of executables
+  /// Throws a [ExecutableNotFound] exception if the
+  /// executable doesn't exist.
   void remove(String name) {
-    final dependency = this[name];
+    final executable = this[name];
 
-    if (dependency == null) {
-      throw DependencyNotFound(
+    if (executable == null) {
+      throw ExecutableNotFound(
           _pubspec.document, '$name not found in the ${this.name} section');
     }
 
-    _dependencies.remove(dependency);
-    final lines = dependency.lines;
+    _executables.remove(executable);
+    final lines = executable.lines;
     _pubspec.document.removeAll(lines);
   }
 
@@ -120,22 +122,22 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   int get lastLineNo => lines.last.lineNo;
 
   @override
-  Iterator<Dependency> get iterator => DependencyIterator(_dependencies);
+  Iterator<Executable> get iterator => ExecutableIterator(_executables);
 }
 
-class DependencyIterator implements Iterator<Dependency> {
-  DependencyIterator(this._dependencies);
+class ExecutableIterator implements Iterator<Executable> {
+  ExecutableIterator(this._executables);
 
   int index = -1;
 
-  final List<Dependency> _dependencies;
+  final List<Executable> _executables;
 
   @override
-  Dependency get current => _dependencies.elementAt(0);
+  Executable get current => _executables.elementAt(0);
 
   @override
   bool moveNext() {
-    if (index >= _dependencies.length) {
+    if (index >= _executables.length) {
       return false;
     }
     index++;

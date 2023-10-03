@@ -1,5 +1,6 @@
 name: eric
-version: 1.0.0-alpha.2
+version: 1.0.0-alpha.3
+publish_to: https://onepub.dev/api/jbbxpsdavu/
 description: Read, write and modify a pubspec.yaml including retention and modifications of comments and out of spec content.
 repository: https://github.com/onepub-dev/eric
 environment: 

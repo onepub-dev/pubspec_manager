@@ -11,14 +11,10 @@ class HostedDependency extends Section implements Dependency {
       {required String name, required String url, String version = 'any'}) {
     _name = name;
     hostedUrl = url;
-    try {
-      _version = sm.VersionConstraint.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException(e.message);
-    }
-
+    _versionConstraint = Version.parse(version);
     comments = Comments.empty(this);
   }
+
   HostedDependency._fromLine(this._line) {
     _name = _line.key;
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -26,25 +22,37 @@ class HostedDependency extends Section implements Dependency {
     final v = _line.findKeyChild('version');
     if (v != null) {
       _versionLine = Version._fromLine(v);
-      _version = _versionLine!.constraint;
+      _versionConstraint = _versionLine!.constraint;
     }
 
     comments = Comments(this);
   }
+
   static const key = 'hosted';
   late final String _name;
   late final String hostedUrl;
-  late final sm.VersionConstraint _version;
+  late final sm.VersionConstraint _versionConstraint;
 
   late Line _line;
   late Line _hostedUrlLine;
   late Version? _versionLine;
 
   @override
+  set version(String version) {
+    _versionConstraint = Version.parse(version);
+
+    if (_versionLine != null) {
+      _versionLine!._version = _versionConstraint;
+    }
+  }
+
+  String get version => _versionConstraint.toString();
+
+  @override
   sm.VersionConstraint get versionConstraint =>
-      _version == sm.VersionConstraint.empty
+      _versionConstraint == sm.VersionConstraint.empty
           ? sm.VersionConstraint.any
-          : _version;
+          : _versionConstraint;
 
   @override
   String get name => _name;
@@ -76,8 +84,8 @@ class HostedDependency extends Section implements Dependency {
     _hostedUrlLine =
         Line.forInsertion(pubspec.document, '    hosted: $hostedUrl');
     pubspec.document.insert(_hostedUrlLine, lineNo++);
-    _versionLine = Version._fromLine(
-        Line.forInsertion(pubspec.document, '    version: $_version'));
+    _versionLine = Version._fromLine(Line.forInsertion(
+        pubspec.document, '    version: $_versionConstraint'));
     pubspec.document.insert(_versionLine!.line, lineNo++);
   }
 }

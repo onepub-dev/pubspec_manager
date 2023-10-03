@@ -22,7 +22,7 @@ void main() {
     final pubspec = Pubspec.fromString(content);
     final devDependencies = pubspec.devDependencies
       ..append(PubHostedDependency(name: 'test', version: version));
-    expect(devDependencies.contains('test'), isTrue);
+    expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
     expect(testDep!.line.lineNo, equals(13));
@@ -30,7 +30,7 @@ void main() {
 
     final dependencies = pubspec.dependencies
       ..append(PubHostedDependency(name: 'dcli_core', version: version));
-    expect(dependencies.contains('dcli_core'), isTrue);
+    expect(dependencies.exists('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
     expect(dcliCore!.line.lineNo, equals(10));

@@ -23,18 +23,6 @@ class Version extends LineSection {
   Version._missing(Document document)
       : line = Line.missing(document),
         super.missing(document, 'version');
-  // factory Version(PubSpec pubspec, String version) {
-  //   final line = Line.forInsertion(pubspec.document, 'version: $version');
-  //   return Version.fromLine(line);
-  // }
-
-  static sm.VersionConstraint parse(String version) {
-    try {
-      return sm.VersionConstraint.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException(e.message);
-    }
-  }
 
   @override
   late Line line;
@@ -112,5 +100,13 @@ class Version extends LineSection {
 
   static void validate(String version) {
     parse(version);
+  }
+
+  static sm.VersionConstraint parse(String version) {
+    try {
+      return sm.VersionConstraint.parse(version);
+    } on FormatException catch (e) {
+      throw VersionException(e.message);
+    }
   }
 }

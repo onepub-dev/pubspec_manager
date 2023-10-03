@@ -25,7 +25,7 @@ class Pubspec {
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
     platforms = SimpleSection.missing(document, 'platforms');
-    executables = SimpleSection.missing(document, 'executables');
+    executables = Executables._missing(this);
     funding = SimpleSection.missing(document, 'funding');
     falseSecrets = SimpleSection.missing(document, 'false_secrets');
     screenshots = SimpleSection.missing(document, 'screenshots');
@@ -51,7 +51,7 @@ class Pubspec {
     dependencyOverrides = _initDependencies('dependency_overrides');
     platforms = document.findSectionForKey('platforms');
 
-    executables = document.findSectionForKey('executables');
+    executables = _initExecutables();
     funding = document.findSectionForKey('funding');
     falseSecrets = document.findSectionForKey('falseSecrets');
     screenshots = document.findSectionForKey('screenshots');
@@ -89,6 +89,9 @@ class Pubspec {
     return pubspec;
   }
 
+  factory Pubspec.loadFile(String pathTo) =>
+      Pubspec.fromFile(directory: dirname(pathTo), filename: basename(pathTo));
+
   // the path the pubspec.yaml was loaded from (including the filename)
   // If the pubpsec wasn't loaded from a file then this will be null.
   String? _loadedFromDirectory;
@@ -112,7 +115,7 @@ class Pubspec {
   late final Dependencies devDependencies;
   late final Dependencies dependencyOverrides;
   late final SimpleSection platforms;
-  late final SimpleSection executables;
+  late final Executables executables;
   late final SimpleSection funding;
   late final SimpleSection falseSecrets;
   late final SimpleSection screenshots;
@@ -142,6 +145,23 @@ class Pubspec {
       dependencies.append(Dependency._loadFrom(child), attach: false);
     }
     return dependencies;
+  }
+
+  Executables _initExecutables() {
+    final line = document.findTopLevelKey(Executables.key);
+    if (line == null) {
+      return Executables._missing(this);
+    }
+
+    final executables = Executables._fromLine(this, line);
+
+    for (final child in line.childrenOf()) {
+      if (child.type != LineType.key) {
+        continue;
+      }
+      executables.append(Executable._fromLine(child), attach: false);
+    }
+    return executables;
   }
 
   /// Save the pubspec.yaml to [directory] with the given [filename].
@@ -185,6 +205,16 @@ class Pubspec {
       ..render(topics)
       ..renderMissing()
       ..write(join(directory, filename));
+  }
+
+  /// Allows you to save the pubpsec to the file
+  /// located at [pathTo].
+  /// [pathTo] must contains both the directory and file name.
+  /// If only the filename is present then the pubspec is saved
+  /// to the current working directory.
+  /// @see you should normally use [save].
+  void saveTo(String pathTo) {
+    save(directory: dirname(pathTo), filename: basename(pathTo));
   }
 
   @override

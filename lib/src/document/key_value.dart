@@ -1,4 +1,4 @@
-import '../pubspec_exception.dart';
+import '../internal_parts.dart';
 import 'line.dart';
 
 class KeyValue {

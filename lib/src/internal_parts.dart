@@ -1,12 +1,12 @@
 library internal;
 
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:strings/strings.dart';
 
-import '../eric.dart';
 import 'document/comments.dart';
 import 'document/document.dart';
 import 'document/document_writer.dart';
@@ -21,6 +21,9 @@ import 'document/simple_section.dart';
 part 'dependencies.dart';
 part 'dependency.dart';
 part 'environment.dart';
+part 'exceptions.dart';
+part 'executable.dart';
+part 'executables.dart';
 part 'git_dependency.dart';
 part 'hosted_dependency.dart';
 part 'path_dependency.dart';

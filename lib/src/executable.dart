@@ -8,14 +8,14 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class PathDependency extends Section implements Dependency {
-  PathDependency({required String name, required String path})
+class Executable extends Section {
+  Executable({required String name, String? scriptPath})
       : _name = name,
-        _path = path;
+        _scriptPath = scriptPath;
 
-  PathDependency._fromLine(this._line) {
+  Executable._fromLine(this._line) {
     _name = _line.key;
-    _path = (_pathLine = _line.findRequiredKeyChild('path')).value;
+    _scriptPath = _line.value;
     comments = Comments(this);
   }
   static const key = 'path';
@@ -23,10 +23,27 @@ class PathDependency extends Section implements Dependency {
   late final Line _line;
 
   late final String _name;
-  late final String _path;
+  late final String? _scriptPath;
 
-  @override
   String get name => _name;
+
+  set name(String name) {
+    _name = name;
+
+    if (!_line.missing) {
+      _line.key = _name;
+    }
+  }
+
+  /// returns the project relative path to the script.
+  ///
+  /// e.g.
+  /// executables:
+  ///   dcli_install: dcli_install
+  ///
+  /// scriptPath => bin/dcli_install.dart
+  ///
+  String get scriptPath => join('bin', '${_scriptPath ?? name}.dart');
 
   @override
   Line get line => _line;
@@ -42,28 +59,13 @@ class PathDependency extends Section implements Dependency {
   @override
   late final Comments comments;
 
-  @override
   void _attach(Pubspec pubspec, int lineNo) {
-    _line = Line.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insert(_line, lineNo);
-
-    _line = Line.forInsertion(pubspec.document, '  path: $_path');
+    final script = _scriptPath ?? '';
+    _line = Line.forInsertion(pubspec.document, '  $_name: $script');
     pubspec.document.insert(_line, lineNo);
   }
-
-  @override
-  int get lineNo => _line.lineNo;
 
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
-
-  @override
-  sm.VersionConstraint get versionConstraint => sm.VersionConstraint.any;
-
-  @override
-  // ignore: avoid_setters_without_getters
-  set version(String version) {
-    // ignored as a git dep doesn't use a version.
-  }
 }

@@ -1,7 +1,4 @@
-import 'package:strings/strings.dart';
-
-import 'document/document.dart';
-import 'document/line.dart';
+part of 'internal_parts.dart';
 
 /// All exceptions throw from this package are based
 /// on this exception.
@@ -48,4 +45,18 @@ class NotFoundException extends PubSpecException {
 /// Thrown when an invalid version is passed.
 class VersionException extends PubSpecException {
   VersionException(super.message) : super.global();
+}
+
+/// Thrown when you try to access a dependency by name
+/// and that dependency doesn't exist.
+class DependencyNotFound extends PubSpecException {
+  DependencyNotFound(Document super.document, super.message)
+      : super.forDocument();
+}
+
+/// Thrown when you try to access an executable by name
+/// and that executable doesn't exist.
+class ExecutableNotFound extends PubSpecException {
+  ExecutableNotFound(Document super.document, super.message)
+      : super.forDocument();
 }

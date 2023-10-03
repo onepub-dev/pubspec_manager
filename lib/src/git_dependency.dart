@@ -2,7 +2,7 @@ part of 'internal_parts.dart';
 
 /// Git style dependency.
 class GitDependency extends Section implements Dependency {
-  GitDependency(String name, {String? url, String? ref, String? path})
+  GitDependency({required String name, String? url, String? ref, String? path})
       : _name = name,
         details = GitDetails(url: url, ref: ref, path: path);
 
@@ -56,6 +56,12 @@ class GitDependency extends Section implements Dependency {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set version(String version) {
+    // ignored as a git dep doesn't use a version.
+  }
 }
 
 /// Holds the details of a git dependency.
