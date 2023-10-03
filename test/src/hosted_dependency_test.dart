@@ -11,7 +11,7 @@ environment:
   sdk: 1.2.3
 dependencies:
   dcli:
-    hosted: https://onepub.dev
+    url: https://onepub.dev
     version: 1.1.1
 ''';
     final pubspec = Pubspec.fromString(content);

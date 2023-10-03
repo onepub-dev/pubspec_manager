@@ -164,14 +164,14 @@ class Pubspec {
         continue;
       }
       dependencies
-          .appendAttached(DependencyAttached._loadFrom(dependencies, child));
+          ._appendAttached(DependencyAttached._loadFrom(dependencies, child));
     }
     return dependencies;
   }
 
   Executables _initExecutables() {
     final line = document.findTopLevelKey(Executables.key);
-    if (line == null) {
+    if (line.missing) {
       return Executables._missing(this);
     }
 

@@ -4,13 +4,6 @@ part of 'internal_parts.dart';
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Dependencies extends Section with IterableMixin<DependencyAttached> {
-  /// Create a new dependencies section
-  Dependencies._(this._pubspec, this.name) {
-    missing = false;
-    _pubspec.document.append(LineDetached('$name:'));
-    comments = CommentsAttached.empty(this);
-  }
-
   Dependencies._missing(this._pubspec, this.name)
       : document = _pubspec.document,
         super.missing();

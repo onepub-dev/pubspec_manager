@@ -1,4 +1,4 @@
-import 'comments.dart';
+import '../internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';
@@ -7,20 +7,20 @@ import 'section.dart';
 class SimpleSection extends Section {
   SimpleSection(this.line, this._children) {
     _key = line.key;
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
 
   SimpleSection.fromLine(this.line) {
     _key = line.key;
     _children = line.childrenOf(descendants: true);
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
 
   SimpleSection.missing(Document document, this._key)
       : line = Line.missing(document, LineType.key),
         _children = <Line>[],
         super.missing() {
-    comments = Comments.empty(this);
+    comments = CommentsAttached.empty(this);
   }
 
   late final String _key;
@@ -38,7 +38,7 @@ class SimpleSection extends Section {
   List<Line> get lines => [...comments.lines, line, ..._children];
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   /// The last line number used by this  section
   @override

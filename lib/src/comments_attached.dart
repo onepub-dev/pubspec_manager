@@ -1,19 +1,15 @@
 // ignore_for_file: avoid_returning_this
 
-import '../../eric.dart';
-import 'line.dart';
-import 'line_type.dart';
-import 'section.dart';
+part of 'internal_parts.dart';
 
 /// Used to hold the comments that prefix a section.
 /// A comment section is all comments/blank lines that are above
 /// a section upto where the proceeding section ends.
-class Comments {
-  Comments(this.section) {
+class CommentsAttached {
+  CommentsAttached(this.section) {
     _lines = commentsAsLine();
   }
-
-  Comments.empty(this.section) : _lines = <Line>[];
+  CommentsAttached.empty(this.section) : _lines = <Line>[];
 
   /// The section these comments are attached to.
   Section section;
@@ -60,7 +56,7 @@ class Comments {
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
-  Comments append(String comment) {
+  CommentsAttached append(String comment) {
     final document = section.line.document;
     final line = Line.forInsertion(
         document, '${' ' * section.line.indent * 2}# $comment');

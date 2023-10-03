@@ -8,6 +8,7 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
+@immutable
 class PathDependency implements Dependency {
   PathDependency(
       {required String name,

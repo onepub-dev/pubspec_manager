@@ -52,7 +52,7 @@ class Version {
   @override
   String toString() {
     if (isEmpty || missing) {
-      return 'any';
+      return '';
     } else {
       return _version.toString();
     }

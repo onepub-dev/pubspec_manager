@@ -10,17 +10,20 @@ part of 'internal_parts.dart';
 class PathDependencyAttached extends Section implements DependencyAttached {
   PathDependencyAttached._fromLine(this._dependencies, this._line) {
     final name = _line.key;
-    final version = Version(_line.value);
-    dependency = PathDependency(name, version: version);
-    comments = Comments(this);
+    final path = line.findRequiredKeyChild('path');
+    dependency = PathDependency(name: name, path: path.value);
+    comments = CommentsAttached(this);
   }
 
   PathDependencyAttached._attach(
       Pubspec pubspec, int lineNo, PathDependency dependency) {
-    _line = Line.forInsertion(
-        pubspec.document, '  ${dependency._name}: ${dependency._version}');
+    _line = Line.forInsertion(pubspec.document, '  ${dependency._name}:');
     pubspec.document.insert(_line, lineNo);
-    comments = Comments(this);
+
+    _line = Line.forInsertion(pubspec.document, '  path: ${dependency._path}');
+    pubspec.document.insert(_line, lineNo);
+
+    comments = CommentsAttached(this);
   }
 
   late final Dependencies _dependencies;
@@ -32,8 +35,9 @@ class PathDependencyAttached extends Section implements DependencyAttached {
   @override
   String get name => dependency.name;
 
+  /// path dependencies don't have a version.
   @override
-  Version get version => dependency.version;
+  Version get version => Version.missing();
 
   @override
   Line get line => _line;
@@ -45,7 +49,7 @@ class PathDependencyAttached extends Section implements DependencyAttached {
   List<Line> get lines => [...comments.lines, _line];
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   @override
   int get lineNo => _line.lineNo;

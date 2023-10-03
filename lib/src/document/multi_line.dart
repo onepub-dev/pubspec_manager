@@ -1,4 +1,4 @@
-import 'comments.dart';
+import '../internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';
@@ -23,12 +23,12 @@ class MultiLine implements Section {
       : missing = false,
         key = line.key,
         document = line.document {
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
   MultiLine.missing(this.document, this.key)
       : missing = true,
         line = Line.missing(document, LineType.key) {
-    comments = Comments.empty(this);
+    comments = CommentsAttached.empty(this);
   }
 
   @override
@@ -46,7 +46,7 @@ class MultiLine implements Section {
   List<Line> get lines => [...comments.lines, line];
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   /// The last line number used by this  section
   @override

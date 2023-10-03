@@ -5,6 +5,7 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli: ^3.0.1
 ///
+@immutable
 class PubHostedDependency implements Dependency {
   /// If you don't pass in a [version] then the version will
   /// be left empty when you save
@@ -25,10 +26,6 @@ class PubHostedDependency implements Dependency {
 
   late final String _name;
   late final Version _version;
-
-  set name(String name) {
-    _name = name;
-  }
 
   @override
   String get name => _name;

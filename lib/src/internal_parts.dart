@@ -3,6 +3,7 @@ library internal;
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:strings/strings.dart';

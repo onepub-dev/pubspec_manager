@@ -1,4 +1,4 @@
-import 'comments.dart';
+import '../internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 
@@ -27,7 +27,7 @@ abstract class Section {
   List<Line> get lines;
 
   /// List of comments associated with this section
-  Comments get comments;
+  CommentsAttached get comments;
 
   /// The [Document] that contains this section.
   Document get document;

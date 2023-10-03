@@ -9,23 +9,16 @@ class Environment {
   /// ```dart
   /// Environment(sdk: '>3.0.0 <=4.0.0')
   /// ```
-  Environment({String? sdk, String? flutter}) {
-    _sdk = Version.parse(sdk);
-    _flutter = Version.parse(flutter);
-  }
+  Environment({String? sdk, String? flutter})
+      : _sdk = sdk,
+        _flutter = flutter;
 
   // Used to indicate that an environment wasn't specified
   Environment.missing();
 
-  Version get sdk => _sdk;
-
-  Version get flutter => _flutter;
-
   EnvironmentAttached _attach(Pubspec pubspec, int lineNo) =>
       EnvironmentAttached._attach(pubspec, lineNo, this);
 
-  late final Version _sdk;
-  late final Version _flutter;
-
-  
+  late final String? _sdk;
+  late final String? _flutter;
 }

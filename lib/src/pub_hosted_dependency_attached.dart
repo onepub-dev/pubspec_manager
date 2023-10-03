@@ -5,22 +5,22 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli: ^3.0.1
 class PubHostedDependencyAttached extends Section
-    implements DependencyAttached {
+    implements DependencyAttached, DependencyVersioned {
   PubHostedDependencyAttached._fromLine(this._dependencies, Line line)
       : _line = line {
     // the line is of the form '<name>: <version>'
     final name = line.key;
     dependency = PubHostedDependency(name: name, version: line.value);
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
 
   @override
   PubHostedDependencyAttached._attach(
       this._dependencies, Pubspec pubspec, int lineNo, this.dependency) {
     _line = Line.forInsertion(pubspec.document,
-        '  ${dependency._name}: ${dependency.version.constraint}');
+        '  ${dependency._name}: ${dependency._version.constraint}');
     pubspec.document.insert(line, lineNo);
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
 
   /// The line this dependency is attached to.
@@ -33,7 +33,7 @@ class PubHostedDependencyAttached extends Section
   String get name => dependency.name;
 
   @override
-  Version get version => dependency.version;
+  String get version => dependency._version.toString();
 
   @override
   Line get line => _line;
@@ -48,7 +48,7 @@ class PubHostedDependencyAttached extends Section
   int get lineNo => _line.lineNo;
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   /// The last line number used by this  section
   @override
@@ -58,5 +58,10 @@ class PubHostedDependencyAttached extends Section
   DependencyAttached append(Dependency dependency) {
     _dependencies.append(dependency);
     return this;
+  }
+  
+  @override
+  set version(String version) {
+    // TODO: implement version
   }
 }

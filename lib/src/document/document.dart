@@ -115,7 +115,7 @@ class Document {
   }
 
   /// Finds the first root key with the name [key]
-  /// returns null if [key] was not found.
+  /// returns Line.missing if [key] was not found.
   Line findTopLevelKey(String key) {
     for (final child in lines) {
       if (child.indent != 0) {

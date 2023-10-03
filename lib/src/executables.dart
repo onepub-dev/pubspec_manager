@@ -4,19 +4,12 @@ part of 'internal_parts.dart';
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Executables extends Section with IterableMixin<Executable> {
-  /// Create a new dependencies section
-  Executables._(this._pubspec, this.name) {
-    missing = false;
-    _pubspec.document.append(LineDetached('$name:'));
-    comments = Comments.empty(this);
-  }
-
   Executables._missing(this._pubspec) : super.missing();
 
   Executables._fromLine(this._pubspec, this.line) {
     missing = false;
     name = line.key;
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
 
   static const String key = 'executables';
@@ -112,7 +105,7 @@ class Executables extends Section with IterableMixin<Executable> {
   bool exists(String name) => this[name] != null;
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   @override
   Document get document => line.document;

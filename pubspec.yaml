@@ -1,11 +1,10 @@
 name: eric
-version: 1.0.0-alpha.3
+version: 1.0.0-alpha.4
 description: Read, write and modify a pubspec.yaml including retention and modifications of comments and out of spec content.
 repository: https://github.com/onepub-dev/eric
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies: 
-  # finite state machine
   fsm2: ^3.0.0
   meta: ^1.9.1
   path: ^1.8.3

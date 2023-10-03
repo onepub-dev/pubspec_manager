@@ -1,8 +1,9 @@
 part of 'internal_parts.dart';
 
 /// Git style dependency.
+@immutable
 class GitDependency implements Dependency {
-  GitDependency(
+  const GitDependency(
       {required this.name,
       this.url,
       this.ref,
@@ -17,20 +18,10 @@ class GitDependency implements Dependency {
   final String? ref;
   final String? path;
 
-  /// Git dependencies don't have verions.
-  @override
-  String get version => '';
-
-  late final Comments comments;
+  final Comments comments;
 
   @override
   GitDependencyAttached _attach(
           Dependencies dpendencies, Pubspec pubspec, int lineNo) =>
       GitDependencyAttached._attach(pubspec, lineNo, this);
-
-  @override
-  // ignore: avoid_setters_without_getters
-  set version(String version) {
-    // ignored as a git dep doesn't use a version.
-  }
 }

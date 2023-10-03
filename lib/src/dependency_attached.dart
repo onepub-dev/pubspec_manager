@@ -46,13 +46,12 @@ abstract class DependencyAttached extends Section {
   /// The line the dependeny starts on - ignoring leading comments
   int get lineNo;
 
-  /// Returns the version constraint for the dependencies
-  /// For dependencies that don't have a version constraint such as
-  ///  [GitDependency] or [PathDependency] then [sm.VersionConstraint.any]
-  ///  will be returned.
-  /// For dependencies that do allow a version, if the version is empty
-  /// the [sm.VersionConstraint.any] will be returned.
-  Version get version;
-
   DependencyAttached append(Dependency pubHostedDependency);
+}
+
+/// Some dependency define a package version number
+/// Dependencies that do so must implent this interface.
+abstract class DependencyVersioned {
+  set version(String version);
+  String get version;
 }

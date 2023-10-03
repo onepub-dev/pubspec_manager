@@ -16,7 +16,7 @@ class Executable extends Section {
   Executable._fromLine(this._line) {
     _name = _line.key;
     _scriptPath = _line.value;
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
   static const key = 'path';
 
@@ -57,7 +57,7 @@ class Executable extends Section {
   List<Line> get lines => [...comments.lines, _line, _pathLine];
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   void _attach(Pubspec pubspec, int lineNo) {
     final script = _scriptPath ?? '';

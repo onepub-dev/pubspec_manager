@@ -1,4 +1,4 @@
-import 'comments.dart';
+import '../internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';
@@ -10,11 +10,11 @@ class LineSection extends Line implements Section {
   LineSection.fromLine(super.line)
       : key = line.key,
         super.copy() {
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
   LineSection.missing(Document document, this.key)
       : super.missing(document, LineType.key) {
-    comments = Comments.empty(this);
+    comments = CommentsAttached.empty(this);
   }
 
   @override
@@ -27,7 +27,7 @@ class LineSection extends Line implements Section {
   List<Line> get lines => [...comments.lines, line];
 
   @override
-  late final Comments comments;
+  late final CommentsAttached comments;
 
   /// The last line number used by this  section
   @override

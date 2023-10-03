@@ -16,10 +16,10 @@ class VersionAttached extends LineSection {
       // treated as 'any'. We however need to record that the
       // version string was blank so we use emtpy.
       // However is the user queries the version we return any.
-      _version = Version.empty();
+      _versionConstraint = Version.empty();
       return;
     }
-    _version = parseVersionConstraint(line, line.value);
+    _versionConstraint = parseVersionConstraint(line, line.value);
   }
 
   /// The version key wasn't present in the pubspec
@@ -27,21 +27,16 @@ class VersionAttached extends LineSection {
       : line = Line.missing(document, LineType.key),
         _missing = false,
         super.missing(document, 'version');
-  // _version = sm.VersionConstraint.empty;
-  // factory Version(PubSpec pubspec, String version) {
-  //   final line = Line.forInsertion(pubspec.document, 'version: $version');
-  //   return Version.fromLine(line);
-  // }
 
   /// There was a version key but no value
-  bool get isEmpty => !_missing && _version.isEmpty;
+  bool get isEmpty => !_missing && _versionConstraint.isEmpty;
 
   /// There was no version in the pubspec.
   bool get isMissing => _missing;
 
   final bool _missing;
 
-  late Version _version;
+  late Version _versionConstraint;
 
   @override
   late Line line;
@@ -50,12 +45,12 @@ class VersionAttached extends LineSection {
   // treated as 'any'. We however need to record that the
   // version string was blank so we use emtpy.
   // However is the user queries the version we return any.
-  sm.VersionConstraint get constraint => _version.isEmpty || _missing
+  sm.VersionConstraint get constraint => _versionConstraint.isEmpty || _missing
       ? sm.VersionConstraint.any
-      : _version._version;
+      : _versionConstraint._version;
 
   @override
-  String toString() => _version.toString();
+  String toString() => _versionConstraint.toString();
 
   @override
   set value(String version) {
@@ -71,10 +66,10 @@ class VersionAttached extends LineSection {
   bool operator ==(Object other) =>
       other is Version &&
       other.runtimeType == runtimeType &&
-      other._version == _version._version;
+      other._version == _versionConstraint._version;
 
   @override
-  int get hashCode => _version.hashCode;
+  int get hashCode => _versionConstraint.hashCode;
 
   // strips any quotes that surround the value
   static String _stripQuotes(String value) {
@@ -104,7 +99,7 @@ class VersionAttached extends LineSection {
 
   static Version parseVersionConstraint(Line line, String value) {
     try {
-      return Version(_stripQuotes(value));
+      return Version.parse(_stripQuotes(value));
     } on VersionException catch (e) {
       e.document = line.document;
       // ignore: use_rethrow_when_possible
