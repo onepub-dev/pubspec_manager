@@ -26,7 +26,7 @@ void main() {
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
     expect(testDep!.line.lineNo, equals(13));
-    expect(testDep.versionConstraint.toString(), equals(version));
+    expect(testDep.version.toString(), equals(version));
 
     final dependencies = pubspec.dependencies
       ..append(PubHostedDependency(name: 'dcli_core', version: version));
@@ -34,7 +34,7 @@ void main() {
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
     expect(dcliCore!.line.lineNo, equals(10));
-    expect(dcliCore.versionConstraint.toString(), equals(version));
+    expect(dcliCore.version.toString(), equals(version));
     expect(pubspec.document.lines.length, equals(15));
   });
 

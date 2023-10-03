@@ -56,6 +56,12 @@ class Line implements Renderer {
       }
     }
   }
+
+  @visibleForTesting
+  Line.test(this.document, this.text)
+      : lineNo = 9999,
+        type = LineType.key,
+        missing = false;
   Line.copy(Line line)
       : document = line.document,
         text = line.text,
@@ -67,9 +73,10 @@ class Line implements Renderer {
         inlineComment = line.inlineComment,
         commentOffset = line.commentOffset;
 
-  Line.missing(this.document)
+  Line.missing(this.document, this.type)
       : lineNo = -1,
         text = '',
+        indent = 0,
         missing = true;
 
   /// Creates a line that is ready to be inserted.
@@ -79,11 +86,11 @@ class Line implements Renderer {
     return line;
   }
 
-  @visibleForTesting
-  Line.test(this.document, this.text)
-      : lineNo = 9999,
-        type = LineType.key,
-        missing = false;
+  // void attach(Document document) {
+  //   this.document = document;
+  //   document.insert(line, insertAt)
+  //   Line.forInsertion(document, text);
+  // }
 
   late final Document document;
 
@@ -113,7 +120,7 @@ class Line implements Renderer {
 
   /// calculate how far the line is idented.
   /// zero based.
-  /// An indentation of 2 is returned as indent level 1.
+  /// An indentation of 2 characters is returned as indent level 1.
   int _indent(String line) {
     var i = 0;
     for (; i < line.length; i++) {
@@ -158,7 +165,7 @@ class Line implements Renderer {
 
   /// Find the child of the current line that has the given [key]
   /// Return null if the [key] can't be found.
-  Line? findKeyChild(String key) => document.findKeyChild(this, key);
+  Line findKeyChild(String key) => document.findKeyChild(this, key);
 
   /// Find the child of the current line that has the given [key],
   /// Throw a [PubSpecException] if the key can't be found.
@@ -169,7 +176,7 @@ class Line implements Renderer {
     }
     final line = findKeyChild(key);
 
-    if (line == null) {
+    if (line.missing) {
       throw PubSpecException(this, 'Missing required child key: $key');
     }
 

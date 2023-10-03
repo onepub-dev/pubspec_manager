@@ -60,3 +60,7 @@ class ExecutableNotFound extends PubSpecException {
   ExecutableNotFound(Document super.document, super.message)
       : super.forDocument();
 }
+
+class OutOfBoundsException extends PubSpecException {
+  OutOfBoundsException(super.line, super.message);
+}

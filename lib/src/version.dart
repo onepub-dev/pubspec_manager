@@ -3,31 +3,32 @@
 part of 'internal_parts.dart';
 
 /// Holds a dependency version
-class Version extends LineSection {
-  // not part of the public interface
-  Version._fromLine(this.line, {bool required = false}) : super.fromLine(line) {
-    if (Strings.isBlank(line.value)) {
-      if (required) {
-        throw PubSpecException(line, 'Required version missing.');
-      }
-      // The pubspec doc says that a blank version is to be
-      // treated as 'any'. We however need to record that the
-      // version string was blank so we use emtpy.
-      // However is the user queries the version we return any.
-      _version = sm.VersionConstraint.empty;
-      return;
-    }
-    _version = parseVersionConstraint(line, line.value);
-  }
+class Version {
+  Version(this._version);
 
-  Version._missing(Document document)
-      : line = Line.missing(document),
-        super.missing(document, 'version');
+  factory Version.parse(String? versionConstraint) => versionConstraint != null
+      ? Version(parseConstraint(versionConstraint))
+      : Version.missing();
 
-  @override
-  late Line line;
+  /// Used to indicate that that a version key doesn't exist.
+  /// This is different from [Version.empty()] which indicates
+  /// that a version key was provided but the value was empty.
+  Version.missing()
+      : missing = true,
+        _version = sm.VersionConstraint.empty;
 
-  late sm.VersionConstraint _version;
+  /// A version for which no value was supplied yet
+  /// a key exist.
+  /// An empty version is treated as 'any' but we need
+  /// to record that it was empty so when writting out
+  /// the version we leave it as blank to ensure the fidelity
+  /// of the original document is maintained.
+  Version.empty()
+      : missing = false,
+        _version = sm.VersionConstraint.empty;
+
+  late final bool missing;
+  late final sm.VersionConstraint _version;
 
   // The pubspec doc says that a blank version is to be
   // treated as 'any'. We however need to record that the
@@ -37,18 +38,7 @@ class Version extends LineSection {
       ? sm.VersionConstraint.any
       : _version;
 
-  @override
-  String toString() => line.value;
-
-  @override
-  set value(String version) {
-    try {
-      sm.VersionConstraint.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException('The passed version is invalid: ${e.message}');
-    }
-    line.value = version;
-  }
+  bool get isEmpty => _version == sm.VersionConstraint.empty;
 
   @override
   bool operator ==(Object other) =>
@@ -59,51 +49,20 @@ class Version extends LineSection {
   @override
   int get hashCode => _version.hashCode;
 
-  // strips any quotes that surround the value
-  static String _stripQuotes(String value) {
-    if (value.isEmpty) {
-      return value;
-    }
-    final first = value.substring(0, 1);
-
-    // the version may have no quotes.
-    if (first != "'" && first != '"') {
-      return value;
-    }
-
-    // find the matching quote.
-    final last = value.substring(value.length - 1, value.length);
-
-    if (first == "'" || first == '"') {
-      if (first != last) {
-        throw PubSpecException.global(
-            'The quotes around the version $value  do not match');
-      }
-      return value.substring(1, value.length - 1);
-    }
-
-    return value;
-  }
-
-  static sm.VersionConstraint parseVersionConstraint(Line line, String value) {
-    try {
-      return parse(_stripQuotes(value));
-    } on VersionException catch (e) {
-      e.document = line.document;
-      // ignore: use_rethrow_when_possible
-      throw e;
-    }
-  }
-
   @override
-  List<Line> get lines => [line];
-
-  static void validate(String version) {
-    parse(version);
+  String toString() {
+    if (isEmpty || missing) {
+      return 'any';
+    } else {
+      return _version.toString();
+    }
   }
 
-  static sm.VersionConstraint parse(String version) {
+  static sm.VersionConstraint parseConstraint(String? version) {
     try {
+      if (version == null) {
+        return sm.VersionConstraint.empty;
+      }
       return sm.VersionConstraint.parse(version);
     } on FormatException catch (e) {
       throw VersionException(e.message);

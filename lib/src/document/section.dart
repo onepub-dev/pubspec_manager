@@ -3,7 +3,7 @@ import 'document.dart';
 import 'line.dart';
 
 /// Represent a section of a pubspec such as a dependency
-/// an all lines attached to the dependency
+/// and all lines attached to the dependency
 /// Sections may be nested - e.g. The dependeny key is a
 /// section as are each dependency under it.
 // ignore: one_member_abstracts

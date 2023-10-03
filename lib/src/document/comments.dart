@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_returning_this
+
 import '../../eric.dart';
-import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';
 import 'section.dart';
@@ -13,6 +14,9 @@ class Comments {
   }
 
   Comments.empty(this.section) : _lines = <Line>[];
+
+  /// The section these comments are attached to.
+  Section section;
 
   /// Gets the set of comments that suffix the passed in [section]
   /// This will include any blank lines upto the end of the prior
@@ -44,13 +48,6 @@ class Comments {
     return suffix;
   }
 
-  // Comments.fromLine(this._pubspec, this.line) {
-  //   name = line.key;
-  // }
-
-  /// The section these comments are attached to.
-  Section section;
-
   /// All of the lines that make up this comment.
   late final List<Line> _lines;
 
@@ -63,14 +60,13 @@ class Comments {
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
-  void append(String comment, {bool attach = true}) {
+  Comments append(String comment) {
     final document = section.line.document;
-    final line = Line.forInsertion(document, '#$comment');
+    final line = Line.forInsertion(
+        document, '${' ' * section.line.indent * 2}# $comment');
     _lines.add(line);
-
-    if (attach) {
-      document.insert(line, section.line.lineNo);
-    }
+    document.insert(line, section.line.lineNo);
+    return this;
   }
 
   /// removes the comment a offset [index] in the list
@@ -96,18 +92,3 @@ class Comments {
     _lines.removeRange(0, _lines.length);
   }
 }
-
-class DependencyNotFound extends PubSpecException {
-  DependencyNotFound(Document super.document, super.message)
-      : super.forDocument();
-}
-
-class OutOfBoundsException extends PubSpecException {
-  OutOfBoundsException(super.line, super.message);
-}
-
-// List<String> commentsAsString(Section section) {
-//   final lines = commentsAsLine(section);
-
-//   return lines.map((line) => line.text).toList();
-// }

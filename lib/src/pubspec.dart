@@ -8,19 +8,25 @@ class Pubspec {
   /// Create an in memory pubspec.yaml.
   ///
   /// It can be saved to disk by calling [save].
-  Pubspec(this.name, this.version, this.description, this.environment) {
-    dependencies = Dependencies._(this, 'dependencies');
+  Pubspec(
+      {required String name,
+      required String version,
+      required String description,
+      required Environment environment}) {
+    document = Document.loadFromString('');
 
-    document
-      ..append(LineDetached('name:$name'))
-      ..append(LineDetached('version:$version'))
-      ..append(LineDetached('description:$description'));
+    this.name =
+        LineSection.fromLine(document.append(LineDetached('name: $name')));
+    this.version = VersionAttached._fromLine(
+        document.append(LineDetached('version: $version')));
+    this.description = MultiLine.fromLine(
+        document.append(LineDetached('description: $description')));
 
-    environment = Environment.missing(document);
-    homepage = LineSection.missing(document, 'homepage');
-    repository = LineSection.missing(document, 'repository');
-    issueTracker = LineSection.missing(document, 'issueTracker');
-    documentation = LineSection.missing(document, 'documentation');
+    _environment = environment._attach(this, document.lines.length + 1);
+    homepage = HomepageAttached.missing(document);
+    repository = RepositoryAttached.missing(document);
+    issueTracker = IssueTrackerAttached.missing(document);
+    documentation = DocumentationAttached.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
@@ -37,14 +43,19 @@ class Pubspec {
     document = Document.loadFromString(content);
 
     name = document.getLineForRequiredKey('name');
-    version = Version._fromLine(document.getLineForRequiredKey('version'));
+    version =
+        VersionAttached._fromLine(document.getLineForRequiredKey('version'));
     description = document.getMultiLineForRequiredKey('description');
-    environment =
-        Environment.fromLine(document.getLineForRequiredKey('environment'));
-    homepage = document.getLineForKey('homepage');
-    repository = document.getLineForKey('repository');
-    issueTracker = document.getLineForKey('issueTracker');
-    documentation = document.getLineForKey('documentation');
+    _environment = EnvironmentAttached.fromLine(
+        document.getLineForRequiredKey(EnvironmentAttached._key));
+    homepage = HomepageAttached._fromLine(
+        document.getLineForKey(HomepageAttached._key));
+    repository = RepositoryAttached._fromLine(
+        document.getLineForKey(RepositoryAttached._key));
+    issueTracker = IssueTrackerAttached._fromLine(
+        document.getLineForKey(IssueTrackerAttached._key));
+    documentation = DocumentationAttached._fromLine(
+        document.getLineForKey(DocumentationAttached._key));
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
@@ -58,15 +69,19 @@ class Pubspec {
     topics = document.findSectionForKey('topics');
   }
 
-  /// Loads the pubspec.yaml file from the given [directory].
+  /// Loads the pubspec.yaml file from the given [directory] or
+  /// the current work directory if [directory] is not passed.
+  ///
+  /// If the pubspec is not found we search
+  /// up the directory tree looking for it unless [search] is set
+  /// to false.
+  ///
   /// If you pass [filename] then it can be loaded from
   /// a non-standard filename.
   ///
   /// If you don't pass [filename] then we will attempt to load
   /// the pubspec from the file 'pubspec.yaml'.
   ///
-  /// If the pubspec is not found in the given directory we search
-  /// up the directory tree looking for it.
   ///
   /// If you don't provide a [directory] then we start the search
   /// from the current working directory.
@@ -78,9 +93,11 @@ class Pubspec {
   ///   ..save();
   /// ```
   factory Pubspec.fromFile(
-      {String? directory, String filename = 'pubspec.yaml'}) {
+      {String? directory,
+      String filename = 'pubspec.yaml',
+      bool search = true}) {
     final loadedFrom =
-        _findPubSpecFile(directory ?? Directory.current.path, filename);
+        _findPubSpecFile(directory ?? Directory.current.path, filename, search);
     final content = File(loadedFrom).readAsStringSync();
 
     final pubspec = Pubspec.fromString(content)
@@ -103,14 +120,14 @@ class Pubspec {
   /// attibutes of the pubspec.yaml follow.
 
   late LineSection name;
-  late Version version;
+  late VersionAttached version;
   late MultiLine description;
-  late Environment environment;
+  late EnvironmentAttached _environment;
 
-  late final LineSection homepage;
-  late final LineSection repository;
-  late final LineSection issueTracker;
-  late final LineSection documentation;
+  late final HomepageAttached homepage;
+  late final RepositoryAttached repository;
+  late final IssueTrackerAttached issueTracker;
+  late final DocumentationAttached documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
   late final Dependencies dependencyOverrides;
@@ -121,6 +138,10 @@ class Pubspec {
   late final SimpleSection screenshots;
   late final SimpleSection topics;
 
+  EnvironmentAttached get environment => _environment;
+
+  /// If the pubspec hasn't been loaded from or
+  /// save to a file then './pubspec.yaml' is returned.
   String get loadedFrom =>
       join(_loadedFromDirectory ?? '.', _loadedFromFilename);
 
@@ -132,7 +153,7 @@ class Pubspec {
   /// * dependency_overrides
   Dependencies _initDependencies(String key) {
     final line = document.findTopLevelKey(key);
-    if (line == null) {
+    if (line.missing) {
       return Dependencies._missing(this, key);
     }
 
@@ -142,7 +163,8 @@ class Pubspec {
       if (child.type != LineType.key) {
         continue;
       }
-      dependencies.append(Dependency._loadFrom(child), attach: false);
+      dependencies
+          .appendAttached(DependencyAttached._loadFrom(dependencies, child));
     }
     return dependencies;
   }
@@ -189,7 +211,7 @@ class Pubspec {
       ..render(name)
       ..render(version)
       ..render(description)
-      ..render(environment)
+      ..render(_environment)
       ..render(homepage)
       ..render(repository)
       ..render(issueTracker)
@@ -230,11 +252,15 @@ class Pubspec {
   /// search up the directory tree (starting from [directory]to find
   /// a file with the name [filename] which will normally be
   /// pubspec.yaml
-  static String _findPubSpecFile(String directory, String filename) {
+  static String _findPubSpecFile(
+      String directory, String filename, bool search) {
     var path = join(directory, filename);
     var parent = directory;
     var found = true;
     while (!File(path).existsSync()) {
+      if (!search) {
+        throw NotFoundException(path);
+      }
       if (isRoot(parent)) {
         found = false;
         break;
@@ -251,5 +277,5 @@ class Pubspec {
   }
 
   static bool isRoot(String path) =>
-      path.startsWith('/') || path.startsWith(RegExp(r'[a-z]:\\'));
+      path.startsWith('/') || path.startsWith(RegExp(r'[a-zA-Z]:\\'));
 }

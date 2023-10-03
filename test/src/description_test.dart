@@ -1,3 +1,5 @@
+// ignore_for_file: unreachable_from_main
+
 import 'package:eric/eric.dart';
 import 'package:test/test.dart';
 

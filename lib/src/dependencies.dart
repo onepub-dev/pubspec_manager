@@ -3,21 +3,27 @@ part of 'internal_parts.dart';
 /// Used to hold a list of [Dependency]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Dependencies extends Section with IterableMixin<Dependency> {
+class Dependencies extends Section with IterableMixin<DependencyAttached> {
   /// Create a new dependencies section
   Dependencies._(this._pubspec, this.name) {
     missing = false;
     _pubspec.document.append(LineDetached('$name:'));
-    comments = Comments.empty(this);
+    comments = CommentsAttached.empty(this);
   }
 
-  Dependencies._missing(this._pubspec, this.name) : super.missing();
+  Dependencies._missing(this._pubspec, this.name)
+      : document = _pubspec.document,
+        super.missing();
 
   Dependencies._fromLine(this._pubspec, this.line) {
+    document = _pubspec.document;
     missing = false;
     name = line.key;
-    comments = Comments(this);
+    comments = CommentsAttached(this);
   }
+
+  @override
+  late final Document document;
 
   @override
   late final Line line;
@@ -29,10 +35,10 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// reference to the pubspec that has these dependencies.
   final Pubspec _pubspec;
 
-  final List<Dependency> _dependencies = <Dependency>[];
+  final List<DependencyAttached> _dependencies = <DependencyAttached>[];
 
   /// List of the dependencies
-  List<Dependency> get list => List.unmodifiable(_dependencies);
+  List<DependencyAttached> get list => List.unmodifiable(_dependencies);
 
   /// the number of dependencies in this section
   @override
@@ -53,7 +59,7 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// returns the [Dependency] with the given [name]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
-  Dependency? operator [](String name) {
+  DependencyAttached? operator [](String name) {
     for (final dependency in _dependencies) {
       if (dependency.name == name) {
         return dependency;
@@ -64,29 +70,30 @@ class Dependencies extends Section with IterableMixin<Dependency> {
 
   /// Add [dependency] to the PubSpec
   /// after the last dependency.
-  Dependencies append(Dependency dependency, {bool attach = true}) {
+  DependencyAttached append(Dependency dependency) {
     var insertAt = 0;
+    // if we don't have a dependencies section then create it.
     if (missing) {
       missing = false;
-      if (attach) {
-        // create the section.
-        line = document.append(LineDetached(name));
-      }
+      line = document.append(LineDetached('$name:'));
+    }
+
+    if (_dependencies.isEmpty) {
+      insertAt = line.lineNo + 1;
     } else {
-      if (_dependencies.isEmpty) {
-        insertAt = line.lineNo + 1;
-      } else {
-        insertAt = _dependencies.last.lastLineNo + 1;
-      }
+      insertAt = _dependencies.last.lastLineNo + 1;
     }
+    final attached = dependency._attach(this, _pubspec, insertAt);
 
+    _dependencies.add(attached);
+
+    return attached;
+  }
+
+  /// register a dependency that is already attached.
+  DependencyAttached _appendAttached(DependencyAttached dependency) {
     _dependencies.add(dependency);
-
-    if (attach) {
-      dependency._attach(_pubspec, insertAt);
-    }
-    // ignore: avoid_returning_this
-    return this;
+    return dependency;
   }
 
   /// Remove a dependency from the section
@@ -110,28 +117,26 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   bool exists(String name) => this[name] != null;
 
   @override
-  late final Comments comments;
-
-  @override
-  Document get document => line.document;
+  late final CommentsAttached comments;
 
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
 
   @override
-  Iterator<Dependency> get iterator => DependencyIterator(_dependencies);
+  Iterator<DependencyAttached> get iterator =>
+      DependencyIterator(_dependencies);
 }
 
-class DependencyIterator implements Iterator<Dependency> {
+class DependencyIterator implements Iterator<DependencyAttached> {
   DependencyIterator(this._dependencies);
 
   int index = -1;
 
-  final List<Dependency> _dependencies;
+  final List<DependencyAttached> _dependencies;
 
   @override
-  Dependency get current => _dependencies.elementAt(0);
+  DependencyAttached get current => _dependencies.elementAt(0);
 
   @override
   bool moveNext() {

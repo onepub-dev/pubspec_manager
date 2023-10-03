@@ -1,5 +1,7 @@
 import 'comments.dart';
+import 'document.dart';
 import 'line.dart';
+import 'line_type.dart';
 import 'section.dart';
 
 /// Used to hold a single line that can have a multi-line scalar
@@ -16,21 +18,29 @@ import 'section.dart';
 /// All scalars are terminated by a new section indented to the same
 /// depth of the parent.
 /// Scalars may include blank lines.
-class MultiLine extends Line implements Section {
-  MultiLine.fromLine(super.line)
-      : key = line.key,
-        super.copy() {
+class MultiLine implements Section {
+  MultiLine.fromLine(this.line)
+      : missing = false,
+        key = line.key,
+        document = line.document {
     comments = Comments(this);
   }
-  MultiLine.missing(super.document, this.key) : super.missing() {
+  MultiLine.missing(this.document, this.key)
+      : missing = true,
+        line = Line.missing(document, LineType.key) {
     comments = Comments.empty(this);
   }
 
   @override
+  bool missing;
+
   String key;
 
   @override
-  Line get line => this;
+  Document document;
+
+  @override
+  Line line;
 
   @override
   List<Line> get lines => [...comments.lines, line];
@@ -41,4 +51,6 @@ class MultiLine extends Line implements Section {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  String get value => line.value;
 }

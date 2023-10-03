@@ -1,0 +1,24 @@
+name: new eric 
+version: 1.0.0-alpha.2 
+description: An example 
+environment:  
+  sdk: >3.0.0 <=4.0.0 
+  flutter: any 
+# This is the doco 
+documentation: https://onepub.dev 
+# The home page 
+# more 
+homepage: https://onepub.dev/home 
+# Log bugs here 
+issue_tracker: https://onepub.dev/Issues 
+# The code is here 
+repository: https://onepub.dev/Issues 
+dependencies:  
+  # DCLI to do file system stuff 
+  # Hello world 
+  dcli:  
+    hosted: https://onepub.dev 
+  dcli_core: 1.0.0 
+dev_dependencies:  
+  test: 1.0.0 
+  test_it: 1.0.0 

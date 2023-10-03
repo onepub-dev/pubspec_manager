@@ -8,19 +8,17 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class PathDependency extends Section implements Dependency {
-  PathDependency({required String name, required String path})
+class PathDependency implements Dependency {
+  PathDependency(
+      {required String name,
+      required String path,
+      List<String> comments = const <String>[]})
       : _name = name,
-        _path = path;
-
-  PathDependency._fromLine(this._line) {
-    _name = _line.key;
-    _path = (_pathLine = _line.findRequiredKeyChild('path')).value;
-    comments = Comments(this);
+        _path = path {
+    this.comments = Comments(comments);
   }
-  static const key = 'path';
 
-  late final Line _line;
+  static const key = 'path';
 
   late final String _name;
   late final String _path;
@@ -28,42 +26,10 @@ class PathDependency extends Section implements Dependency {
   @override
   String get name => _name;
 
-  @override
-  Line get line => _line;
-
-  late final Line _pathLine;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line, _pathLine];
-
-  @override
   late final Comments comments;
 
   @override
-  void _attach(Pubspec pubspec, int lineNo) {
-    _line = Line.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insert(_line, lineNo);
-
-    _line = Line.forInsertion(pubspec.document, '  path: $_path');
-    pubspec.document.insert(_line, lineNo);
-  }
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
-
-  @override
-  sm.VersionConstraint get versionConstraint => sm.VersionConstraint.any;
-
-  @override
-  // ignore: avoid_setters_without_getters
-  set version(String version) {
-    // ignored as a git dep doesn't use a version.
-  }
+  DependencyAttached _attach(
+          Dependencies dependencies, Pubspec pubspec, int lineNo) =>
+      PathDependencyAttached._attach(pubspec, lineNo, this);
 }
