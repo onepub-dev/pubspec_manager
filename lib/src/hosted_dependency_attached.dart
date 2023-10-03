@@ -10,25 +10,24 @@ class HostedDependencyAttached extends Section
     implements DependencyAttached, DependencyVersioned {
   /// build a hosted dependency from a line in the document
   HostedDependencyAttached._fromLine(this._dependencies, this._line) {
-    final name = _line.key;
+    _name = _line.key;
+
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
-    final hostedUrl = _hostedUrlLine.value;
+    _hostedUrl = _hostedUrlLine.value;
+
     _versionLine = _line.findKeyChild('version');
-
-    String? version;
-
     if (!_versionLine.missing) {
-      version = _versionLine.value;
+      _version = _versionLine.value;
     }
-
-    _dependency =
-        HostedDependency(name: name, hosted: hostedUrl, version: version);
-
     comments = CommentsAttached(this);
   }
 
   HostedDependencyAttached.attach(this._dependencies, Pubspec pubspec,
       int lineNo, HostedDependency dependency) {
+    _name = dependency.name;
+    _hostedUrl = dependency.hostedUrl;
+    _version = dependency.version;
+
     _line = Line.forInsertion(pubspec.document, '  ${dependency.name}: ');
     pubspec.document.insert(_line, lineNo++);
     _hostedUrlLine = Line.forInsertion(
@@ -45,18 +44,40 @@ class HostedDependencyAttached extends Section
     comments = CommentsAttached(this);
   }
 
+  /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
-  late Line _line;
-  late Line _hostedUrlLine;
-  late Line _versionLine;
+
+  late String _name;
+  late String _hostedUrl;
+  late String _version;
+
+  late final Line _line;
+  late final Line _hostedUrlLine;
+  late final Line _versionLine;
 
   @override
-  Version get version => Version.parse(_dependency.version);
+  String get name => _name;
+
+  set name(String name) {
+    _name = name;
+    _line.value = name;
+  }
+
+  String get hostedUrl => _hostedUrl;
+
+  set hostedUrl(String hostedUrl) {
+    _hostedUrl = hostedUrl;
+    _hostedUrlLine.value = _hostedUrl;
+  }
 
   @override
-  String get name => _dependency._name;
+  String get version => _version;
 
-  String get hostedUrl => _dependency.hostedUrl;
+  @override
+  set version(String version) {
+    _version = version;
+    _versionLine.value = version;
+  }
 
   @override
   Line get line => _line;
@@ -86,10 +107,5 @@ class HostedDependencyAttached extends Section
   DependencyAttached append(Dependency dependency) {
     _dependencies.append(dependency);
     return this;
-  }
-
-  @override
-  set version(String version) {
-    _dependency.version = Version.parse(version);
   }
 }

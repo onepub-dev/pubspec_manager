@@ -30,13 +30,13 @@ void main() {
         .append(HostedDependency(
           name: 'dcli',
           hosted: 'https://onepub.dev',
-          comments: ['DCLI to do file system stuff', 'Hello world'],
+          comments: const ['DCLI to do file system stuff', 'Hello world'],
         ))
         .append(PubHostedDependency(name: 'dcli_core', version: '1.0.0'))
     ..devDependencies
         .append(
           PubHostedDependency(
-              comments: ['hi there', 'ho there'],
+              comments: const ['hi there', 'ho there'],
               name: 'test',
               version: '1.0.0'),
         )

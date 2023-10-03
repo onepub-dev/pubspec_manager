@@ -54,7 +54,7 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
   /// Returns null if it doesn't exist.
   DependencyAttached? operator [](String name) {
     for (final dependency in _dependencies) {
-      if (dependency.name == name) {
+      if (dependency._name == name) {
         return dependency;
       }
     }

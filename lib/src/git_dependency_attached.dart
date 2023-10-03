@@ -41,7 +41,7 @@ class GitDependencyAttached extends Section implements DependencyAttached {
   late final Line _line;
 
   @override
-  String get name => _line.key;
+  String get _name => _line.key;
 
   @override
   Line get line => _line;

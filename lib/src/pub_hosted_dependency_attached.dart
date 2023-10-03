@@ -9,28 +9,37 @@ class PubHostedDependencyAttached extends Section
   PubHostedDependencyAttached._fromLine(this._dependencies, Line line)
       : _line = line {
     // the line is of the form '<name>: <version>'
-    final name = line.key;
-    dependency = PubHostedDependency(name: name, version: line.value);
+    _name = line.key;
+    _version = line.value;
     comments = CommentsAttached(this);
   }
 
   @override
-  PubHostedDependencyAttached._attach(
-      this._dependencies, Pubspec pubspec, int lineNo, this.dependency) {
+  PubHostedDependencyAttached._attach(this._dependencies, Pubspec pubspec,
+      int lineNo, PubHostedDependency dependency) {
+    _name = dependency.name;
+    version = dependency._version;
     _line = Line.forInsertion(pubspec.document,
         '  ${dependency._name}: ${dependency._version.constraint}');
     pubspec.document.insert(line, lineNo);
     comments = CommentsAttached(this);
   }
 
+  String _name;
+  String _version;
+
   /// The line this dependency is attached to.
   late final Line _line;
-  late final PubHostedDependency dependency;
 
   late final Dependencies _dependencies;
 
   @override
   String get name => dependency.name;
+
+  set name(String name) {
+    _name = name;
+    _line.value = name;
+  }
 
   @override
   String get version => dependency._version.toString();
@@ -59,9 +68,9 @@ class PubHostedDependencyAttached extends Section
     _dependencies.append(dependency);
     return this;
   }
-  
+
   @override
-  set version(String version) {
+  set _version(String version) {
     // TODO: implement version
   }
 }

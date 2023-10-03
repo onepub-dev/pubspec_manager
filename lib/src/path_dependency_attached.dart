@@ -35,10 +35,6 @@ class PathDependencyAttached extends Section implements DependencyAttached {
   @override
   String get name => dependency.name;
 
-  /// path dependencies don't have a version.
-  @override
-  Version get version => Version.missing();
-
   @override
   Line get line => _line;
 

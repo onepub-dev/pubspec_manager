@@ -10,25 +10,15 @@ class PubHostedDependency implements Dependency {
   /// If you don't pass in a [version] then the version will
   /// be left empty when you save
   PubHostedDependency({
-    required String name,
-    String version = 'any',
+    required this.name,
+    String? version,
     List<String>? comments,
-  })  : _name = name,
-        _comments = comments ?? <String>[] {
-    try {
-      _version = Version.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException(e.message);
-    }
-  }
+  }) : _comments = comments ?? <String>[] {}
 
   late final List<String> _comments;
 
-  late final String _name;
-  late final Version _version;
-
-  @override
-  String get name => _name;
+  late final String name;
+  late final Version version;
 
   @override
   DependencyAttached _attach(
