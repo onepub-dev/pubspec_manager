@@ -25,6 +25,6 @@ class PathDependency implements Dependency {
 
   @override
   DependencyAttached _attach(
-          Dependencies dependencies, Pubspec pubspec, int lineNo) =>
+          Dependencies dependencies, PubSpec pubspec, int lineNo) =>
       PathDependencyAttached._attach(pubspec, lineNo, this);
 }

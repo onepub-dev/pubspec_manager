@@ -4,11 +4,11 @@ part of 'internal_parts.dart';
 /// pubspec.yaml.
 /// All operations start here.
 ///
-class Pubspec {
+class PubSpec {
   /// Create an in memory pubspec.yaml.
   ///
   /// It can be saved to disk by calling [save].
-  Pubspec(
+  PubSpec(
       {required String name,
       required String version,
       required String description,
@@ -39,7 +39,7 @@ class Pubspec {
   }
 
   /// Loads the content of a pubspec.yaml from the string [content].
-  Pubspec.fromString(String content) {
+  PubSpec.fromString(String content) {
     document = Document.loadFromString(content);
 
     name = document.getLineForRequiredKey('name');
@@ -68,7 +68,7 @@ class Pubspec {
   /// Loads the pubspec.yaml file from the given [directory] or
   /// the current work directory if [directory] is not passed.
   ///
-  /// If the pubspec is not found we search
+  /// If the pubspec is not found, we search
   /// up the directory tree looking for it unless [search] is set
   /// to false.
   ///
@@ -83,12 +83,12 @@ class Pubspec {
   /// from the current working directory.
   ///
   /// ```dart
-  /// Pubspec.fromFile()
+  /// Pubspec.load()
   ///   ..dependencies
   ///     .append(HostedDependency(name: 'onepub', url:'https://onepub.dev'))
   ///   ..save();
   /// ```
-  factory Pubspec.fromFile(
+  factory PubSpec.load(
       {String? directory,
       String filename = 'pubspec.yaml',
       bool search = true}) {
@@ -96,14 +96,18 @@ class Pubspec {
         _findPubSpecFile(directory ?? Directory.current.path, filename, search);
     final content = File(loadedFrom).readAsStringSync();
 
-    final pubspec = Pubspec.fromString(content)
+    final pubspec = PubSpec.fromString(content)
       .._loadedFromDirectory = dirname(loadedFrom)
       .._loadedFromFilename = basename(loadedFrom);
     return pubspec;
   }
 
-  factory Pubspec.loadFile(String pathTo) =>
-      Pubspec.fromFile(directory: dirname(pathTo), filename: basename(pathTo));
+  /// Allows you to load the pubspec from path which includes
+  /// the directory and filename.
+  ///
+  /// @see [PubSpec.load] to load the project's pubspec.yaml
+  factory PubSpec.loadFromPath(String pathTo) =>
+      PubSpec.load(directory: dirname(pathTo), filename: basename(pathTo));
 
   // the path the pubspec.yaml was loaded from (including the filename)
   // If the pubpsec wasn't loaded from a file then this will be null.
@@ -136,6 +140,8 @@ class Pubspec {
 
   EnvironmentAttached get environment => _environment;
 
+  /// Returns the path that the pubspec was loaded from.
+  ///
   /// If the pubspec hasn't been loaded from or
   /// save to a file then './pubspec.yaml' is returned.
   String get loadedFrom =>

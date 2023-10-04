@@ -12,7 +12,7 @@ class Executable {
   String name;
   String script;
 
-  ExecutableAttached _attach(Pubspec pubspec, int lineNo) =>
+  ExecutableAttached _attach(PubSpec pubspec, int lineNo) =>
       ExecutableAttached._attach(pubspec, lineNo, this);
 }
 
@@ -23,7 +23,7 @@ class ExecutableAttached extends SectionSingleLine {
     _script = _line.value;
   }
 
-  ExecutableAttached._attach(Pubspec pubspec, int lineNo, Executable executable)
+  ExecutableAttached._attach(PubSpec pubspec, int lineNo, Executable executable)
       : super.attach(executable.name, pubspec, lineNo, executable.script) {
     _name = executable.name;
     _script = executable.script;

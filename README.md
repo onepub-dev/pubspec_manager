@@ -1,8 +1,6 @@
-# Eric
+# pubspec_manager
 
-Say hello to Eric.
-
-Eric allows you to read, .modify and write pubspec.yaml files.
+pubspec_manager allows you to read, .modify and write pubspec.yaml files.
 
 Why another pubspec.yaml manipulation file?
 
@@ -14,7 +12,7 @@ There are also a number of other pubspec maintinance packages but none of them
 meet all of the criteria. In particualar none of them are able to preserve 
 comments.
 
-So the aim of Eric is to fix three problems
+So the aim of pubspec_manager is to fix three problems
 
 1) simplified API
 2) fully type safe code based to ease maintenance
@@ -23,7 +21,7 @@ So the aim of Eric is to fix three problems
 
 
 ```dart
-import 'package:eric/eric.dart'
+import 'package:pubspec_manager/pubspec_manager.dart'
 
 void main() {
   Pubspec.fromFile()

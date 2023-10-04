@@ -39,7 +39,7 @@ part 'path_dependency.dart';
 part 'path_dependency_attached.dart';
 part 'pub_hosted_dependency.dart';
 part 'pub_hosted_dependency_attached.dart';
-part 'pubspec.dart';
+part 'pub_spec.dart';
 part 'repository.dart';
 part 'version.dart';
 part 'version_attached.dart';

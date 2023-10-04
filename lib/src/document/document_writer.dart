@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../eric.dart';
+import '../../pubspec_manager.dart';
 import 'document.dart';
 import 'line.dart';
 import 'section.dart';

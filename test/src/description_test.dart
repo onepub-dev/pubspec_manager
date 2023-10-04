@@ -1,6 +1,6 @@
 // ignore_for_file: unreachable_from_main
 
-import 'package:eric/eric.dart';
+import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 const simple = '''
@@ -47,14 +47,14 @@ dependencies:
 void main() {
   group('description', () {
     test('simple ...', () async {
-      final pubspec = Pubspec.fromString(simple);
+      final pubspec = PubSpec.fromString(simple);
 
       expect(pubspec.description.value,
           equals('A simple command-line application created by dcli'));
     });
 
     test('plainScalar', () {
-      final pubspec = Pubspec.fromString(simple);
+      final pubspec = PubSpec.fromString(simple);
 
       expect(pubspec.description.value, equals(simpleExpected));
     });

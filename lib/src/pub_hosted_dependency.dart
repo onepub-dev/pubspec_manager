@@ -24,7 +24,7 @@ class PubHostedDependency implements Dependency {
 
   @override
   DependencyAttached _attach(
-      Dependencies dependencies, Pubspec pubspec, int lineNo) {
+      Dependencies dependencies, PubSpec pubspec, int lineNo) {
     final attached = PubHostedDependencyAttached._attach(
         dependencies, pubspec, lineNo, this);
 

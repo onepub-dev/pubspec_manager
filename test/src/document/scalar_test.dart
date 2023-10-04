@@ -1,4 +1,4 @@
-import 'package:eric/src/document/scalar.dart';
+import 'package:pubspec_manager/src/document/scalar.dart';
 import 'package:test/test.dart';
 
 const word = 'simple';

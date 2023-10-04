@@ -16,7 +16,7 @@ class Environment {
   // Used to indicate that an environment wasn't specified
   Environment.missing();
 
-  EnvironmentAttached _attach(Pubspec pubspec, int lineNo) =>
+  EnvironmentAttached _attach(PubSpec pubspec, int lineNo) =>
       EnvironmentAttached._attach(pubspec, lineNo, this);
 
   late final String? _sdk;

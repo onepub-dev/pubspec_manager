@@ -1,6 +1,6 @@
-import 'package:eric/src/document/document.dart';
-import 'package:eric/src/document/line.dart';
-import 'package:eric/src/document/line_type.dart';
+import 'package:pubspec_manager/src/document/document.dart';
+import 'package:pubspec_manager/src/document/line.dart';
+import 'package:pubspec_manager/src/document/line_type.dart';
 import 'package:test/test.dart';
 
 void main() {

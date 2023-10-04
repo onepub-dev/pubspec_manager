@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import '../internal_parts.dart';
 import 'document.dart';
 import 'key_value.dart';
@@ -13,29 +11,32 @@ abstract class Renderer {
 /// Each line read from the pubspec.yaml is stored into a [Line]
 /// and categorised into one of the [LineType]s.
 class Line implements Renderer {
-  /// Construct a Line. Used when reading
+  /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
   Line(this.document, this.text, this.lineNo) : missing = false {
-    indent = _indent(text);
     final trimmed = text.trimLeft();
 
-    // final lastLine = document.lastLine;
-
-    // if (lastLine != null && lastLine.continues) {
-    //   type = LineType.multiline;
-    // } else
+    // no further processing required for blank lines.
+    if (trimmed.isEmpty) {
+      type = LineType.blank;
+      indent = 0;
+      return;
+    }
 
     // determine line type
     if (trimmed.startsWith('#')) {
       type = LineType.comment;
     } else if (trimmed.startsWith('-')) {
       type = LineType.indexed;
-    } else if (trimmed.isEmpty) {
-      type = LineType.blank;
     } else {
       type = LineType.key;
     }
+    // we must assign a type before we check for indent
+    // as _indent can thrown an exception and if the [type]
+    // hasn't been initialised then a secondary exception
+    // will be thrown.
+    indent = _indent(text);
 
     // a comment can't have an inline comment
     // so no further process of the line is required.
@@ -57,11 +58,6 @@ class Line implements Renderer {
     }
   }
 
-  @visibleForTesting
-  Line.test(this.document, this.text)
-      : lineNo = 9999,
-        type = LineType.key,
-        missing = false;
   Line.copy(Line line)
       : document = line.document,
         text = line.text,
@@ -85,12 +81,6 @@ class Line implements Renderer {
     final line = Line(document, text, -1);
     return line;
   }
-
-  // void attach(Document document) {
-  //   this.document = document;
-  //   document.insert(line, insertAt)
-  //   Line.forInsertion(document, text);
-  // }
 
   late final Document document;
 
@@ -129,10 +119,15 @@ class Line implements Renderer {
         break;
       }
     }
+    // we need to ensure that [indent] is initialised before
+    // we throw an exception otherwise it will cause a secondary
+    // exception due to [indent] being unitialised.
+    indent = (i / 2).round();
+
     if (i.isOdd) {
       throw PubSpecException(this, 'Invalid indent on line $lineNo found $i');
     }
-    return (i / 2).round();
+    return indent;
   }
 
   /// Returns the key/value pair for the line.
@@ -233,8 +228,6 @@ class Line implements Renderer {
         return text;
     }
   }
-
-  // String get _indentRender => ' ' * indent * 2;
 
   /// If the line has an inline comment the this method
   /// will render the comment.

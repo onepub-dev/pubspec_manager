@@ -7,7 +7,7 @@ import 'simple_section.dart';
 class SectionSingleLine extends SimpleSection {
   SectionSingleLine.fromLine(this.key, super._line) : super.fromLine();
 
-  SectionSingleLine.attach(this.key, Pubspec pubspec, int lineNo, String value)
+  SectionSingleLine.attach(this.key, PubSpec pubspec, int lineNo, String value)
       : super.fromLine(Line.forInsertion(pubspec.document, '$key: $value')) {
     document.insert(line, lineNo);
   }

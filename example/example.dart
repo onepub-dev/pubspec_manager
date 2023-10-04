@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:eric/eric.dart';
+import 'package:pubspec_manager/pubspec_manager.dart';
 
 void main() {
-  final pubspec = Pubspec(
+  final pubspec = PubSpec(
     name: 'new eric',
     version: '1.0.0-alpha.2',
     description: 'An example',

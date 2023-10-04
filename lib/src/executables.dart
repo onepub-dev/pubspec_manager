@@ -22,7 +22,7 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
   late final String name;
 
   /// reference to the pubspec that has these dependencies.
-  final Pubspec _pubspec;
+  final PubSpec _pubspec;
 
   final List<ExecutableAttached> _executables = <ExecutableAttached>[];
 

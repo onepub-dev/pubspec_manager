@@ -18,7 +18,7 @@ class GitDependencyAttached extends Section implements DependencyAttached {
   }
 
   GitDependencyAttached._attach(
-      Pubspec pubspec, int lineNo, GitDependency dependency) {
+      PubSpec pubspec, int lineNo, GitDependency dependency) {
     _name = dependency.name;
     _line = Line.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insert(_line, lineNo);

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:eric/eric.dart';
 import 'package:path/path.dart' hide equals;
+import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -9,7 +9,7 @@ void main() {
     test('set', () {
       final pathTo =
           join(Directory.systemTemp.path, 'pubspec_environment.yaml');
-      final pubspec = Pubspec(
+      final pubspec = PubSpec(
           name: 'test',
           description: 'test desc',
           environment: Environment(sdk: '1.0.0'),
@@ -23,7 +23,7 @@ void main() {
 
       pubspec.saveTo(pathTo);
 
-      final updated = Pubspec.loadFile(pathTo);
+      final updated = PubSpec.loadFromPath(pathTo);
       expect(updated.environment.flutter, equals('1.2.4'));
       expect(updated.environment.sdk, equals('1.2.1'));
     });

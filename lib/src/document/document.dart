@@ -24,10 +24,10 @@ class Document {
   /// into a an ordered list of [Line]s.
   Document.loadFromLines(List<String> contentLines) {
     var lineNo = 1;
+    pathTo = '<Loaded from lines>';
     for (final line in contentLines) {
       lines.add(Line(this, line, lineNo++));
     }
-    pathTo = '<Loaded from lines>';
   }
 
   /// Load the pubspec.yaml from [content]

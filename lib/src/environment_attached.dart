@@ -26,7 +26,7 @@ class EnvironmentAttached extends Section {
   }
 
   EnvironmentAttached._attach(
-      Pubspec pubspec, int lineNo, Environment environment) {
+      PubSpec pubspec, int lineNo, Environment environment) {
     final document = pubspec.document;
 
     _line = Line.forInsertion(document, 'environment:');

@@ -27,6 +27,6 @@ class HostedDependency implements Dependency {
 
   @override
   DependencyAttached _attach(
-          Dependencies dependencies, Pubspec pubspec, int lineNo) =>
+          Dependencies dependencies, PubSpec pubspec, int lineNo) =>
       HostedDependencyAttached.attach(dependencies, pubspec, lineNo, this);
 }

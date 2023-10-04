@@ -1,11 +1,11 @@
-import 'package:eric/eric.dart';
+import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 import 'pubspec_test.dart';
 
 void main() {
   test('pub hosted dependency ...', () async {
-    final pubspec = Pubspec.fromString(goodContent);
+    final pubspec = PubSpec.fromString(goodContent);
     expect(pubspec.dependencies.length, equals(2));
 
     final one = pubspec.dependencies.list.first;

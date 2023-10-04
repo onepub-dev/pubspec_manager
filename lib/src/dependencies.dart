@@ -26,7 +26,7 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
   late final String name;
 
   /// reference to the pubspec that has these dependencies.
-  final Pubspec _pubspec;
+  final PubSpec _pubspec;
 
   final List<DependencyAttached> _dependencies = <DependencyAttached>[];
 

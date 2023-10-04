@@ -15,7 +15,7 @@ class PubHostedDependencyAttached extends Section
   }
 
   @override
-  PubHostedDependencyAttached._attach(this._dependencies, Pubspec pubspec,
+  PubHostedDependencyAttached._attach(this._dependencies, PubSpec pubspec,
       int lineNo, PubHostedDependency dependency) {
     _name = dependency.name;
     _version = dependency.version;

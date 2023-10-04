@@ -22,7 +22,7 @@ class HostedDependencyAttached extends Section
     comments = CommentsAttached(this);
   }
 
-  HostedDependencyAttached.attach(this._dependencies, Pubspec pubspec,
+  HostedDependencyAttached.attach(this._dependencies, PubSpec pubspec,
       int lineNo, HostedDependency dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;

@@ -1,4 +1,4 @@
-import 'package:eric/eric.dart';
+import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -13,7 +13,7 @@ dependencies:
     hosted: https://onepub.dev
     version: 1.1.1
 ''';
-    final pubspec = Pubspec.fromString(content);
+    final pubspec = PubSpec.fromString(content);
     expect(pubspec.dependencies.length, equals(1));
 
     final one = pubspec.dependencies.list.first;

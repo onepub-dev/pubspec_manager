@@ -17,7 +17,7 @@ class PathDependencyAttached extends Section implements DependencyAttached {
   }
 
   PathDependencyAttached._attach(
-      Pubspec pubspec, int lineNo, PathDependency dependency) {
+      PubSpec pubspec, int lineNo, PathDependency dependency) {
     _name = dependency.name;
     _path = dependency.path;
 
