@@ -48,14 +48,10 @@ class Pubspec {
     description = document.getMultiLineForRequiredKey('description');
     _environment = EnvironmentAttached.fromLine(
         document.getLineForRequiredKey(EnvironmentAttached._key));
-    homepage = HomepageAttached._fromLine(
-        document.getLineForKey(HomepageAttached._key));
-    repository = RepositoryAttached._fromLine(
-        document.getLineForKey(RepositoryAttached._key));
-    issueTracker = IssueTrackerAttached._fromLine(
-        document.getLineForKey(IssueTrackerAttached._key));
-    documentation = DocumentationAttached._fromLine(
-        document.getLineForKey(DocumentationAttached._key));
+    homepage = HomepageAttached._fromLine(document);
+    repository = RepositoryAttached._fromLine(document);
+    issueTracker = IssueTrackerAttached._fromLine(document);
+    documentation = DocumentationAttached._fromLine(document);
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
@@ -181,7 +177,7 @@ class Pubspec {
       if (child.type != LineType.key) {
         continue;
       }
-      executables.append(Executable._fromLine(child), attach: false);
+      executables._appendAttached(ExecutableAttached._fromLine(child));
     }
     return executables;
   }

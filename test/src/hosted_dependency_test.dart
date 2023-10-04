@@ -1,5 +1,4 @@
 import 'package:eric/eric.dart';
-import 'package:eric/src/document/line.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -11,7 +10,7 @@ environment:
   sdk: 1.2.3
 dependencies:
   dcli:
-    url: https://onepub.dev
+    hosted: https://onepub.dev
     version: 1.1.1
 ''';
     final pubspec = Pubspec.fromString(content);
@@ -20,12 +19,9 @@ dependencies:
     final one = pubspec.dependencies.list.first;
     expect(one is HostedDependencyAttached, isTrue);
     final hosted = one as HostedDependencyAttached;
-    expect(hosted._name, equals('dcli'));
-    expect(
-        hosted._version,
-        equals(VersionAttached.parseVersionConstraint(
-            Line.test(pubspec.document, 'verson:1.1.1'), '1.1.1')));
-    expect(hosted._hostedUrl, equals('https://onepub.dev'));
+    expect(hosted.name, equals('dcli'));
+    expect(hosted.version, equals('1.1.1'));
+    expect(hosted.hostedUrl, equals('https://onepub.dev'));
 
     // final two = pubspec.dependencies.elementAt(1);
     // expect(two is HostedDependency, isTrue);

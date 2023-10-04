@@ -8,28 +8,22 @@ part of 'internal_parts.dart';
 /// If no version is specified then 'any' is assumed.
 @immutable
 class HostedDependency implements Dependency {
-  HostedDependency(
-      {required String name,
-      required String hosted,
-      String? version,
-      List<String> comments = const <String>[]}) {
-    _name = name;
+  HostedDependency({
+    required this.name,
+    required String hosted,
+    this.version,
+    List<String>? comments,
+  }) : _comments = comments ?? <String>[] {
     hostedUrl = hosted;
-
-    _version = Version.parse(version);
-    this.comments = Comments(comments);
   }
-  static const key = 'hosted';
-  late final String _name;
-  late final String hostedUrl;
-  late final Version _version;
-
-  String get version => _version.toString();
 
   @override
-  String get name => _name;
+  late final String name;
+  late final String hostedUrl;
+  late final String? version;
+  late final List<String> _comments;
 
-  late final Comments comments;
+  List<String> get comments => _comments;
 
   @override
   DependencyAttached _attach(

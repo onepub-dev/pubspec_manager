@@ -4,7 +4,7 @@ part of 'internal_parts.dart';
 
 /// Holds a dependency version
 class Version {
-  Version(this._version);
+  Version(this._version) : missing = false;
 
   factory Version.parse(String? versionConstraint) => versionConstraint != null
       ? Version(parseConstraint(versionConstraint))

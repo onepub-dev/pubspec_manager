@@ -11,24 +11,23 @@ class PubHostedDependency implements Dependency {
   /// be left empty when you save
   PubHostedDependency({
     required this.name,
-    String? version,
+    this.version,
     List<String>? comments,
-  }) : _comments = comments ?? <String>[] {}
+  }) : _comments = comments ?? <String>[];
 
+  @override
+  late final String name;
+  late final String? version;
   late final List<String> _comments;
 
-  late final String name;
-  late final Version version;
+  List<String> get comments => _comments;
 
   @override
   DependencyAttached _attach(
       Dependencies dependencies, Pubspec pubspec, int lineNo) {
     final attached = PubHostedDependencyAttached._attach(
         dependencies, pubspec, lineNo, this);
-    // ignore: prefer_foreach
-    for (final comment in _comments) {
-      attached.comments.append(comment);
-    }
+
     return attached;
   }
 }

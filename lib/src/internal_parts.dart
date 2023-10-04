@@ -19,7 +19,6 @@ import 'document/section.dart';
 import 'document/section_single_line.dart';
 import 'document/simple_section.dart';
 
-part 'comments.dart';
 part 'comments_attached.dart';
 part 'dependencies.dart';
 part 'dependency.dart';

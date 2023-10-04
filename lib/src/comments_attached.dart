@@ -7,7 +7,7 @@ part of 'internal_parts.dart';
 /// a section upto where the proceeding section ends.
 class CommentsAttached {
   CommentsAttached(this.section) {
-    _lines = commentsAsLine();
+    _lines = _commentsAsLine();
   }
   CommentsAttached.empty(this.section) : _lines = <Line>[];
 
@@ -17,7 +17,7 @@ class CommentsAttached {
   /// Gets the set of comments that suffix the passed in [section]
   /// This will include any blank lines upto the end of the prior
   /// section.
-  List<Line> commentsAsLine() {
+  List<Line> _commentsAsLine() {
     final document = section.document;
 
     final suffix = <Line>[];

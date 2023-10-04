@@ -27,7 +27,7 @@ class Document {
     for (final line in contentLines) {
       lines.add(Line(this, line, lineNo++));
     }
-    pathTo = '<from lines>';
+    pathTo = '<Loaded from lines>';
   }
 
   /// Load the pubspec.yaml from [content]
@@ -39,7 +39,8 @@ class Document {
       lines = lines.sublist(0, lines.length - 1);
     }
 
-    final doc = Document.loadFromLines(lines)..pathTo = '<from String>';
+    final doc = Document.loadFromLines(lines)
+      ..pathTo = '<Loaded from a String>';
     return doc;
   }
 

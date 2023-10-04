@@ -6,7 +6,7 @@ class GitDependencyAttached extends Section implements DependencyAttached {
   /// from [line].
   GitDependencyAttached._fromLine(this._dependencies, Line line)
       : _line = line {
-    final name = _line.key;
+    _name = _line.key;
     final details = GitDetails.fromLine(_line);
 
     if (Strings.isNotBlank(_line.value) && details.refLine != null) {
@@ -14,34 +14,41 @@ class GitDependencyAttached extends Section implements DependencyAttached {
           '''The git dependency for '$name has the url specified twice. ''');
     }
 
-    dependency = GitDependency(
-        name: name, url: details.url, ref: details.ref, path: details.path);
-
     comments = CommentsAttached(this);
   }
 
   GitDependencyAttached._attach(
       Pubspec pubspec, int lineNo, GitDependency dependency) {
-    _line = Line.forInsertion(pubspec.document, '  ${dependency.name}:');
+    _name = dependency.name;
+    _line = Line.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insert(_line, lineNo);
 
     _details = GitDetails(dependency);
     _details._attach(this, lineNo);
 
-    comments = dependency.comments._attach(this);
+    // ignore: prefer_foreach
+    for (final comment in dependency.comments) {
+      comments.append(comment);
+    }
   }
+  static const key = 'git';
+
+  late final String _name;
 
   /// The parent dependency key
   late final Dependencies _dependencies;
-
-  late final GitDependency dependency;
 
   late final GitDetails _details;
 
   late final Line _line;
 
   @override
-  String get _name => _line.key;
+  String get name => _name;
+
+  set name(String name) {
+    this.name = name;
+    _line.key = name;
+  }
 
   @override
   Line get line => _line;
@@ -57,9 +64,6 @@ class GitDependencyAttached extends Section implements DependencyAttached {
 
   @override
   Document get document => line.document;
-
-  @override
-  Version get version => Version.empty();
 
   /// The last line number used by this  section
   @override

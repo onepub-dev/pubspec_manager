@@ -15,8 +15,11 @@ abstract class DependencyAttached extends Section {
     /// So not a pub hosted dep, we use the main key
     /// from each of the dependency types to discover
     /// which type of dependeny we have.
-    final depTypeLine = line.findOneOf(
-        [HostedDependency.key, PathDependency.key, GitDependency.key]);
+    final depTypeLine = line.findOneOf([
+      HostedDependencyAttached.key,
+      PathDependencyAttached.key,
+      GitDependencyAttached.key
+    ]);
 
     // none of the children had one of the expected keys.
     if (depTypeLine == null) {
@@ -28,11 +31,11 @@ abstract class DependencyAttached extends Section {
 
     /// We know the type of dependency so lets load the details.
     switch (depTypeLine.key) {
-      case HostedDependency.key:
+      case HostedDependencyAttached.key:
         return HostedDependencyAttached._fromLine(dependencies, line);
-      case PathDependency.key:
+      case PathDependencyAttached.key:
         return PathDependencyAttached._fromLine(dependencies, line);
-      case GitDependency.key:
+      case GitDependencyAttached.key:
         return GitDependencyAttached._fromLine(dependencies, line);
     }
 

@@ -1,3 +1,7 @@
+# 1.0.0-alpha.5
+- Cleaner demarkation between attached and non-attached entities.
+- you can now provide a documentation url and associate comments with it.
+
 # 1.0.0-alpha.3
 - rework of api to make creation more fluid that is close to be declarative
 - add support for additional pubspec keys.

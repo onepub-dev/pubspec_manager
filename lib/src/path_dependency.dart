@@ -10,24 +10,18 @@ part of 'internal_parts.dart';
 ///     path: ../dcli
 @immutable
 class PathDependency implements Dependency {
-  PathDependency(
-      {required String name,
-      required String path,
-      List<String> comments = const <String>[]})
-      : _name = name,
-        _path = path {
-    this.comments = Comments(comments);
-  }
-
-  static const key = 'path';
-
-  late final String _name;
-  late final String _path;
+  PathDependency({
+    required this.name,
+    required this.path,
+    List<String>? comments,
+  }) : _comments = comments ?? <String>[];
 
   @override
-  String get name => _name;
+  late final String name;
+  late final String path;
+  late final List<String> _comments;
 
-  late final Comments comments;
+  List<String> get comments => _comments;
 
   @override
   DependencyAttached _attach(

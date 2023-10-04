@@ -11,13 +11,24 @@ class Repository implements SingleLine {
 }
 
 class RepositoryAttached extends SectionSingleLine {
-  RepositoryAttached._fromLine(Line line)
+  factory RepositoryAttached._fromLine(Document document) {
+    final line = document.getLineForKey(RepositoryAttached._key);
+    if (line.missing) {
+      return RepositoryAttached.missing(document);
+    } else {
+      return RepositoryAttached._(line);
+    }
+  }
+
+  RepositoryAttached._(Line line)
       : repository = Repository(line.value),
         super.fromLine(_key, line);
 
   RepositoryAttached.missing(Document document)
       : repository = Repository.missing(),
         super.missing(_key, document);
+
+  final Repository repository;
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -29,8 +40,6 @@ class RepositoryAttached extends SectionSingleLine {
   }
 
   String get url => repository.url;
-  //final Document document;
-  final Repository repository;
 
   static const String _key = 'repository';
 }

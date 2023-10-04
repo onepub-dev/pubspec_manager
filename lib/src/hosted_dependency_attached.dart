@@ -28,28 +28,37 @@ class HostedDependencyAttached extends Section
     _hostedUrl = dependency.hostedUrl;
     _version = dependency.version;
 
-    _line = Line.forInsertion(pubspec.document, '  ${dependency.name}: ');
+    _line = Line.forInsertion(pubspec.document, '  $_name: ');
     pubspec.document.insert(_line, lineNo++);
-    _hostedUrlLine = Line.forInsertion(
-        pubspec.document, '    hosted: ${dependency.hostedUrl}');
+    _hostedUrlLine =
+        Line.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
     pubspec.document.insert(_hostedUrlLine, lineNo++);
 
-    if (dependency.version.isNotEmpty) {
-      _versionLine = Line.forInsertion(
-          pubspec.document, '    version: ${dependency.version}');
+    if (_version != null) {
+      _versionLine =
+          Line.forInsertion(pubspec.document, '    version: $_version');
       pubspec.document.insert(_versionLine, lineNo++);
     } else {
       _versionLine = Line.missing(document, LineType.key);
     }
     comments = CommentsAttached(this);
+
+    // ignore: prefer_foreach
+    for (final comment in dependency.comments) {
+      comments.append(comment);
+    }
   }
+  static const key = 'hosted';
 
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
 
   late String _name;
   late String _hostedUrl;
-  late String _version;
+  late String? _version;
+
+  @override
+  late final CommentsAttached comments;
 
   late final Line _line;
   late final Line _hostedUrlLine;
@@ -71,7 +80,7 @@ class HostedDependencyAttached extends Section
   }
 
   @override
-  String get version => _version;
+  String get version => _version ?? 'any';
 
   @override
   set version(String version) {
@@ -87,9 +96,6 @@ class HostedDependencyAttached extends Section
 
   @override
   int get lineNo => _line.lineNo;
-
-  @override
-  late final CommentsAttached comments;
 
   @override
   List<Line> get lines => [

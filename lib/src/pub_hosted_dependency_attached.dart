@@ -18,15 +18,19 @@ class PubHostedDependencyAttached extends Section
   PubHostedDependencyAttached._attach(this._dependencies, Pubspec pubspec,
       int lineNo, PubHostedDependency dependency) {
     _name = dependency.name;
-    version = dependency._version;
-    _line = Line.forInsertion(pubspec.document,
-        '  ${dependency._name}: ${dependency._version.constraint}');
+    _version = dependency.version;
+    _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
     pubspec.document.insert(line, lineNo);
     comments = CommentsAttached(this);
+
+    // ignore: prefer_foreach
+    for (final comment in dependency.comments) {
+      comments.append(comment);
+    }
   }
 
-  String _name;
-  String _version;
+  late String _name;
+  late String? _version;
 
   /// The line this dependency is attached to.
   late final Line _line;
@@ -34,15 +38,21 @@ class PubHostedDependencyAttached extends Section
   late final Dependencies _dependencies;
 
   @override
-  String get name => dependency.name;
+  String get name => _name;
 
   set name(String name) {
     _name = name;
-    _line.value = name;
+    _line.key = name;
   }
 
   @override
-  String get version => dependency._version.toString();
+  String get version => _version ?? 'any';
+
+  @override
+  set version(String version) {
+    _version = version;
+    _line.value = version;
+  }
 
   @override
   Line get line => _line;
@@ -67,10 +77,5 @@ class PubHostedDependencyAttached extends Section
   DependencyAttached append(Dependency dependency) {
     _dependencies.append(dependency);
     return this;
-  }
-
-  @override
-  set _version(String version) {
-    // TODO: implement version
   }
 }

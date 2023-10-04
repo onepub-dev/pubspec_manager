@@ -26,7 +26,8 @@ void main() {
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
     expect(testDep!.line.lineNo, equals(13));
-    expect(testDep.version.toString(), equals(version));
+    expect(testDep, isA<DependencyVersioned>());
+    expect((testDep as DependencyVersioned).version, equals(version));
 
     final dependencies = pubspec.dependencies
       ..append(PubHostedDependency(name: 'dcli_core', version: version));
@@ -34,7 +35,8 @@ void main() {
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
     expect(dcliCore!.line.lineNo, equals(10));
-    expect(dcliCore.version.toString(), equals(version));
+    expect(dcliCore, isA<DependencyVersioned>());
+    expect((dcliCore as DependencyVersioned).version, equals(version));
     expect(pubspec.document.lines.length, equals(15));
   });
 
@@ -58,7 +60,7 @@ void main() {
     final document = pubspec.document;
     const comment = 'A comment on section';
     pubspec.dependencies.comments.append(comment);
-    expect(document.lines[5].text, '#$comment');
+    expect(document.lines[5].text, '# $comment');
 
     expect(pubspec.dependencies.comments.length, equals(1));
   });

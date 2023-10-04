@@ -14,17 +14,24 @@ class Documentation implements SingleLine {
 }
 
 class DocumentationAttached extends SectionSingleLine {
-  // DocumentationAttached._attach(Pubspec pubspec, int lineNo,
-  // this.documentation)
-  //     : super.attach(_key, pubspec, lineNo, documentation);
+  factory DocumentationAttached._fromLine(Document document) {
+    final line = document.getLineForKey(DocumentationAttached._key);
+    if (line.missing) {
+      return DocumentationAttached.missing(document);
+    } else {
+      return DocumentationAttached._(line);
+    }
+  }
 
-  DocumentationAttached._fromLine(Line line)
+  DocumentationAttached._(Line line)
       : documentation = Documentation(line.value),
         super.fromLine(_key, line);
 
   DocumentationAttached.missing(Document document)
       : documentation = Documentation.missing(),
         super.missing(_key, document);
+
+  final Documentation documentation;
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -35,9 +42,6 @@ class DocumentationAttached extends SectionSingleLine {
     // ignore: avoid_returning_this
     return this;
   }
-
-  //final Document document;
-  final Documentation documentation;
 
   static const String _key = 'documentation';
 }

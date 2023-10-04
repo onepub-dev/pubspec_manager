@@ -11,13 +11,24 @@ class IssueTracker implements SingleLine {
 }
 
 class IssueTrackerAttached extends SectionSingleLine {
-  IssueTrackerAttached._fromLine(Line line)
+  factory IssueTrackerAttached._fromLine(Document document) {
+    final line = document.getLineForKey(IssueTrackerAttached._key);
+    if (line.missing) {
+      return IssueTrackerAttached.missing(document);
+    } else {
+      return IssueTrackerAttached._(line);
+    }
+  }
+
+  IssueTrackerAttached._(Line line)
       : issueTracker = IssueTracker(line.value),
         super.fromLine(_key, line);
 
   IssueTrackerAttached.missing(Document document)
       : issueTracker = IssueTracker.missing(),
         super.missing(_key, document);
+
+  final IssueTracker issueTracker;
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -29,8 +40,6 @@ class IssueTrackerAttached extends SectionSingleLine {
   }
 
   String get url => issueTracker.url;
-  //final Document document;
-  final IssueTracker issueTracker;
 
   static const String _key = 'issue_tracker';
 }

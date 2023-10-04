@@ -1,40 +1,46 @@
 part of 'internal_parts.dart';
 
-class Homepage implements SingleLine {
-  Homepage(this.url);
-  Homepage.missing() : url = '';
+// class Homepage {
+//   Homepage({required this.url, this.comments = const <String>[]});
+//   Homepage.missing()
+//       : url = '',
+//         comments = const <String>[];
 
-  String url;
-
-  @override
-  String get value => url;
-}
+//   final String url;
+//   final List<String> comments;
+// }
 
 class HomepageAttached extends SectionSingleLine {
-  // HomepageAttached._attach(Pubspec pubspec, int lineNo,
-  // this.Homepage)
-  //     : super.attach(_key, pubspec, lineNo, Homepage);
+  /// build homepage from an imported document line
+  factory HomepageAttached._fromLine(Document document) {
+    final line = document.getLineForKey(HomepageAttached._key);
+    if (line.missing) {
+      return HomepageAttached.missing(document);
+    } else {
+      return HomepageAttached._(line);
+    }
+  }
 
-  HomepageAttached._fromLine(Line line)
-      : homepage = Homepage(line.value),
+  HomepageAttached._(Line line)
+      : _url = line.value,
         super.fromLine(_key, line);
 
   HomepageAttached.missing(Document document)
-      : homepage = Homepage.missing(),
+      : _url = '',
         super.missing(_key, document);
+
+  String _url;
 
   @override
   // ignore: avoid_renaming_method_parameters
   HomepageAttached set(String url) {
-    homepage.url = url;
+    _url = url;
     super.set(url);
     // ignore: avoid_returning_this
     return this;
   }
 
-  String get url => homepage.url;
-  //final Document document;
-  final Homepage homepage;
+  String get url => _url;
 
   static const String _key = 'homepage';
 }
