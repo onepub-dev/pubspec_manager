@@ -1,3 +1,9 @@
+# 1.0.0-alpha.6
+- renamed Pubspec to PubSpec. 
+- Fixed a bug when setting the flutter and sdk environments. 
+- Added logic to track if versions where quoted so we can preserve the quoting.
+- general cleanup nd bug fixes.
+
 # 1.0.0-alpha.5
 - Cleaner demarkation between attached and non-attached entities.
 - you can now provide a documentation url and associate comments with it.
