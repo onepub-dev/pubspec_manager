@@ -153,7 +153,13 @@ class Line implements Renderer {
   /// is thrown.
   String get value => keyValue.value;
 
-  set value(String value) => _keyValue = keyValue.copy(value: value);
+  set value(String value) {
+    if (_keyValue == null) {
+      _keyValue = KeyValue(key, value);
+    } else {
+      _keyValue = keyValue.copy(value: value);
+    }
+  }
 
   /// a short hand way of getting the key component
   /// of a line of type [LineType.key].

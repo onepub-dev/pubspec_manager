@@ -2,7 +2,7 @@ import '../internal_parts.dart';
 import 'line.dart';
 
 class KeyValue {
-  KeyValue._internal(this.key, this.value);
+  KeyValue(this.key, this.value);
 
   KeyValue.fromLine(Line line) {
     var content = line.text;
@@ -20,7 +20,7 @@ class KeyValue {
   }
 
   KeyValue copy({String? key, String? value}) =>
-      KeyValue._internal(key ?? this.key, value ?? this.value);
+      KeyValue(key ?? this.key, value ?? this.value);
 
   late final String key;
   late final String value;

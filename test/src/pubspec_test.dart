@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:eric/eric.dart';
-import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:test/test.dart';
 
 const goodContent = '''
@@ -38,8 +37,7 @@ void main() {
       expect(pubspec.description.value,
           equals('A simple command-line application created by dcli'));
 
-      expect(pubspec.environment.sdk.constraint,
-          equals(sm.VersionConstraint.parse('>=2.19.0 <3.0.0')));
+      expect(pubspec.environment.sdk, equals("'>=2.19.0 <3.0.0'"));
 
       expect(pubspec.dependencies.length, equals(2));
     });

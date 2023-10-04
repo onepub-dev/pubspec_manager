@@ -4,7 +4,9 @@ part of 'internal_parts.dart';
 
 /// Holds a dependency version
 class VersionAttached extends LineSection {
-  // not part of the public interface
+  ///
+  /// extract a version for a line.
+  ///
   VersionAttached._fromLine(this.line, {bool required = false})
       : _missing = false,
         super.fromLine(line) {
@@ -20,12 +22,13 @@ class VersionAttached extends LineSection {
       return;
     }
     _versionConstraint = parseVersionConstraint(line, line.value);
+    quoted = _isQuoted(line.value);
   }
 
   /// The version key wasn't present in the pubspec
   VersionAttached._missing(Document document)
       : line = Line.missing(document, LineType.key),
-        _missing = false,
+        _missing = true,
         super.missing(document, 'version');
 
   /// There was a version key but no value
@@ -35,6 +38,8 @@ class VersionAttached extends LineSection {
   bool get isMissing => _missing;
 
   final bool _missing;
+
+  bool quoted = false;
 
   late Version _versionConstraint;
 
@@ -52,15 +57,28 @@ class VersionAttached extends LineSection {
   @override
   String toString() => _versionConstraint.toString();
 
-  @override
-  set value(String version) {
+  set version(String version) {
     try {
       sm.VersionConstraint.parse(version);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
-    line.value = version;
+    quoted = _isQuoted(version);
+
+    line.value = _stripQuotes(version);
+    missing = false;
   }
+
+  String get version {
+    if (quoted) {
+      return "'${toString()}'";
+    } else {
+      return toString();
+    }
+  }
+
+  bool _isQuoted(String version) =>
+      version.contains("'") || version.contains('"');
 
   @override
   bool operator ==(Object other) =>

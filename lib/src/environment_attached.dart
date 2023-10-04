@@ -34,8 +34,8 @@ class EnvironmentAttached extends Section {
 
     if (environment._sdk != null) {
       pubspec.document.insert(
-          _sdkLine = Line.forInsertion(
-              pubspec.document, "  sdk: '${environment._sdk}'"),
+          _sdkLine =
+              Line.forInsertion(pubspec.document, '  sdk: ${environment._sdk}'),
           lineNo++);
       _sdk = VersionAttached._fromLine(_sdkLine);
     } else {
@@ -46,7 +46,7 @@ class EnvironmentAttached extends Section {
     if (environment._flutter != null) {
       pubspec.document.insert(
           _flutterLine = Line.forInsertion(
-              pubspec.document, "  flutter: '${environment._flutter}'"),
+              pubspec.document, '  flutter: ${environment._flutter}'),
           lineNo++);
       _flutter = VersionAttached._fromLine(_flutterLine);
     } else {
@@ -55,13 +55,13 @@ class EnvironmentAttached extends Section {
     }
   }
 
-  late final VersionAttached _sdk;
-  late final VersionAttached _flutter;
+  late VersionAttached _sdk;
+  late VersionAttached _flutter;
 
   /// The starting line of the environment section.
   late final Line _line;
-  late final Line _sdkLine;
-  late final Line _flutterLine;
+  late Line _sdkLine;
+  late Line _flutterLine;
 
   @override
   Line get line => _line;
@@ -69,8 +69,28 @@ class EnvironmentAttached extends Section {
   @override
   late final CommentsAttached comments;
 
-  Version get sdk => _sdk._versionConstraint;
-  Version get flutter => _flutter._versionConstraint;
+  String get sdk => _sdk.version;
+  String get flutter => _flutter.isMissing ? '' : _flutter.version;
+
+  set sdk(String version) {
+    if (_sdk.isMissing) {
+      final line = Line.forInsertion(document, '  sdk: $version');
+      document.insert(line, lastLineNo);
+      _sdkLine = line;
+      _sdk = VersionAttached._fromLine(_sdkLine);
+    }
+    _sdk.version = version;
+  }
+
+  set flutter(String version) {
+    if (_flutter.isMissing) {
+      final line = Line.forInsertion(document, '  flutter: $version');
+      document.insert(line, lastLineNo);
+      _flutterLine = line;
+      _flutter = VersionAttached._fromLine(_flutterLine);
+    }
+    _flutter.version = version;
+  }
 
   @override
   String toString() => _line.value;
