@@ -206,6 +206,15 @@ class PubSpec {
     _loadedFromDirectory = directory;
     _loadedFromFilename = filename;
 
+    final writer = FileWriter(join(directory, filename));
+
+    /// whilst the calls to [render] are ordered (for easy reading)
+    /// the underlying lines control the order
+    /// that each section is written to disk.
+    write(writer);
+  }
+
+  void write(Writer writer) {
     /// whilst the calls to [render] are ordered (for easy reading)
     /// the underlying lines control the order
     /// that each section is written to disk.
@@ -228,7 +237,7 @@ class PubSpec {
       ..render(screenshots)
       ..render(topics)
       ..renderMissing()
-      ..write(join(directory, filename));
+      ..write(writer);
   }
 
   /// Allows you to save the pubpsec to the file
@@ -243,12 +252,9 @@ class PubSpec {
 
   @override
   String toString() {
-    final content = StringBuffer();
-    // ignore: prefer_foreach
-    for (final line in document.lines) {
-      content.writeln(line);
-    }
-    return content.toString();
+    final writer = StringWriter();
+    write(writer);
+    return writer.content;
   }
 
   /// search up the directory tree (starting from [directory]to find

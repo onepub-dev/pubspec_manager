@@ -5,6 +5,48 @@ import 'document.dart';
 import 'line.dart';
 import 'section.dart';
 
+abstract class Writer {
+  void init();
+  void write(String s) {}
+}
+
+class StringWriter implements Writer {
+  final _content = StringBuffer();
+
+  @override
+  void init() {
+    // noop
+  }
+
+  @override
+  void write(String line) {
+    _content.writeln(line);
+  }
+
+  String get content => _content.toString();
+}
+
+class FileWriter implements Writer {
+  FileWriter(this.pathTo) : file = File(pathTo);
+
+  @override
+  void init() {
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+  }
+
+  String pathTo;
+  File file;
+
+  void close() {}
+
+  @override
+  void write(String line) {
+    file.writeAsStringSync(line, mode: FileMode.append);
+  }
+}
+
 class DocumentWriter {
   DocumentWriter(this.document);
   Document document;
@@ -28,29 +70,25 @@ class DocumentWriter {
     }
   }
 
-  /// Write the contents of the pubspec.yaml to the file
-  /// at [pathTo].
-  void write(String pathTo) {
-    final file = File(pathTo);
+  /// Write the contents of the pubspec.yaml [writer]
+  void write(Writer writer) {
+    writer.init();
     final sorted = lines.keys.toList()..sort((a, b) => a - b);
-    if (file.existsSync()) {
-      file.deleteSync();
-    }
+
     for (final lineNo in sorted) {
       final line = lines[lineNo];
-      file.writeAsStringSync('${line!.render()} $_lineTerminator',
-          mode: FileMode.append);
+      writer.write(line!.render());
     }
   }
 
-  /// Platform specific line terminator.
-  static String get _lineTerminator {
-    if (Platform.isWindows) {
-      return '\r\n';
-    } else {
-      return '\n';
-    }
-  }
+  // /// Platform specific line terminator.
+  // static String get _lineTerminator {
+  //   if (Platform.isWindows) {
+  //     return '\r\n';
+  //   } else {
+  //     return '\n';
+  //   }
+  // }
 
   /// Any lines which are independent of known keys will not have
   /// been rendered so now we render them verbatum.
