@@ -4,7 +4,8 @@ part of 'internal_parts.dart';
 /// executable:
 ///   dcli: dcli_tool
 class Executable {
-  Executable(this.name, this.script);
+  Executable({required this.name, this.script = ''});
+
   Executable.missing()
       : name = '',
         script = '';
@@ -27,13 +28,11 @@ class ExecutableAttached extends SectionSingleLine {
   ExecutableAttached._attach(PubSpec pubspec, int lineNo, Executable executable)
       : _name = executable.name,
         _script = executable.script,
-        super.attach(executable.name, pubspec, lineNo, executable.script) {
-    _line = Line.forInsertion(pubspec.document, '  $_name: $_script');
-    pubspec.document.insert(_line, lineNo);
-  }
+        _line = Line.forInsertion(pubspec.document, _buildLine(executable)),
+        super.attach(executable.name, pubspec, lineNo, executable.script);
 
   String _name;
-  String? _script;
+  String _script;
 
   late final Line _line;
 
@@ -55,7 +54,7 @@ class ExecutableAttached extends SectionSingleLine {
     _line.value = script;
   }
 
-  String get script => _script ?? name;
+  String get script => Strings.orElseOnBlank(_script, name);
 
   /// returns the project relative path to the script.
   ///
@@ -65,8 +64,7 @@ class ExecutableAttached extends SectionSingleLine {
   ///
   /// scriptPath => bin/main.dart
   ///
-  String get scriptPath =>
-      join('bin', '${Strings.orElseOnBlank(_script, name)}.dart');
+  String get scriptPath => join('bin', '$script.dart');
 
   @override
   Line get line => _line;
@@ -80,4 +78,15 @@ class ExecutableAttached extends SectionSingleLine {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
+
+  static String _buildLine(Executable executable) {
+    final prefix = '  ${executable.name}:';
+
+    final script = executable.script;
+    if (Strings.isNotBlank(script)) {
+      return '$prefix $script';
+    } else {
+      return prefix;
+    }
+  }
 }

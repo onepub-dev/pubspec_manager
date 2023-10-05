@@ -64,7 +64,7 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
     if (missing) {
       missing = false;
       // create the section.
-      line = document.append(LineDetached(name));
+      line = document.append(LineDetached(key));
     } else {
       if (_executables.isEmpty) {
         insertAt = line.lineNo + 1;
