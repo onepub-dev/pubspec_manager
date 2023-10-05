@@ -16,23 +16,24 @@ class Executable {
       ExecutableAttached._attach(pubspec, lineNo, this);
 }
 
+/// An executable script that is attached to the [PubSpec].
 class ExecutableAttached extends SectionSingleLine {
   /// re-hydrate an executable from a line.
-  ExecutableAttached._fromLine(this._line) : super.fromLine(_line.key, _line) {
-    _name = _line.key;
-    _script = _line.value;
-  }
+  ExecutableAttached._fromLine(this._line)
+      : _name = _line.key,
+        _script = _line.value,
+        super.fromLine(_line.key, _line);
 
   ExecutableAttached._attach(PubSpec pubspec, int lineNo, Executable executable)
-      : super.attach(executable.name, pubspec, lineNo, executable.script) {
-    _name = executable.name;
-    _script = executable.script;
+      : _name = executable.name,
+        _script = executable.script,
+        super.attach(executable.name, pubspec, lineNo, executable.script) {
     _line = Line.forInsertion(pubspec.document, '  $_name: $_script');
     pubspec.document.insert(_line, lineNo);
   }
 
-  late final String _name;
-  late final String? _script;
+  String _name;
+  String? _script;
 
   late final Line _line;
 
@@ -64,7 +65,8 @@ class ExecutableAttached extends SectionSingleLine {
   ///
   /// scriptPath => bin/main.dart
   ///
-  String get scriptPath => join('bin', '${_script ?? name}.dart');
+  String get scriptPath =>
+      join('bin', '${Strings.orElseOnBlank(_script, name)}.dart');
 
   @override
   Line get line => _line;
