@@ -43,7 +43,16 @@ class FileWriter implements Writer {
 
   @override
   void write(String line) {
-    file.writeAsStringSync(line, mode: FileMode.append);
+    file.writeAsStringSync('$line$_lineTerminator', mode: FileMode.append);
+  }
+
+  /// Platform specific line terminator.
+  String get _lineTerminator {
+    if (Platform.isWindows) {
+      return '\r\n';
+    } else {
+      return '\n';
+    }
   }
 }
 
@@ -80,15 +89,6 @@ class DocumentWriter {
       writer.write(line!.render());
     }
   }
-
-  // /// Platform specific line terminator.
-  // static String get _lineTerminator {
-  //   if (Platform.isWindows) {
-  //     return '\r\n';
-  //   } else {
-  //     return '\n';
-  //   }
-  // }
 
   /// Any lines which are independent of known keys will not have
   /// been rendered so now we render them verbatum.
