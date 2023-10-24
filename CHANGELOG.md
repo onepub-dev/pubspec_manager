@@ -1,3 +1,14 @@
+# 1.0.0-alpha.8
+- fixed a bug in Line.text where the text value wasn't being updated if the key or value of the line where changed.
+- additional test cases.
+- line_section now implements rather than extends line.
+- Added toString method to key_value
+- added platform specific line terminator when writting pubspec.
+- changed the pubspec render process to use a writer interface so we can switch out the render target.
+- Fixed bugs in executables when trying to append or update an executable.
+- imporved the readme example.
+- Fixed a bug in ExectuableAttached which prevented changing of the executable name. Fixed a bug in the scriptPath. When there was no script we returned .dart rather than name.dart.
+
 # 1.0.0-alpha.6
 - renamed Pubspec to PubSpec. 
 - Fixed a bug when setting the flutter and sdk environments. 
