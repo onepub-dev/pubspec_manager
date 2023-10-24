@@ -154,6 +154,7 @@ class Line implements Renderer {
     } else {
       _keyValue = keyValue.copy(value: value);
     }
+    text = _keyValue.toString();
   }
 
   /// a short hand way of getting the key component
@@ -162,7 +163,10 @@ class Line implements Renderer {
   /// is thrown.
   String get key => keyValue.key;
 
-  set key(String key) => _keyValue = keyValue.copy(key: key);
+  set key(String key) {
+    _keyValue = keyValue.copy(key: key);
+    text = _keyValue.toString();
+  }
 
   /// Find the child of the current line that has the given [key]
   /// Return null if the [key] can't be found.
