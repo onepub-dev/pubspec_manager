@@ -24,4 +24,7 @@ class KeyValue {
 
   late final String key;
   late final String value;
+
+  @override
+  String toString() => '$key: $value';
 }
