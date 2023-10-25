@@ -1,3 +1,6 @@
+# 1.0.0-alpha.10
+- Fixed a bug in the version_constraint. It wasn't being updated correctly when a new value was assigned to it.
+
 # 1.0.0-alpha.9
 - lint cleanup
 - Change insert to InsertBefore to avoid line maths being done all over the place. Now you just pass the nearest line and we insert relative to that. Added helper functions to make the indent consistent.
