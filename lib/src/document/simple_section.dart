@@ -4,23 +4,24 @@ import 'line.dart';
 import 'line_type.dart';
 import 'section.dart';
 
+/// A section that may have children and comments.
 class SimpleSection extends Section {
   SimpleSection(this.line, this._children) {
     _key = line.key;
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
 
   SimpleSection.fromLine(this.line) {
     _key = line.key;
     _children = line.childrenOf(descendants: true);
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
 
   SimpleSection.missing(Document document, this._key)
       : line = Line.missing(document, LineType.key),
         _children = <Line>[],
         super.missing() {
-    comments = CommentsAttached.empty(this);
+    comments = Comments.empty(this);
   }
 
   late final String _key;
@@ -38,7 +39,7 @@ class SimpleSection extends Section {
   List<Line> get lines => [...comments.lines, line, ..._children];
 
   @override
-  late final CommentsAttached comments;
+  late final Comments comments;
 
   /// The last line number used by this  section
   @override

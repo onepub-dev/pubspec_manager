@@ -20,13 +20,13 @@ class RepositoryAttached extends SectionSingleLine {
     }
   }
 
-  RepositoryAttached._(Line line)
+  RepositoryAttached._(super.line)
       : repository = Repository(line.value),
-        super.fromLine(_key, line);
+        super.fromLine();
 
   RepositoryAttached.missing(Document document)
       : repository = Repository.missing(),
-        super.missing(_key, document);
+        super.missing(document, _key);
 
   final Repository repository;
 

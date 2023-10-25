@@ -1,35 +1,18 @@
 part of 'internal_parts.dart';
 
-/// represents an executable
-/// executable:
-///   dcli: dcli_tool
-class Executable {
-  Executable({required this.name, this.script = ''});
-
-  Executable.missing()
-      : name = '',
-        script = '';
-
-  String name;
-  String script;
-
-  ExecutableAttached _attach(PubSpec pubspec, int lineNo) =>
-      ExecutableAttached._attach(pubspec, lineNo, this);
-}
-
 /// An executable script that is attached to the [PubSpec].
-class ExecutableAttached extends SectionSingleLine {
+class Executable extends SectionSingleLine {
   /// re-hydrate an executable from a line.
-  ExecutableAttached._fromLine(this._line)
+  Executable._fromLine(this._line)
       : _name = _line.key,
         _script = _line.value,
-        super.fromLine(_line.key, _line);
+        super.fromLine(_line);
 
-  ExecutableAttached._attach(PubSpec pubspec, int lineNo, Executable executable)
+  Executable._attach(PubSpec pubspec, int lineNo, ExecutableBuilder executable)
       : _name = executable.name,
         _script = executable.script,
         _line = Line.forInsertion(pubspec.document, _buildLine(executable)),
-        super.attach(executable.name, pubspec, lineNo, executable.script);
+        super.attach(pubspec, lineNo, executable.name, executable.script);
 
   String _name;
   String _script;
@@ -79,7 +62,7 @@ class ExecutableAttached extends SectionSingleLine {
   @override
   int get lastLineNo => lines.last.lineNo;
 
-  static String _buildLine(Executable executable) {
+  static String _buildLine(ExecutableBuilder executable) {
     final prefix = '  ${executable.name}:';
 
     final script = executable.script;

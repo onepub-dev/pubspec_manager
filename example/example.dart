@@ -7,7 +7,7 @@ void main() {
     name: 'new eric',
     version: '1.0.0-alpha.2',
     description: 'An example',
-    environment: Environment(sdk: '>3.0.0 <=4.0.0'),
+    environment: EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0'),
   )
     ..documentation
         .set('https://onepub.dev')
@@ -27,20 +27,20 @@ void main() {
         .comments
         .append('The code is here')
     ..dependencies
-        .append(HostedDependency(
+        .append(HostedDependencyBuilder(
           name: 'dcli',
           hosted: 'https://onepub.dev',
           comments: const ['DCLI to do file system stuff', 'Hello world'],
         ))
-        .append(PubHostedDependency(name: 'dcli_core', version: '1.0.0'))
+        .append(PubHostedDependencyBuilder(name: 'dcli_core', version: '1.0.0'))
     ..devDependencies
         .append(
-          PubHostedDependency(
+          PubHostedDependencyBuilder(
               comments: const ['hi there', 'ho there'],
               name: 'test',
               version: '1.0.0'),
         )
-        .append(PubHostedDependency(
+        .append(PubHostedDependencyBuilder(
           name: 'test_it',
           version: '1.0.0',
         ))

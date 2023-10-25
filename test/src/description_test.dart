@@ -47,14 +47,14 @@ dependencies:
 void main() {
   group('description', () {
     test('simple ...', () async {
-      final pubspec = PubSpec.fromString(simple);
+      final pubspec = PubSpec.loadFromString(simple);
 
       expect(pubspec.description.value,
           equals('A simple command-line application created by dcli'));
     });
 
     test('plainScalar', () {
-      final pubspec = PubSpec.fromString(simple);
+      final pubspec = PubSpec.loadFromString(simple);
 
       expect(pubspec.description.value, equals(simpleExpected));
     });

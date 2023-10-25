@@ -1,15 +1,15 @@
 part of 'internal_parts.dart';
 
-/// Used to hold a list of [Dependency]s from
+/// Used to hold a list of [DependencyBuilder]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Executables extends Section with IterableMixin<ExecutableAttached> {
+class Executables extends Section with IterableMixin<Executable> {
   Executables._missing(this._pubspec) : super.missing();
 
   Executables._fromLine(this._pubspec, this.line) {
     missing = false;
     name = line.key;
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
 
   static const String key = 'executables';
@@ -24,10 +24,10 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
 
-  final List<ExecutableAttached> _executables = <ExecutableAttached>[];
+  final List<Executable> _executables = <Executable>[];
 
   /// List of the dependencies
-  List<ExecutableAttached> get list => List.unmodifiable(_executables);
+  List<Executable> get list => List.unmodifiable(_executables);
 
   /// the number of dependencies in this section
   @override
@@ -45,10 +45,10 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
     return lines;
   }
 
-  /// returns the [Executable] with the given [name]
+  /// returns the [ExecutableBuilder] with the given [name]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
-  ExecutableAttached? operator [](String name) {
+  Executable? operator [](String name) {
     for (final executable in _executables) {
       if (executable.name == name) {
         return executable;
@@ -59,7 +59,7 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
 
   /// Add [executable] to the PubSpec
   /// after the last dependency.
-  Executables append(Executable executable) {
+  Executables append(ExecutableBuilder executable) {
     var insertAt = 0;
     if (missing) {
       missing = false;
@@ -80,7 +80,7 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
     return this;
   }
 
-  void _appendAttached(ExecutableAttached attached) {
+  void _appendAttached(Executable attached) {
     _executables.add(attached);
   }
 
@@ -105,7 +105,7 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
   bool exists(String name) => this[name] != null;
 
   @override
-  late final CommentsAttached comments;
+  late final Comments comments;
 
   @override
   Document get document => line.document;
@@ -115,18 +115,18 @@ class Executables extends Section with IterableMixin<ExecutableAttached> {
   int get lastLineNo => lines.last.lineNo;
 
   @override
-  Iterator<ExecutableAttached> get iterator => ExecutableIterator(_executables);
+  Iterator<Executable> get iterator => ExecutableIterator(_executables);
 }
 
-class ExecutableIterator implements Iterator<ExecutableAttached> {
+class ExecutableIterator implements Iterator<Executable> {
   ExecutableIterator(this._executables);
 
   int index = -1;
 
-  final List<ExecutableAttached> _executables;
+  final List<Executable> _executables;
 
   @override
-  ExecutableAttached get current => _executables.elementAt(0);
+  Executable get current => _executables.elementAt(0);
 
   @override
   bool moveNext() {

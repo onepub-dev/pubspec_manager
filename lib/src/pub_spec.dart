@@ -12,20 +12,20 @@ class PubSpec {
       {required String name,
       required String version,
       required String description,
-      required Environment environment}) {
+      required EnvironmentBuilder environment}) {
     document = Document.loadFromString('');
 
     this.name =
         LineSection.fromLine(document.append(LineDetached('name: $name')));
-    this.version = VersionAttached._fromLine(
-        document.append(LineDetached('version: $version')));
+    this.version =
+        VersionBuilder.parse(key: 'version', version: version)._append(this);
     this.description = MultiLine.fromLine(
         document.append(LineDetached('description: $description')));
 
     _environment = environment._attach(this, document.lines.length + 1);
-    homepage = HomepageAttached.missing(document);
+    homepage = Homepage.missing(document);
     repository = RepositoryAttached.missing(document);
-    issueTracker = IssueTrackerAttached.missing(document);
+    issueTracker = IssueTracker.missing(document);
     documentation = DocumentationAttached.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
@@ -39,18 +39,17 @@ class PubSpec {
   }
 
   /// Loads the content of a pubspec.yaml from the string [content].
-  PubSpec.fromString(String content) {
+  PubSpec.loadFromString(String content) {
     document = Document.loadFromString(content);
 
     name = document.getLineForRequiredKey('name');
-    version =
-        VersionAttached._fromLine(document.getLineForRequiredKey('version'));
+    version = Version._fromLine(document.getLineForRequiredKey('version'));
     description = document.getMultiLineForRequiredKey('description');
-    _environment = EnvironmentAttached.fromLine(
-        document.getLineForRequiredKey(EnvironmentAttached._key));
-    homepage = HomepageAttached._fromLine(document);
+    _environment =
+        Environment.fromLine(document.getLineForRequiredKey(Environment._key));
+    homepage = Homepage._fromLine(document);
     repository = RepositoryAttached._fromLine(document);
-    issueTracker = IssueTrackerAttached._fromLine(document);
+    issueTracker = IssueTracker._fromLine(document);
     documentation = DocumentationAttached._fromLine(document);
 
     dependencies = _initDependencies('dependencies');
@@ -96,7 +95,7 @@ class PubSpec {
         _findPubSpecFile(directory ?? Directory.current.path, filename, search);
     final content = File(loadedFrom).readAsStringSync();
 
-    final pubspec = PubSpec.fromString(content)
+    final pubspec = PubSpec.loadFromString(content)
       .._loadedFromDirectory = dirname(loadedFrom)
       .._loadedFromFilename = basename(loadedFrom);
     return pubspec;
@@ -120,13 +119,13 @@ class PubSpec {
   /// attibutes of the pubspec.yaml follow.
 
   late LineSection name;
-  late VersionAttached version;
+  late Version version;
   late MultiLine description;
-  late EnvironmentAttached _environment;
+  late Environment _environment;
 
-  late final HomepageAttached homepage;
+  late final Homepage homepage;
   late final RepositoryAttached repository;
-  late final IssueTrackerAttached issueTracker;
+  late final IssueTracker issueTracker;
   late final DocumentationAttached documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
@@ -138,7 +137,7 @@ class PubSpec {
   late final SimpleSection screenshots;
   late final SimpleSection topics;
 
-  EnvironmentAttached get environment => _environment;
+  Environment get environment => _environment;
 
   /// Returns the path that the pubspec was loaded from.
   ///
@@ -165,8 +164,7 @@ class PubSpec {
       if (child.type != LineType.key) {
         continue;
       }
-      dependencies
-          ._appendAttached(DependencyAttached._loadFrom(dependencies, child));
+      dependencies._appendAttached(Dependency._loadFrom(dependencies, child));
     }
     return dependencies;
   }
@@ -183,7 +181,7 @@ class PubSpec {
       if (child.type != LineType.key) {
         continue;
       }
-      executables._appendAttached(ExecutableAttached._fromLine(child));
+      executables._appendAttached(Executable._fromLine(child));
     }
     return executables;
   }

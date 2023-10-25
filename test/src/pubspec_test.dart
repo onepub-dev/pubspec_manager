@@ -30,10 +30,10 @@ executables:
 void main() {
   group('pubspec', () {
     test('pubspec ...', () async {
-      final pubspec = PubSpec.fromString(goodContent);
+      final pubspec = PubSpec.loadFromString(goodContent);
 
       expect(pubspec.name.value, equals('pubspec3'));
-      expect(pubspec.version.value, equals('0.0.1'));
+      expect(pubspec.version.value.toString(), equals('0.0.1'));
       expect(pubspec.description.value,
           equals('A simple command-line application created by dcli'));
 
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('save', () {
-      final pubspec = PubSpec.fromString(goodContent)
+      final pubspec = PubSpec.loadFromString(goodContent)
         ..save(directory: Directory.systemTemp.path);
 
       print(File(pubspec.loadedFrom).readAsStringSync());

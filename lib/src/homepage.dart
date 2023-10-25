@@ -10,30 +10,30 @@ part of 'internal_parts.dart';
 //   final List<String> comments;
 // }
 
-class HomepageAttached extends SectionSingleLine {
+class Homepage extends SectionSingleLine {
   /// build homepage from an imported document line
-  factory HomepageAttached._fromLine(Document document) {
-    final line = document.getLineForKey(HomepageAttached._key);
+  factory Homepage._fromLine(Document document) {
+    final line = document.getLineForKey(Homepage._key);
     if (line.missing) {
-      return HomepageAttached.missing(document);
+      return Homepage.missing(document);
     } else {
-      return HomepageAttached._(line);
+      return Homepage._(line);
     }
   }
 
-  HomepageAttached._(Line line)
+  Homepage._(super.line)
       : _url = line.value,
-        super.fromLine(_key, line);
+        super.fromLine();
 
-  HomepageAttached.missing(Document document)
+  Homepage.missing(Document document)
       : _url = '',
-        super.missing(_key, document);
+        super.missing(document, _key);
 
   String _url;
 
   @override
   // ignore: avoid_renaming_method_parameters
-  HomepageAttached set(String url) {
+  Homepage set(String url) {
     _url = url;
     super.set(url);
     // ignore: avoid_returning_this

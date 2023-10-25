@@ -8,23 +8,70 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-@immutable
-class PathDependency implements Dependency {
-  PathDependency({
-    required this.name,
-    required this.path,
-    List<String>? comments,
-  }) : _comments = comments ?? <String>[];
+class PathDependency extends Section implements Dependency {
+  PathDependency._fromLine(this._dependencies, this._line) {
+    _name = _line.key;
+    _pathLine = line.findRequiredKeyChild('path');
+    path = _pathLine.value;
+    comments = Comments(this);
+  }
 
-  @override
-  late final String name;
+  PathDependency._attach(
+      PubSpec pubspec, int lineNo, PathDependencyBuilder dependency) {
+    _name = dependency.name;
+    path = dependency.path;
+
+    _line = Line.forInsertion(pubspec.document, '  $_name:');
+    pubspec.document.insert(_line, lineNo);
+
+    _line = Line.forInsertion(pubspec.document, '  path: $path');
+    pubspec.document.insert(_line, lineNo);
+
+    comments = Comments(this);
+
+    // ignore: prefer_foreach
+    for (final comment in dependency.comments) {
+      comments.append(comment);
+    }
+  }
+  static const key = 'path';
+
+  late final String _name;
   late final String path;
-  late final List<String> _comments;
 
-  List<String> get comments => _comments;
+  /// The parent dependency key
+  late final Dependencies _dependencies;
+
+  /// Line that contained the dependency declaration
+  late final Line _line;
+  late final Line _pathLine;
 
   @override
-  DependencyAttached _attach(
-          Dependencies dependencies, PubSpec pubspec, int lineNo) =>
-      PathDependencyAttached._attach(pubspec, lineNo, this);
+  String get name => _name;
+
+  @override
+  Line get line => _line;
+
+  @override
+  Document get document => line.document;
+
+  @override
+  List<Line> get lines => [...comments.lines, _line];
+
+  @override
+  late final Comments comments;
+
+  @override
+  int get lineNo => _line.lineNo;
+
+  /// The last line number used by this  section
+  @override
+  int get lastLineNo => lines.last.lineNo;
+
+  /// Allows cascading calls to append
+  @override
+  Dependency append(DependencyBuilder dependency) {
+    _dependencies.append(dependency);
+    return this;
+  }
 }

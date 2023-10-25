@@ -8,17 +8,18 @@ import 'section.dart';
 /// Used to hold a single line that cannot have
 /// children, but may have comments.
 class LineSection implements Section, Line {
+  /// Build a [LineSection] from an attached line.
   LineSection.fromLine(Line line)
       : _line = line,
         key = line.key {
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
 
   // LineSection.fromLine(super.document, this.key, super.text, super.loneNo);
 
   LineSection.missing(Document document, this.key)
       : _line = Line.missing(document, LineType.key) {
-    comments = CommentsAttached.empty(this);
+    comments = Comments.empty(this);
   }
 
   final Line _line;
@@ -33,7 +34,7 @@ class LineSection implements Section, Line {
   List<Line> get lines => [...comments.lines, line];
 
   @override
-  late final CommentsAttached comments;
+  late final Comments comments;
 
   /// The last line number used by this  section
   @override

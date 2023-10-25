@@ -3,69 +3,139 @@
 part of 'internal_parts.dart';
 
 /// Holds a dependency version
-class Version {
-  Version(this._version) : missing = false;
+class Version extends SectionSingleLine {
+  ///
+  /// extract a version for an attached line.
+  ///
+  Version._fromLine(Line line, {bool required = false})
+      : _missing = false,
+        super.fromLine(line) {
+    if (Strings.isBlank(line.value)) {
+      if (required) {
+        throw PubSpecException(line, 'Required version missing.');
+      }
+      _version = sm.Version.none;
+      return;
+    }
+    _version = parseVersion(line, line.value);
+    quoted = _isQuoted(line.value);
+  }
 
-  factory Version.parse(String? versionConstraint) => versionConstraint != null
-      ? Version(parseConstraint(versionConstraint))
-      : Version.missing();
+  /// The version key wasn't present in the pubspec
+  Version._missing(super.document, super.key)
+      : _missing = true,
+        super.missing();
 
-  /// Used to indicate that that a version key doesn't exist.
-  /// This is different from [Version.empty()] which indicates
-  /// that a version key was provided but the value was empty.
-  Version.missing()
-      : missing = true,
-        _version = sm.VersionConstraint.empty;
+  /// Attached the passed [VersionBuilder] to the [Document].
+  @override
+  factory Version._attach(
+      PubSpec pubspec, int lineNo, VersionBuilder versionBuilder) {
+    final line = Line.forInsertion(
+        pubspec.document, '  version: ${versionBuilder._version}');
+    pubspec.document.insert(line, lineNo);
 
-  /// A version for which no value was supplied yet
-  /// a key exist.
-  /// An empty version is treated as 'any' but we need
-  /// to record that it was empty so when writting out
-  /// the version we leave it as blank to ensure the fidelity
-  /// of the original document is maintained.
-  Version.empty()
-      : missing = false,
-        _version = sm.VersionConstraint.empty;
+    return Version._fromLine(line);
+  }
 
-  late final bool missing;
-  late final sm.VersionConstraint _version;
+  factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
+    final detached = LineDetached('  version: ${versionBuilder._version}');
+    final line = pubspec.document.append(detached);
 
-  // The pubspec doc says that a blank version is to be
-  // treated as 'any'. We however need to record that the
-  // version string was blank so we use emtpy.
-  // However is the user queries the version we return any.
-  sm.VersionConstraint get constraint => _version == sm.VersionConstraint.empty
-      ? sm.VersionConstraint.any
-      : _version;
+    return Version._fromLine(line);
+  }
 
-  bool get isEmpty => _version == sm.VersionConstraint.empty;
+  /// There was a version key but no value
+  bool get isEmpty => !_missing && _version.isEmpty;
+
+  /// There was no version in the pubspec.
+  bool get isMissing => _missing;
+
+  final bool _missing;
+
+  bool quoted = false;
+
+  late sm.Version _version;
+
+  /// If a version has not been specified we return [sm.Version.none]
+  sm.Version get value =>
+      _version.isEmpty || _missing ? sm.Version.none : _version;
+
+  set value(sm.Version value) {
+    _version = value;
+    line.value = value.toString();
+  }
+
+  @override
+  String toString() => _version.toString();
+
+  set version(String version) {
+    try {
+      sm.VersionConstraint.parse(version);
+    } on FormatException catch (e) {
+      throw VersionException('The passed version is invalid: ${e.message}');
+    }
+    quoted = _isQuoted(version);
+
+    line.value = _stripQuotes(version);
+    missing = false;
+  }
+
+  String get version {
+    if (quoted) {
+      return "'${toString()}'";
+    } else {
+      return toString();
+    }
+  }
+
+  bool _isQuoted(String version) =>
+      version.contains("'") || version.contains('"');
 
   @override
   bool operator ==(Object other) =>
-      other is Version &&
+      other is VersionBuilder &&
       other.runtimeType == runtimeType &&
       other._version == _version;
 
   @override
   int get hashCode => _version.hashCode;
 
-  @override
-  String toString() {
-    if (isEmpty || missing) {
-      return '';
-    } else {
-      return _version.toString();
+  // strips any quotes that surround the value
+  static String _stripQuotes(String value) {
+    if (value.isEmpty) {
+      return value;
+    }
+    final first = value.substring(0, 1);
+
+    // the version may have no quotes.
+    if (first != "'" && first != '"') {
+      return value;
+    }
+
+    // find the matching quote.
+    final last = value.substring(value.length - 1, value.length);
+
+    if (first == "'" || first == '"') {
+      if (first != last) {
+        throw PubSpecException.global(
+            'The quotes around the version $value  do not match');
+      }
+      return value.substring(1, value.length - 1);
+    }
+
+    return value;
+  }
+
+  static sm.Version parseVersion(Line line, String value) {
+    try {
+      return sm.Version.parse(_stripQuotes(value));
+    } on VersionException catch (e) {
+      e.document = line.document;
+      // ignore: use_rethrow_when_possible
+      throw e;
     }
   }
 
-  static sm.VersionConstraint parseConstraint(String? version) {
-    try {
-      if (version == null) {
-        return sm.VersionConstraint.empty;
-      }
-      return sm.VersionConstraint.parse(version);
-    } on FormatException catch (e) {
-      throw VersionException(e.message);
-    }
-  }
+  @override
+  List<Line> get lines => [line];
 }

@@ -3,11 +3,11 @@
 part of 'internal_parts.dart';
 
 /// Holds a dependency version
-class VersionAttached extends LineSection {
+class VersionConstraint extends LineSection {
   ///
   /// extract a version for a line.
   ///
-  VersionAttached._fromLine(this.line, {bool required = false})
+  VersionConstraint._fromLine(this.line, {bool required = false})
       : _missing = false,
         super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
@@ -18,7 +18,7 @@ class VersionAttached extends LineSection {
       // treated as 'any'. We however need to record that the
       // version string was blank so we use emtpy.
       // However is the user queries the version we return any.
-      _versionConstraint = Version.empty();
+      _versionConstraint = sm.VersionConstraint.empty;
       return;
     }
     _versionConstraint = parseVersionConstraint(line, line.value);
@@ -26,10 +26,26 @@ class VersionAttached extends LineSection {
   }
 
   /// The version key wasn't present in the pubspec
-  VersionAttached._missing(Document document)
+  VersionConstraint._missing(super.document, super.key)
       : line = Line.missing(document, LineType.key),
         _missing = true,
-        super.missing(document, 'version');
+        super.missing();
+
+  @override
+  factory VersionConstraint._attach(
+      PubSpec pubspec, int lineNo, VersionConstraintBuilder versionBuilder) {
+    final line = Line.forInsertion(
+        pubspec.document, '  version: ${versionBuilder._version}');
+    pubspec.document.insert(line, lineNo);
+
+    final vc = VersionConstraint._fromLine(line);
+
+    // ignore: prefer_foreach
+    for (final comment in versionBuilder.comments) {
+      vc.comments.append(comment);
+    }
+    return vc;
+  }
 
   /// There was a version key but no value
   bool get isEmpty => !_missing && _versionConstraint.isEmpty;
@@ -41,7 +57,7 @@ class VersionAttached extends LineSection {
 
   bool quoted = false;
 
-  late Version _versionConstraint;
+  late sm.VersionConstraint _versionConstraint;
 
   @override
   late Line line;
@@ -52,7 +68,7 @@ class VersionAttached extends LineSection {
   // However is the user queries the version we return any.
   sm.VersionConstraint get constraint => _versionConstraint.isEmpty || _missing
       ? sm.VersionConstraint.any
-      : _versionConstraint._version;
+      : _versionConstraint;
 
   @override
   String toString() => _versionConstraint.toString();
@@ -82,9 +98,9 @@ class VersionAttached extends LineSection {
 
   @override
   bool operator ==(Object other) =>
-      other is Version &&
+      other is VersionBuilder &&
       other.runtimeType == runtimeType &&
-      other._version == _versionConstraint._version;
+      other._version == _versionConstraint;
 
   @override
   int get hashCode => _versionConstraint.hashCode;
@@ -115,9 +131,9 @@ class VersionAttached extends LineSection {
     return value;
   }
 
-  static Version parseVersionConstraint(Line line, String value) {
+  static sm.VersionConstraint parseVersionConstraint(Line line, String value) {
     try {
-      return Version.parse(_stripQuotes(value));
+      return VersionConstraintBuilder.parseConstraint(_stripQuotes(value));
     } on VersionException catch (e) {
       e.document = line.document;
       // ignore: use_rethrow_when_possible

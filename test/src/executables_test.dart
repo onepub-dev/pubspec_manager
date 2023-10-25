@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('executables ...', () {
     test('update', () {
-      final pubspec = PubSpec.fromString('''
+      final pubspec = PubSpec.loadFromString('''
 name: test
 version: 1.0.0
 description: testing testing.
@@ -13,7 +13,7 @@ environment:
 executables:
   dcli:
    ''');
-      pubspec.executables.append(Executable(name: 'full'));
+      pubspec.executables.append(ExecutableBuilder(name: 'full'));
       expect(pubspec.executables['full'], isNotNull);
       expect(pubspec.executables['full']!.line.text, '  full:');
 

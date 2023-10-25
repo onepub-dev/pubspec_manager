@@ -27,7 +27,7 @@ abstract class Section {
   List<Line> get lines;
 
   /// List of comments associated with this section
-  CommentsAttached get comments;
+  Comments get comments;
 
   /// The [Document] that contains this section.
   Document get document;

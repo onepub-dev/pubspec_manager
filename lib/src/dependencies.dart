@@ -1,9 +1,9 @@
 part of 'internal_parts.dart';
 
-/// Used to hold a list of [Dependency]s from
+/// Used to hold a list of [DependencyBuilder]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Dependencies extends Section with IterableMixin<DependencyAttached> {
+class Dependencies extends Section with IterableMixin<Dependency> {
   Dependencies._missing(this._pubspec, this.name)
       : document = _pubspec.document,
         super.missing();
@@ -12,7 +12,7 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
     document = _pubspec.document;
     missing = false;
     name = line.key;
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
 
   @override
@@ -28,10 +28,10 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
 
-  final List<DependencyAttached> _dependencies = <DependencyAttached>[];
+  final List<Dependency> _dependencies = <Dependency>[];
 
   /// List of the dependencies
-  List<DependencyAttached> get list => List.unmodifiable(_dependencies);
+  List<Dependency> get list => List.unmodifiable(_dependencies);
 
   /// the number of dependencies in this section
   @override
@@ -49,10 +49,10 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
     return lines;
   }
 
-  /// returns the [Dependency] with the given [name]
+  /// returns the [DependencyBuilder] with the given [name]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
-  DependencyAttached? operator [](String name) {
+  Dependency? operator [](String name) {
     for (final dependency in _dependencies) {
       if (dependency.name == name) {
         return dependency;
@@ -63,7 +63,7 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
 
   /// Add [dependency] to the PubSpec
   /// after the last dependency.
-  DependencyAttached append(Dependency dependency) {
+  Dependency append(DependencyBuilder dependency) {
     var insertAt = 0;
     // if we don't have a dependencies section then create it.
     if (missing) {
@@ -84,9 +84,16 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
   }
 
   /// register a dependency that is already attached.
-  DependencyAttached _appendAttached(DependencyAttached dependency) {
+  Dependency _appendAttached(Dependency dependency) {
     _dependencies.add(dependency);
     return dependency;
+  }
+
+  /// Remove all dependencies from the section
+  void removeAll() {
+    for (final dependency in _dependencies) {
+      remove(dependency.name);
+    }
   }
 
   /// Remove a dependency from the section
@@ -110,26 +117,25 @@ class Dependencies extends Section with IterableMixin<DependencyAttached> {
   bool exists(String name) => this[name] != null;
 
   @override
-  late final CommentsAttached comments;
+  late final Comments comments;
 
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
 
   @override
-  Iterator<DependencyAttached> get iterator =>
-      DependencyIterator(_dependencies);
+  Iterator<Dependency> get iterator => DependencyIterator(_dependencies);
 }
 
-class DependencyIterator implements Iterator<DependencyAttached> {
+class DependencyIterator implements Iterator<Dependency> {
   DependencyIterator(this._dependencies);
 
   int index = -1;
 
-  final List<DependencyAttached> _dependencies;
+  final List<Dependency> _dependencies;
 
   @override
-  DependencyAttached get current => _dependencies.elementAt(0);
+  Dependency get current => _dependencies.elementAt(0);
 
   @override
   bool moveNext() {

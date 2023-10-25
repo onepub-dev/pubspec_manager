@@ -23,12 +23,12 @@ class MultiLine implements Section {
       : missing = false,
         key = line.key,
         document = line.document {
-    comments = CommentsAttached(this);
+    comments = Comments(this);
   }
   MultiLine.missing(this.document, this.key)
       : missing = true,
         line = Line.missing(document, LineType.key) {
-    comments = CommentsAttached.empty(this);
+    comments = Comments.empty(this);
   }
 
   @override
@@ -46,7 +46,7 @@ class MultiLine implements Section {
   List<Line> get lines => [...comments.lines, line];
 
   @override
-  late final CommentsAttached comments;
+  late final Comments comments;
 
   /// The last line number used by this  section
   @override

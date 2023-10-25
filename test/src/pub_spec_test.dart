@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('pubspec', () {
     test('update single line attributes', () async {
-      final pubspec = PubSpec.fromString('''
+      final pubspec = PubSpec.loadFromString('''
 name: test
 version: 1.1.1
 description: test

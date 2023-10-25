@@ -13,12 +13,12 @@ dependencies:
     hosted: https://onepub.dev
     version: 1.1.1
 ''';
-    final pubspec = PubSpec.fromString(content);
+    final pubspec = PubSpec.loadFromString(content);
     expect(pubspec.dependencies.length, equals(1));
 
     final one = pubspec.dependencies.list.first;
-    expect(one is HostedDependencyAttached, isTrue);
-    final hosted = one as HostedDependencyAttached;
+    expect(one is HostedDependency, isTrue);
+    final hosted = one as HostedDependency;
     expect(hosted.name, equals('dcli'));
     expect(hosted.version, equals('1.1.1'));
     expect(hosted.hostedUrl, equals('https://onepub.dev'));

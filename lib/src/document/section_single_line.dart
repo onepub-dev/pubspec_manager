@@ -4,15 +4,19 @@ import 'line.dart';
 import 'line_detached.dart';
 import 'simple_section.dart';
 
+/// A section which is a single line with no children
+/// but which can have comments.
 class SectionSingleLine extends SimpleSection {
-  SectionSingleLine.fromLine(this.key, super._line) : super.fromLine();
+  SectionSingleLine.fromLine(super._line) : super.fromLine() {
+    key = line.key;
+  }
 
-  SectionSingleLine.attach(this.key, PubSpec pubspec, int lineNo, String value)
+  SectionSingleLine.attach(PubSpec pubspec, int lineNo, this.key, String value)
       : super.fromLine(Line.forInsertion(pubspec.document, '$key: $value')) {
     document.insert(line, lineNo);
   }
 
-  SectionSingleLine.missing(this.key, Document document)
+  SectionSingleLine.missing(Document document, this.key)
       : super.missing(document, key);
 
   void set(String value) {
@@ -26,7 +30,7 @@ class SectionSingleLine extends SimpleSection {
   }
 
   @override
-  final String key;
+  late final String key;
 }
 
 abstract class SingleLine {

@@ -5,11 +5,11 @@ part of 'internal_parts.dart';
 /// Used to hold the comments that prefix a section.
 /// A comment section is all comments/blank lines that are above
 /// a section upto where the proceeding section ends.
-class CommentsAttached {
-  CommentsAttached(this.section) {
+class Comments {
+  Comments(this.section) {
     _lines = _commentsAsLine();
   }
-  CommentsAttached.empty(this.section) : _lines = <Line>[];
+  Comments.empty(this.section) : _lines = <Line>[];
 
   /// The section these comments are attached to.
   Section section;
@@ -56,7 +56,7 @@ class CommentsAttached {
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
-  CommentsAttached append(String comment) {
+  Comments append(String comment) {
     final document = section.line.document;
     final line = Line.forInsertion(
         document, '${' ' * section.line.indent * 2}# $comment');

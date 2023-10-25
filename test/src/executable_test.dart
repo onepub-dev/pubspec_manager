@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('executable ...', () {
     test('update', () {
-      final pubspec = PubSpec.fromString('''
+      final pubspec = PubSpec.loadFromString('''
 name: test
 version: 1.0.0
 description: testing testing.

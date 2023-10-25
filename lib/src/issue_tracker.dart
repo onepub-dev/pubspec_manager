@@ -1,38 +1,28 @@
 part of 'internal_parts.dart';
 
-class IssueTracker implements SingleLine {
-  IssueTracker(this.url);
-  IssueTracker.missing() : url = '';
-
-  String url;
-
-  @override
-  String get value => url;
-}
-
-class IssueTrackerAttached extends SectionSingleLine {
-  factory IssueTrackerAttached._fromLine(Document document) {
-    final line = document.getLineForKey(IssueTrackerAttached._key);
+class IssueTracker extends SectionSingleLine {
+  factory IssueTracker._fromLine(Document document) {
+    final line = document.getLineForKey(IssueTracker._key);
     if (line.missing) {
-      return IssueTrackerAttached.missing(document);
+      return IssueTracker.missing(document);
     } else {
-      return IssueTrackerAttached._(line);
+      return IssueTracker._(line);
     }
   }
 
-  IssueTrackerAttached._(Line line)
-      : issueTracker = IssueTracker(line.value),
-        super.fromLine(_key, line);
+  IssueTracker._(super.line)
+      : issueTracker = IssueTrackerBuilder(line.value),
+        super.fromLine();
 
-  IssueTrackerAttached.missing(Document document)
-      : issueTracker = IssueTracker.missing(),
-        super.missing(_key, document);
+  IssueTracker.missing(Document document)
+      : issueTracker = IssueTrackerBuilder.missing(),
+        super.missing(document, _key);
 
-  final IssueTracker issueTracker;
+  final IssueTrackerBuilder issueTracker;
 
   @override
   // ignore: avoid_renaming_method_parameters
-  IssueTrackerAttached set(String url) {
+  IssueTracker set(String url) {
     issueTracker.url = url;
     super.set(url);
     // ignore: avoid_returning_this

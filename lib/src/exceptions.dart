@@ -64,3 +64,17 @@ class ExecutableNotFound extends PubSpecException {
 class OutOfBoundsException extends PubSpecException {
   OutOfBoundsException(super.line, super.message);
 }
+
+// /// Don't use this exception directly (its abstract).
+// /// Instead use one of the more specific derived exceptions or create
+// /// your own extending from this exception.
+// abstract class CommandLineException extends DCliException {
+//   ///
+//   CommandLineException(super.message);
+// }
+
+// /// Thrown when an invalid argument is passed to a command.
+// class InvalidCommandArgumentException extends CommandLineException {
+//   ///
+//   InvalidCommandArgumentException(super.message);
+// }
