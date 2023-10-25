@@ -1,3 +1,7 @@
+# 1.0.0-alpha.11
+- Fixes for environment when the sdk or flutter constraints where missing.
+- work on validating the function of the VersionConstraint class
+
 # 1.0.0-alpha.10
 - Fixed a bug in the version_constraint. It wasn't being updated correctly when a new value was assigned to it.
 
