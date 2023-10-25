@@ -1,3 +1,8 @@
+# 1.0.0-alpha.9
+- lint cleanup
+- Change insert to InsertBefore to avoid line maths being done all over the place. Now you just pass the nearest line and we insert relative to that. Added helper functions to make the indent consistent.
+- renamed the base section to builders and removed the 'attached' component of the section names;
+
 # 1.0.0-alpha.8
 - fixed a bug in Line.text where the text value wasn't being updated if the key or value of the line where changed.
 - additional test cases.
