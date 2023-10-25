@@ -8,7 +8,7 @@ class VersionConstraint extends LineSection {
   /// extract a version from an attached line.
   ///
   VersionConstraint._fromLine(this.line, {bool required = false})
-      : _missing = false,
+      : _missingValue = false,
         super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
       if (required) {
@@ -28,7 +28,7 @@ class VersionConstraint extends LineSection {
   /// The version key wasn't present in the pubspec
   VersionConstraint._missing(super.document, super.key)
       : line = Line.missing(document, LineType.key),
-        _missing = true,
+        _missingValue = true,
         super.missing();
 
   // @override
@@ -47,13 +47,10 @@ class VersionConstraint extends LineSection {
   //   return vc;
   // }
 
-  /// There was a version key but no value
-  bool get isEmpty => !_missing && _versionConstraint.isEmpty;
+  /// There was no value for the version key in the pubspec.
+  bool get isMissingValue => _missingValue;
 
-  /// There was no version in the pubspec.
-  bool get isMissing => _missing;
-
-  bool _missing;
+  bool _missingValue;
 
   /// We track if the original constraint was wrapped in quotes
   /// so that when we write the value back out we can include
@@ -69,12 +66,13 @@ class VersionConstraint extends LineSection {
   // treated as 'any'. We however need to record that the
   // version string was blank so we use emtpy.
   // However is the user queries the version we return any.
-  sm.VersionConstraint get constraint => _versionConstraint.isEmpty || _missing
-      ? sm.VersionConstraint.any
-      : _versionConstraint;
+  sm.VersionConstraint get constraint =>
+      _versionConstraint.isEmpty || _missingValue
+          ? sm.VersionConstraint.any
+          : _versionConstraint;
 
   @override
-  String toString() => _missing ? '' : constraint.toString();
+  String toString() => _missingValue ? '' : constraint.toString();
 
   set version(String version) {
     quoted = _isQuoted(version);
@@ -82,7 +80,7 @@ class VersionConstraint extends LineSection {
 
     if (Strings.isEmpty(line.value)) {
       _versionConstraint = sm.VersionConstraint.empty;
-      _missing = true;
+      _missingValue = true;
       return;
     }
 
@@ -91,7 +89,7 @@ class VersionConstraint extends LineSection {
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
-    _missing = false;
+    _missingValue = false;
   }
 
   String get version {

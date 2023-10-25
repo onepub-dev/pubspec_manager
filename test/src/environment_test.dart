@@ -102,7 +102,7 @@ executables:
 
       // any sdk
       environment.sdk = 'any';
-      expect(environment.sdk, equals(''));
+      expect(environment.sdk, equals('any'));
     });
   });
 }

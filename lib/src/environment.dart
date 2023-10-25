@@ -73,10 +73,10 @@ class Environment extends Section {
   late final Comments comments;
 
   String get sdk => _sdk.version;
-  String get flutter => _flutter.isMissing ? '' : _flutter.version;
+  String get flutter => _flutter.version;
 
   set sdk(String version) {
-    if (_sdk.isMissing) {
+    if (_sdk.missing) {
       final sdkLine = Line.forInsertion(document, '  sdk: $version');
       document.insertAfter(sdkLine, _line);
       _sdkLine = sdkLine;
@@ -84,12 +84,11 @@ class Environment extends Section {
     } else {
       _sdk.version = version;
       _sdkLine.value = version;
-      
     }
   }
 
   set flutter(String version) {
-    if (_flutter.isMissing) {
+    if (_flutter.missing) {
       final flutterLine = Line.forInsertion(document, '  flutter: $version');
       document.insertAfter(flutterLine, _line);
       _flutterLine = flutterLine;
