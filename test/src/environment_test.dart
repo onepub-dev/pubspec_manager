@@ -27,5 +27,67 @@ void main() {
       expect(updated.environment.flutter, equals('1.2.4'));
       expect(updated.environment.sdk, equals('1.2.1'));
     });
+    test('sdk range from ctor', () {
+      final pubspec = PubSpec(
+          name: 'test',
+          description: 'test desc',
+          environment: EnvironmentBuilder(sdk: '>=3.0.0 <4.0.0'),
+          version: '1.0.0');
+
+      final environment = pubspec.environment;
+      expect(environment.sdk, equals('>=3.0.0 <4.0.0'));
+    });
+
+    test('sdk range from string - quoted', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+version: 1.0.0
+description: testing testing.
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+executables:
+  dcli:
+   ''');
+
+      final environment = pubspec.environment;
+      // check we retained the quotes
+      expect(environment.sdk, equals("'>=3.0.0 <4.0.0'"));
+    });
+    test('sdk range from string - unquoted', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+version: 1.0.0
+description: testing testing.
+environment:
+  sdk: 1.0.0
+executables:
+  dcli:
+   ''');
+
+      final environment = pubspec.environment;
+      // check we retained the quotes
+      expect(environment.sdk, equals('1.0.0'));
+    });
+
+    test('assign sdk', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+version: 1.0.0
+description: testing testing.
+environment:
+  sdk: 1.0.0
+executables:
+  dcli:
+   ''');
+
+      final environment = pubspec.environment;
+      // check we retained the quotes
+      expect(environment.sdk, equals('1.0.0'));
+      environment.sdk = '2.0.0';
+      expect(environment.sdk, equals('2.0.0'));
+
+      environment.sdk = "'>=3.0.0 < 4.0.0'";
+      expect(environment.sdk, equals("'>=3.0.0 <4.0.0'"));
+    });
   });
 }

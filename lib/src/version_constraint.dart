@@ -55,6 +55,9 @@ class VersionConstraint extends LineSection {
 
   final bool _missing;
 
+  /// We track if the original constraint was wrapped in quotes
+  /// so that when we write the value back out we can include
+  /// the quotes.
   bool quoted = false;
 
   late sm.VersionConstraint _versionConstraint;
@@ -74,14 +77,14 @@ class VersionConstraint extends LineSection {
   String toString() => _versionConstraint.toString();
 
   set version(String version) {
+    quoted = _isQuoted(version);
+    line.value = _stripQuotes(version);
+
     try {
-      sm.VersionConstraint.parse(version);
+      _versionConstraint = sm.VersionConstraint.parse(line.value);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
-    quoted = _isQuoted(version);
-
-    line.value = _stripQuotes(version);
     missing = false;
   }
 
