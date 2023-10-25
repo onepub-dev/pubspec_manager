@@ -53,7 +53,7 @@ class VersionConstraint extends LineSection {
   /// There was no version in the pubspec.
   bool get isMissing => _missing;
 
-  final bool _missing;
+  bool _missing;
 
   /// We track if the original constraint was wrapped in quotes
   /// so that when we write the value back out we can include
@@ -74,18 +74,24 @@ class VersionConstraint extends LineSection {
       : _versionConstraint;
 
   @override
-  String toString() => _versionConstraint.toString();
+  String toString() => _missing ? '' : constraint.toString();
 
   set version(String version) {
     quoted = _isQuoted(version);
     line.value = _stripQuotes(version);
+
+    if (Strings.isEmpty(line.value)) {
+      _versionConstraint = sm.VersionConstraint.empty;
+      _missing = true;
+      return;
+    }
 
     try {
       _versionConstraint = sm.VersionConstraint.parse(line.value);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
-    missing = false;
+    _missing = false;
   }
 
   String get version {

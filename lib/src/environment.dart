@@ -84,6 +84,7 @@ class Environment extends Section {
     } else {
       _sdk.version = version;
       _sdkLine.value = version;
+      
     }
   }
 

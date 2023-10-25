@@ -6,6 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('environment', () {
+    ////////////////////////////////////////////////////////////
     test('set', () {
       final pathTo =
           join(Directory.systemTemp.path, 'pubspec_environment.yaml');
@@ -27,6 +28,8 @@ void main() {
       expect(updated.environment.flutter, equals('1.2.4'));
       expect(updated.environment.sdk, equals('1.2.1'));
     });
+
+    //////////////////////////////////////////////////////////////
     test('sdk range from ctor', () {
       final pubspec = PubSpec(
           name: 'test',
@@ -38,6 +41,7 @@ void main() {
       expect(environment.sdk, equals('>=3.0.0 <4.0.0'));
     });
 
+    ////////////////////////////////////////////////////////////
     test('sdk range from string - quoted', () {
       final pubspec = PubSpec.loadFromString('''
 name: test
@@ -53,6 +57,8 @@ executables:
       // check we retained the quotes
       expect(environment.sdk, equals("'>=3.0.0 <4.0.0'"));
     });
+
+    ////////////////////////////////////////////////////////////
     test('sdk range from string - unquoted', () {
       final pubspec = PubSpec.loadFromString('''
 name: test
@@ -69,6 +75,7 @@ executables:
       expect(environment.sdk, equals('1.0.0'));
     });
 
+    ////////////////////////////////////////////////////////////
     test('assign sdk', () {
       final pubspec = PubSpec.loadFromString('''
 name: test
@@ -88,6 +95,14 @@ executables:
 
       environment.sdk = "'>=3.0.0 < 4.0.0'";
       expect(environment.sdk, equals("'>=3.0.0 <4.0.0'"));
+
+      // empty sdk
+      environment.sdk = '';
+      expect(environment.sdk, equals(''));
+
+      // any sdk
+      environment.sdk = 'any';
+      expect(environment.sdk, equals(''));
     });
   });
 }
