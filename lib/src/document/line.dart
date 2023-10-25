@@ -222,7 +222,7 @@ class Line implements Renderer {
     String rendered;
     switch (type) {
       case LineType.key:
-        rendered = '${' ' * indent * 2}$key: $value';
+        rendered = '$expand$key: $value';
         return '$rendered${renderInlineComment(rendered.length)}';
       case LineType.blank:
       case LineType.comment:
@@ -241,9 +241,18 @@ class Line implements Renderer {
     }
     final space = commentOffset! - contentLength - 1;
 
-    return "${' ' * space} ${inlineComment!}";
+    return '${spaces(space)}${inlineComment!}';
   }
 
   @override
   String toString() => 'Line No: $lineNo Type: ${type.name} $text';
+
+  /// Returns a [indent] * 2 spaces
+  String get expand => spaces(indent * 2);
+
+  /// returns the number of spaces to correctly indent
+  /// a child of this line.
+  String get childIndent => spaces((indent + 1) * 2);
 }
+
+String spaces(int count) => ' ' * count;

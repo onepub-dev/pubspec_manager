@@ -60,19 +60,18 @@ class Executables extends Section with IterableMixin<Executable> {
   /// Add [executable] to the PubSpec
   /// after the last dependency.
   Executables append(ExecutableBuilder executable) {
-    var insertAt = 0;
+    var lineBefore = line;
+
     if (missing) {
       missing = false;
       // create the section.
       line = document.append(LineDetached(key));
     } else {
-      if (_executables.isEmpty) {
-        insertAt = line.lineNo + 1;
-      } else {
-        insertAt = _executables.last.lastLineNo + 1;
+      if (_executables.isNotEmpty) {
+        lineBefore = _executables.last.line;
       }
     }
-    final attached = executable._attach(_pubspec, insertAt);
+    final attached = executable._attach(_pubspec, lineBefore);
 
     _executables.add(attached);
 

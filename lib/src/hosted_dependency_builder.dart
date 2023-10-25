@@ -26,6 +26,7 @@ class HostedDependencyBuilder implements DependencyBuilder {
   List<String> get comments => _comments;
 
   @override
-  Dependency _attach(Dependencies dependencies, PubSpec pubspec, int lineNo) =>
-      HostedDependency.attach(dependencies, pubspec, lineNo, this);
+  Dependency _attach(
+          Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
+      HostedDependency.attach(dependencies, pubspec, lineBefore, this);
 }

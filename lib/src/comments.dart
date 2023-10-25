@@ -58,10 +58,10 @@ class Comments {
   /// method adds the '#'.
   Comments append(String comment) {
     final document = section.line.document;
-    final line = Line.forInsertion(
-        document, '${' ' * section.line.indent * 2}# $comment');
-    _lines.add(line);
-    document.insert(line, section.line.lineNo);
+    final commentLine = Line.forInsertion(
+        document, '${spaces(section.line.indent * 2)}# $comment');
+    _lines.add(commentLine);
+    document.insertBefore(commentLine, section.line);
     return this;
   }
 

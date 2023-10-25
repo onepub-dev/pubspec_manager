@@ -9,7 +9,7 @@ class Environment extends Section {
         _flutter = VersionConstraint._missing(document, flutterKey);
 
   /// Load the environment [Section] starting from the
-  /// given [_line].
+  /// given attached [_line].
   Environment.fromLine(this._line) {
     _sdkLine = _line.findKeyChild('sdk');
     _flutterLine = _line.findKeyChild('flutter');
@@ -26,17 +26,17 @@ class Environment extends Section {
   }
 
   Environment._attach(
-      PubSpec pubspec, int lineNo, EnvironmentBuilder environment) {
+      PubSpec pubspec, Line lineBefore, EnvironmentBuilder environment) {
     final document = pubspec.document;
 
     _line = Line.forInsertion(document, 'environment:');
-    document.insert(_line, lineNo++);
+    document.insertAfter(_line, lineBefore);
 
     if (environment._sdk != null) {
-      pubspec.document.insert(
+      lineBefore = pubspec.document.insertAfter(
           _sdkLine = Line.forInsertion(
               pubspec.document, '  $sdkKey: ${environment._sdk}'),
-          lineNo++);
+          _line);
       _sdk = VersionConstraint._fromLine(_sdkLine);
     } else {
       _sdkLine = Line.missing(document, LineType.key);
@@ -44,10 +44,10 @@ class Environment extends Section {
     }
 
     if (environment._flutter != null) {
-      pubspec.document.insert(
+      pubspec.document.insertAfter(
           _flutterLine = Line.forInsertion(
               pubspec.document, '  $flutterKey: ${environment._flutter}'),
-          lineNo++);
+          lineBefore);
       _flutter = VersionConstraint._fromLine(_flutterLine);
     } else {
       _flutterLine = Line.missing(document, LineType.key);
@@ -77,22 +77,26 @@ class Environment extends Section {
 
   set sdk(String version) {
     if (_sdk.isMissing) {
-      final line = Line.forInsertion(document, '  sdk: $version');
-      document.insert(line, lastLineNo);
-      _sdkLine = line;
+      final sdkLine = Line.forInsertion(document, '  sdk: $version');
+      document.insertAfter(sdkLine, _line);
+      _sdkLine = sdkLine;
       _sdk = VersionConstraint._fromLine(_sdkLine);
+    } else {
+      _sdk.version = version;
+      _sdkLine.value = version;
     }
-    _sdk.version = version;
   }
 
   set flutter(String version) {
     if (_flutter.isMissing) {
-      final line = Line.forInsertion(document, '  flutter: $version');
-      document.insert(line, lastLineNo);
-      _flutterLine = line;
+      final flutterLine = Line.forInsertion(document, '  flutter: $version');
+      document.insertAfter(flutterLine, _line);
+      _flutterLine = flutterLine;
       _flutter = VersionConstraint._fromLine(_flutterLine);
+    } else {
+      _flutter.version = version;
+      _flutterLine.value = version;
     }
-    _flutter.version = version;
   }
 
   @override

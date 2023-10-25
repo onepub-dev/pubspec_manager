@@ -13,6 +13,6 @@ class ExecutableBuilder {
   String name;
   String script;
 
-  Executable _attach(PubSpec pubspec, int lineNo) =>
-      Executable._attach(pubspec, lineNo, this);
+  Executable _attach(PubSpec pubspec, Line lineBefore) =>
+      Executable._attach(pubspec, lineBefore, this);
 }

@@ -5,7 +5,7 @@ part of 'internal_parts.dart';
 /// Holds a dependency version
 class VersionConstraint extends LineSection {
   ///
-  /// extract a version for a line.
+  /// extract a version from an attached line.
   ///
   VersionConstraint._fromLine(this.line, {bool required = false})
       : _missing = false,
@@ -32,11 +32,11 @@ class VersionConstraint extends LineSection {
         super.missing();
 
   @override
-  factory VersionConstraint._attach(
-      PubSpec pubspec, int lineNo, VersionConstraintBuilder versionBuilder) {
+  factory VersionConstraint._attach(PubSpec pubspec, Line lineBefore,
+      VersionConstraintBuilder versionBuilder) {
     final line = Line.forInsertion(
         pubspec.document, '  version: ${versionBuilder._version}');
-    pubspec.document.insert(line, lineNo);
+    pubspec.document.insertAfter(line, lineBefore);
 
     final vc = VersionConstraint._fromLine(line);
 

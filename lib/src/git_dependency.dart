@@ -17,13 +17,13 @@ class GitDependency extends Section implements Dependency {
   }
 
   GitDependency._attach(
-      PubSpec pubspec, int lineNo, GitDependencyBuilder dependency) {
+      PubSpec pubspec, Line lineBefore, GitDependencyBuilder dependency) {
     _name = dependency.name;
     _line = Line.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insert(_line, lineNo);
+    pubspec.document.insertAfter(_line, lineBefore);
 
     _details = GitDetails(dependency);
-    _details._attach(this, lineNo);
+    _details._attach(this, line);
 
     // ignore: prefer_foreach
     for (final comment in dependency.comments) {
@@ -108,29 +108,29 @@ class GitDetails {
         if (pathLine != null) pathLine!
       ];
 
-  void _attach(Section section, int lineNo) {
-    if (_attachLine(section, lineNo,
+  void _attach(Section section, Line lineBefore) {
+    if (_attachLine(section, lineBefore,
         key: 'url', value: url, inserted: (line) => urlLine = line)) {
-      lineNo++;
+      lineBefore = urlLine!;
     }
-    if (_attachLine(section, lineNo,
+    if (_attachLine(section, lineBefore,
         key: 'ref', value: ref, inserted: (line) => refLine = line)) {
-      lineNo++;
+      lineBefore = refLine!;
     }
-    if (_attachLine(section, lineNo,
+    if (_attachLine(section, lineBefore,
         key: 'path', value: path, inserted: (line) => pathLine = line)) {
-      lineNo++;
+      lineBefore = pathLine!;
     }
   }
 
-  bool _attachLine(Section section, int lineNo,
+  bool _attachLine(Section section, Line lineBefore,
       {required String key,
       required String? value,
       required void Function(Line) inserted}) {
     var attached = false;
     if (value != null) {
       final _line = Line.forInsertion(section.document, '    $key: $value');
-      section.document.insert(_line, lineNo);
+      section.document.insertAfter(_line, lineBefore);
       inserted(_line);
       attached = true;
     }

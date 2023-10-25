@@ -82,8 +82,8 @@ class VersionBuilder {
     }
   }
 
-  Version _attach(PubSpec pubspec, int lineNo) {
-    final attached = Version._attach(pubspec, lineNo, this);
+  Version _attach(PubSpec pubspec, Line lineBefore) {
+    final attached = Version._attach(pubspec, lineBefore, this);
 
     return attached;
   }

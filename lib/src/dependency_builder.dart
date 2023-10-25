@@ -5,5 +5,6 @@ abstract class DependencyBuilder {
   /// the name of the dependency package
   String get name;
 
-  Dependency _attach(Dependencies dependencies, PubSpec pubspec, int lineNo);
+  Dependency _attach(
+      Dependencies dependencies, PubSpec pubspec, Line lineBefore);
 }

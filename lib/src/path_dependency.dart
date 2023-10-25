@@ -17,15 +17,16 @@ class PathDependency extends Section implements Dependency {
   }
 
   PathDependency._attach(
-      PubSpec pubspec, int lineNo, PathDependencyBuilder dependency) {
+      PubSpec pubspec, Line lineBefore, PathDependencyBuilder dependency) {
     _name = dependency.name;
     path = dependency.path;
 
     _line = Line.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insert(_line, lineNo);
+    pubspec.document.insertAfter(_line, lineBefore);
 
-    _line = Line.forInsertion(pubspec.document, '  path: $path');
-    pubspec.document.insert(_line, lineNo);
+    _pathLine =
+        Line.forInsertion(pubspec.document, '${_line.childIndent}path: $path');
+    pubspec.document.insertAfter(_pathLine, _line);
 
     comments = Comments(this);
 
@@ -74,4 +75,7 @@ class PathDependency extends Section implements Dependency {
     _dependencies.append(dependency);
     return this;
   }
+
+  @override
+  String toString() => lines.join('\n');
 }

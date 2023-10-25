@@ -176,12 +176,50 @@ class Document {
     return attached;
   }
 
-  /// Inserts [line] into the document as indicated
-  /// by the lines [Line.lineNo].
+  /// Inserts [line] into the document before
+  /// the line at [insertAt].
+  /// The new lines lineNo will be [insertAt] -1;
   /// The line numbers of subsequent lines are updated
   /// to reflect their new position.
-  void insert(Line line, int insertAt) {
-    line.lineNo = insertAt - 1;
+  // void insert(Line line, int insertAt) {
+  //   line.lineNo = insertAt - 1;
+  //   lines.insert(line.lineNo, line);
+
+  //   for (var i = line.lineNo; i < lines.length; i++) {
+  //     final _line = lines.elementAt(i);
+  //     _line.lineNo++;
+  //   }
+  //   _validate();
+  // }
+
+  /// Inserts [line] into the document after
+  /// [lineBefore]
+  /// The new lines lineNo will be [lineBefore.lineNo] +1;
+  /// The line numbers of subsequent lines are updated
+  /// to reflect their new position.
+  /// Returns the inserted line.
+  Line insertAfter(Line line, Line lineBefore) {
+    line.lineNo = lineBefore.lineNo + 1;
+    assert(lines.isNotEmpty,
+        "We should never be able to get here as lineBefore wouldn't exist");
+
+    if (lineBefore.lineNo == lastLine!.lineNo) {
+      lines.add(line);
+    } else {
+      lines.insert(line.lineNo, line);
+    }
+
+    for (var i = line.lineNo; i < lines.length; i++) {
+      final _line = lines.elementAt(i);
+      _line.lineNo++;
+    }
+    _validate();
+    return line;
+  }
+
+  /// Inserts a line before the passed [lineAfter]
+  void insertBefore(Line line, Line lineAfter) {
+    line.lineNo = lineAfter.lineNo - 1;
     lines.insert(line.lineNo, line);
 
     for (var i = line.lineNo; i < lines.length; i++) {

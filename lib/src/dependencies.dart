@@ -64,19 +64,17 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// Add [dependency] to the PubSpec
   /// after the last dependency.
   Dependency append(DependencyBuilder dependency) {
-    var insertAt = 0;
     // if we don't have a dependencies section then create it.
     if (missing) {
       missing = false;
       line = document.append(LineDetached('$name:'));
     }
 
-    if (_dependencies.isEmpty) {
-      insertAt = line.lineNo + 1;
-    } else {
-      insertAt = _dependencies.last.lastLineNo + 1;
+    var lineBefore = line;
+    if (_dependencies.isNotEmpty) {
+      lineBefore = _dependencies.last.lines.last;
     }
-    final attached = dependency._attach(this, _pubspec, insertAt);
+    final attached = dependency._attach(this, _pubspec, lineBefore);
 
     _dependencies.add(attached);
 
@@ -91,9 +89,7 @@ class Dependencies extends Section with IterableMixin<Dependency> {
 
   /// Remove all dependencies from the section
   void removeAll() {
-    for (final dependency in _dependencies) {
-      remove(dependency.name);
-    }
+    _dependencies.removeWhere((value) => true);
   }
 
   /// Remove a dependency from the section

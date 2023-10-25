@@ -24,6 +24,7 @@ class PathDependencyBuilder implements DependencyBuilder {
   List<String> get comments => _comments;
 
   @override
-  Dependency _attach(Dependencies dependencies, PubSpec pubspec, int lineNo) =>
-      PathDependency._attach(pubspec, lineNo, this);
+  Dependency _attach(
+          Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
+      PathDependency._attach(pubspec, lineBefore, this);
 }

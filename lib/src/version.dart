@@ -29,10 +29,10 @@ class Version extends SectionSingleLine {
   /// Attached the passed [VersionBuilder] to the [Document].
   @override
   factory Version._attach(
-      PubSpec pubspec, int lineNo, VersionBuilder versionBuilder) {
+      PubSpec pubspec, Line lineBefore, VersionBuilder versionBuilder) {
     final line = Line.forInsertion(
         pubspec.document, '  version: ${versionBuilder._version}');
-    pubspec.document.insert(line, lineNo);
+    pubspec.document.insertAfter(line, lineBefore);
 
     return Version._fromLine(line);
   }

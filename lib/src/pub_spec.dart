@@ -22,7 +22,7 @@ class PubSpec {
     this.description = MultiLine.fromLine(
         document.append(LineDetached('description: $description')));
 
-    _environment = environment._attach(this, document.lines.length + 1);
+    _environment = environment._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
     repository = RepositoryAttached.missing(document);
     issueTracker = IssueTracker.missing(document);

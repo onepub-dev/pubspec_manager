@@ -12,9 +12,9 @@ class VersionConstraintBuilder {
         _version = versionConstraint,
         _comments = comments ?? <String>[];
 
-  factory VersionConstraintBuilder._fromLine(Line line) =>
-      VersionConstraintBuilder(
-          key: line.key, versionConstraint: parseConstraint(line.value));
+  // factory VersionConstraintBuilder._fromLine(Line line) =>
+  //     VersionConstraintBuilder(
+  //         key: line.key, versionConstraint: parseConstraint(line.value));
 
   factory VersionConstraintBuilder.parse(
           {required String key, String? versionConstraint}) =>
@@ -88,8 +88,8 @@ class VersionConstraintBuilder {
     }
   }
 
-  VersionConstraint _attach(PubSpec pubspec, int lineNo) {
-    final attached = VersionConstraint._attach(pubspec, lineNo, this);
+  VersionConstraint _attach(PubSpec pubspec, Line lineBefore) {
+    final attached = VersionConstraint._attach(pubspec, lineBefore, this);
 
     return attached;
   }

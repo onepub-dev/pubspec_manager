@@ -22,6 +22,6 @@ class GitDependencyBuilder implements DependencyBuilder {
 
   @override
   GitDependency _attach(
-          Dependencies dpendencies, PubSpec pubspec, int lineNo) =>
-      GitDependency._attach(pubspec, lineNo, this);
+          Dependencies dpendencies, PubSpec pubspec, Line lineBefore) =>
+      GitDependency._attach(pubspec, lineBefore, this);
 }

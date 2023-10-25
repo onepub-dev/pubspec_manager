@@ -23,9 +23,10 @@ class PubHostedDependencyBuilder implements DependencyBuilder {
   List<String> get comments => _comments;
 
   @override
-  Dependency _attach(Dependencies dependencies, PubSpec pubspec, int lineNo) {
+  Dependency _attach(
+      Dependencies dependencies, PubSpec pubspec, Line lineBefore) {
     final attached =
-        PubHostedDependency._attach(dependencies, pubspec, lineNo, this);
+        PubHostedDependency._attach(dependencies, pubspec, lineBefore, this);
 
     return attached;
   }

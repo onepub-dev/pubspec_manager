@@ -16,8 +16,8 @@ class EnvironmentBuilder {
   // Used to indicate that an environment wasn't specified
   EnvironmentBuilder.missing();
 
-  Environment _attach(PubSpec pubspec, int lineNo) =>
-      Environment._attach(pubspec, lineNo, this);
+  Environment _attach(PubSpec pubspec, Line lineBefore) =>
+      Environment._attach(pubspec, lineBefore, this);
 
   late final String? _sdk;
   late final String? _flutter;

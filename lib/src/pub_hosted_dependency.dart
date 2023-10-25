@@ -17,13 +17,13 @@ class PubHostedDependency extends Section
   PubHostedDependency._attach(
     this._dependencies,
     PubSpec pubspec,
-    int lineNo,
+    Line lineBefore,
     PubHostedDependencyBuilder dependency,
   ) {
     _name = dependency.name;
     _version = dependency.version;
     _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
-    pubspec.document.insert(line, lineNo);
+    pubspec.document.insertAfter(line, lineBefore);
     comments = Comments(this);
 
     // ignore: prefer_foreach

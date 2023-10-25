@@ -11,9 +11,10 @@ class SectionSingleLine extends SimpleSection {
     key = line.key;
   }
 
-  SectionSingleLine.attach(PubSpec pubspec, int lineNo, this.key, String value)
+  SectionSingleLine.attach(
+      PubSpec pubspec, Line lineBefore, this.key, String value)
       : super.fromLine(Line.forInsertion(pubspec.document, '$key: $value')) {
-    document.insert(line, lineNo);
+    document.insertAfter(line, lineBefore);
   }
 
   SectionSingleLine.missing(Document document, this.key)

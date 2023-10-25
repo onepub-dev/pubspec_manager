@@ -132,4 +132,10 @@ class LineSection implements Section, Line {
   set value(String value) {
     _line.value = value;
   }
+
+  @override
+  String get childIndent => _line.childIndent;
+
+  @override
+  String get expand => _line.expand;
 }

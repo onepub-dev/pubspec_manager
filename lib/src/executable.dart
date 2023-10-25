@@ -8,11 +8,12 @@ class Executable extends SectionSingleLine {
         _script = _line.value,
         super.fromLine(_line);
 
-  Executable._attach(PubSpec pubspec, int lineNo, ExecutableBuilder executable)
+  Executable._attach(
+      PubSpec pubspec, Line lineBefore, ExecutableBuilder executable)
       : _name = executable.name,
         _script = executable.script,
         _line = Line.forInsertion(pubspec.document, _buildLine(executable)),
-        super.attach(pubspec, lineNo, executable.name, executable.script);
+        super.attach(pubspec, lineBefore, executable.name, executable.script);
 
   String _name;
   String _script;

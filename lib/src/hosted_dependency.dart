@@ -22,22 +22,22 @@ class HostedDependency extends Section
     comments = Comments(this);
   }
 
-  HostedDependency.attach(this._dependencies, PubSpec pubspec, int lineNo,
+  HostedDependency.attach(this._dependencies, PubSpec pubspec, Line lineBefore,
       HostedDependencyBuilder dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
     _version = dependency.version;
 
     _line = Line.forInsertion(pubspec.document, '  $_name: ');
-    pubspec.document.insert(_line, lineNo++);
+    lineBefore = pubspec.document.insertAfter(_line, lineBefore);
     _hostedUrlLine =
         Line.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
-    pubspec.document.insert(_hostedUrlLine, lineNo++);
+    lineBefore = pubspec.document.insertAfter(_hostedUrlLine, lineBefore);
 
     if (_version != null) {
       _versionLine =
           Line.forInsertion(pubspec.document, '    version: $_version');
-      pubspec.document.insert(_versionLine, lineNo++);
+      lineBefore = pubspec.document.insertAfter(_versionLine, lineBefore);
     } else {
       _versionLine = Line.missing(document, LineType.key);
     }
