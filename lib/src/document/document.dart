@@ -176,25 +176,8 @@ class Document {
     return attached;
   }
 
-  /// Inserts [line] into the document before
-  /// the line at [insertAt].
-  /// The new lines lineNo will be [insertAt] -1;
-  /// The line numbers of subsequent lines are updated
-  /// to reflect their new position.
-  // void insert(Line line, int insertAt) {
-  //   line.lineNo = insertAt - 1;
-  //   lines.insert(line.lineNo, line);
-
-  //   for (var i = line.lineNo; i < lines.length; i++) {
-  //     final _line = lines.elementAt(i);
-  //     _line.lineNo++;
-  //   }
-  //   _validate();
-  // }
-
-  /// Inserts [line] into the document after
-  /// [lineBefore]
-  /// The new lines lineNo will be [lineBefore.lineNo] +1;
+  /// Inserts [line] into the document after [lineBefore].
+  /// The new lines lineNo will be inserted at [lineBefore].lineNo +1;
   /// The line numbers of subsequent lines are updated
   /// to reflect their new position.
   /// Returns the inserted line.

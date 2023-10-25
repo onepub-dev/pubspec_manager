@@ -21,21 +21,21 @@ class Version extends SectionSingleLine {
     quoted = _isQuoted(line.value);
   }
 
-  /// The version key wasn't present in the pubspec
-  Version._missing(super.document, super.key)
-      : _missing = true,
-        super.missing();
+  // /// The version key wasn't present in the pubspec
+  // Version._missing(super.document, super.key)
+  //     : _missing = true,
+  // super.missing();
 
   /// Attached the passed [VersionBuilder] to the [Document].
-  @override
-  factory Version._attach(
-      PubSpec pubspec, Line lineBefore, VersionBuilder versionBuilder) {
-    final line = Line.forInsertion(
-        pubspec.document, '  version: ${versionBuilder._version}');
-    pubspec.document.insertAfter(line, lineBefore);
+  // @override
+  // factory Version._attach(
+  //     PubSpec pubspec, Line lineBefore, VersionBuilder versionBuilder) {
+  //   final line = Line.forInsertion(
+  //       pubspec.document, '  version: ${versionBuilder._version}');
+  //   pubspec.document.insertAfter(line, lineBefore);
 
-    return Version._fromLine(line);
-  }
+  //   return Version._fromLine(line);
+  // }
 
   factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
     final detached = LineDetached('  version: ${versionBuilder._version}');

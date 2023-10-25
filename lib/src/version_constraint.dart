@@ -31,21 +31,21 @@ class VersionConstraint extends LineSection {
         _missing = true,
         super.missing();
 
-  @override
-  factory VersionConstraint._attach(PubSpec pubspec, Line lineBefore,
-      VersionConstraintBuilder versionBuilder) {
-    final line = Line.forInsertion(
-        pubspec.document, '  version: ${versionBuilder._version}');
-    pubspec.document.insertAfter(line, lineBefore);
+  // @override
+  // factory VersionConstraint._attach(PubSpec pubspec, Line lineBefore,
+  //     VersionConstraintBuilder versionBuilder) {
+  //   final line = Line.forInsertion(
+  //       pubspec.document, '  version: ${versionBuilder._version}');
+  //   pubspec.document.insertAfter(line, lineBefore);
 
-    final vc = VersionConstraint._fromLine(line);
+  //   final vc = VersionConstraint._fromLine(line);
 
-    // ignore: prefer_foreach
-    for (final comment in versionBuilder.comments) {
-      vc.comments.append(comment);
-    }
-    return vc;
-  }
+  //   // ignore: prefer_foreach
+  //   for (final comment in versionBuilder.comments) {
+  //     vc.comments.append(comment);
+  //   }
+  //   return vc;
+  // }
 
   /// There was a version key but no value
   bool get isEmpty => !_missing && _versionConstraint.isEmpty;

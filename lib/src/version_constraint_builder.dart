@@ -88,9 +88,9 @@ class VersionConstraintBuilder {
     }
   }
 
-  VersionConstraint _attach(PubSpec pubspec, Line lineBefore) {
-    final attached = VersionConstraint._attach(pubspec, lineBefore, this);
+  // VersionConstraint _attach(PubSpec pubspec, Line lineBefore) {
+  //   final attached = VersionConstraint._attach(pubspec, lineBefore, this);
 
-    return attached;
-  }
+  //   return attached;
+  // }
 }
