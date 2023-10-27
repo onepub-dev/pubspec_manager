@@ -6,10 +6,10 @@ part of 'internal_parts.dart';
 ///     hosted: https://onepub.dev
 ///     version: ^2.3.1
 /// If no version is specified then 'any' is assumed.
-class HostedDependency extends Section
+class DependencyAltHosted extends Section
     implements Dependency, DependencyVersioned {
   /// build a hosted dependency from a line in the document
-  HostedDependency._fromLine(this._dependencies, this._line) {
+  DependencyAltHosted._fromLine(this._dependencies, this._line) {
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -22,8 +22,8 @@ class HostedDependency extends Section
     comments = Comments(this);
   }
 
-  HostedDependency.attach(this._dependencies, PubSpec pubspec, Line lineBefore,
-      HostedDependencyBuilder dependency) {
+  DependencyAltHosted.attach(this._dependencies, PubSpec pubspec,
+      Line lineBefore, DependencyAltHostedBuilder dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
     _version = dependency.version;

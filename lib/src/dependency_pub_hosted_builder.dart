@@ -6,10 +6,10 @@ part of 'internal_parts.dart';
 ///   dcli: ^3.0.1
 ///
 @immutable
-class PubHostedDependencyBuilder implements DependencyBuilder {
+class DependencyPubHostedBuilder implements DependencyBuilder {
   /// If you don't pass in a [version] then the version will
   /// be left empty when you save
-  PubHostedDependencyBuilder({
+  DependencyPubHostedBuilder({
     required this.name,
     this.version,
     List<String>? comments,
@@ -26,7 +26,7 @@ class PubHostedDependencyBuilder implements DependencyBuilder {
   Dependency _attach(
       Dependencies dependencies, PubSpec pubspec, Line lineBefore) {
     final attached =
-        PubHostedDependency._attach(dependencies, pubspec, lineBefore, this);
+        DependencyPubHosted._attach(dependencies, pubspec, lineBefore, this);
 
     return attached;
   }

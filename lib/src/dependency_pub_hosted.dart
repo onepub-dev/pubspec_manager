@@ -4,9 +4,9 @@ part of 'internal_parts.dart';
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
-class PubHostedDependency extends Section
+class DependencyPubHosted extends Section
     implements Dependency, DependencyVersioned {
-  PubHostedDependency._fromLine(this._dependencies, Line line) : _line = line {
+  DependencyPubHosted._fromLine(this._dependencies, Line line) : _line = line {
     // the line is of the form '<name>: <version>'
     _name = line.key;
     _version = line.value;
@@ -14,11 +14,11 @@ class PubHostedDependency extends Section
   }
 
   @override
-  PubHostedDependency._attach(
+  DependencyPubHosted._attach(
     this._dependencies,
     PubSpec pubspec,
     Line lineBefore,
-    PubHostedDependencyBuilder dependency,
+    DependencyPubHostedBuilder dependency,
   ) {
     _name = dependency.name;
     _version = dependency.version;

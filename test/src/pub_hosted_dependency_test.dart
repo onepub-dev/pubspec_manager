@@ -9,14 +9,14 @@ void main() {
     expect(pubspec.dependencies.length, equals(2));
 
     final one = pubspec.dependencies.list.first;
-    expect(one is PubHostedDependency, isTrue);
-    var pubHosted = one as PubHostedDependency;
+    expect(one is DependencyPubHosted, isTrue);
+    var pubHosted = one as DependencyPubHosted;
     expect(one.name, equals('dcli'));
     expect(pubHosted.version, equals('2.3.0'));
 
     final two = pubspec.dependencies.list.elementAt(1);
-    expect(two is PubHostedDependency, isTrue);
-    pubHosted = two as PubHostedDependency;
+    expect(two is DependencyPubHosted, isTrue);
+    pubHosted = two as DependencyPubHosted;
     expect(two.name, equals('dcli_core'));
     expect(pubHosted.version, equals('2.3.1'));
   });

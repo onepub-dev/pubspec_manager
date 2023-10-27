@@ -1,10 +1,10 @@
 part of 'internal_parts.dart';
 
 /// Git style dependency.
-class GitDependency extends Section implements Dependency {
+class DependencyGit extends Section implements Dependency {
   /// Load the git dependency details starting
   /// from [line].
-  GitDependency._fromLine(this._dependencies, Line line) : _line = line {
+  DependencyGit._fromLine(this._dependencies, Line line) : _line = line {
     _name = _line.key;
     final details = GitDetails.fromLine(_line);
 
@@ -16,8 +16,8 @@ class GitDependency extends Section implements Dependency {
     comments = Comments(this);
   }
 
-  GitDependency._attach(
-      PubSpec pubspec, Line lineBefore, GitDependencyBuilder dependency) {
+  DependencyGit._attach(
+      PubSpec pubspec, Line lineBefore, DependencyGitBuilder dependency) {
     _name = dependency.name;
     _line = Line.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
@@ -78,7 +78,7 @@ class GitDependency extends Section implements Dependency {
 /// Holds the details of a git dependency.
 class GitDetails {
   // GitDetails({this.url, this.ref, this.path});
-  GitDetails(GitDependencyBuilder dependency)
+  GitDetails(DependencyGitBuilder dependency)
       : url = dependency.url,
         ref = dependency.ref,
         path = dependency.path;

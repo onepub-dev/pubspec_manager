@@ -1,3 +1,8 @@
+# 1.0.0-alpha.12
+- BREAKING dependency classes have been renamed to begin with Dependency
+so PubHostedDependency becomes DependencyPubHosted. This is to help with discovery and auto-completion.
+- HostedDependency is now called DependencyAltHosted
+
 # 1.0.0-alpha.11
 - Fixes for environment when the sdk or flutter constraints where missing.
 - work on validating the function of the VersionConstraint class

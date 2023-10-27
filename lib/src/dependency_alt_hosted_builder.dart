@@ -7,8 +7,8 @@ part of 'internal_parts.dart';
 ///     version: ^2.3.1
 /// If no version is specified then 'any' is assumed.
 @immutable
-class HostedDependencyBuilder implements DependencyBuilder {
-  HostedDependencyBuilder({
+class DependencyAltHostedBuilder implements DependencyBuilder {
+  DependencyAltHostedBuilder({
     required this.name,
     required String hosted,
     this.version,
@@ -28,5 +28,5 @@ class HostedDependencyBuilder implements DependencyBuilder {
   @override
   Dependency _attach(
           Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
-      HostedDependency.attach(dependencies, pubspec, lineBefore, this);
+      DependencyAltHosted.attach(dependencies, pubspec, lineBefore, this);
 }

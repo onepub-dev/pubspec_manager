@@ -9,8 +9,8 @@ part of 'internal_parts.dart';
 ///   dcli:
 ///     path: ../dcli
 @immutable
-class PathDependencyBuilder implements DependencyBuilder {
-  PathDependencyBuilder({
+class DependencyPathBuilder implements DependencyBuilder {
+  DependencyPathBuilder({
     required this.name,
     required this.path,
     List<String>? comments,
@@ -26,5 +26,5 @@ class PathDependencyBuilder implements DependencyBuilder {
   @override
   Dependency _attach(
           Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
-      PathDependency._attach(pubspec, lineBefore, this);
+      DependencyPath._attach(pubspec, lineBefore, this);
 }

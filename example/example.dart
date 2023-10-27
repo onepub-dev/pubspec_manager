@@ -7,40 +7,40 @@ void main() {
     name: 'new eric',
     version: '1.0.0-alpha.2',
     description: 'An example',
-    environment: EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0'),
+    environment: EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0'),
   )
-    ..documentation
-        .set('https://onepub.dev')
-        .comments
-        .append('This is the doco')
     ..homepage
         .set('https://onepub.dev/home')
         .comments
         .append('The home page')
         .append('more')
-    ..issueTracker
-        .set('https://onepub.dev/Issues')
-        .comments
-        .append('Log bugs here')
     ..repository
         .set('https://onepub.dev/Issues')
         .comments
         .append('The code is here')
+    ..documentation
+        .set('https://onepub.dev')
+        .comments
+        .append('This is the doco')
+    ..issueTracker
+        .set('https://onepub.dev/Issues')
+        .comments
+        .append('Log bugs here')
     ..dependencies
-        .append(HostedDependencyBuilder(
+        .append(DependencyAltHostedBuilder(
           name: 'dcli',
           hosted: 'https://onepub.dev',
           comments: const ['DCLI to do file system stuff', 'Hello world'],
         ))
-        .append(PubHostedDependencyBuilder(name: 'dcli_core', version: '1.0.0'))
+        .append(DependencyPubHostedBuilder(name: 'dcli_core', version: '1.0.0'))
     ..devDependencies
         .append(
-          PubHostedDependencyBuilder(
+          DependencyPubHostedBuilder(
               comments: const ['hi there', 'ho there'],
               name: 'test',
               version: '1.0.0'),
         )
-        .append(PubHostedDependencyBuilder(
+        .append(DependencyPubHostedBuilder(
           name: 'test_it',
           version: '1.0.0',
         ))

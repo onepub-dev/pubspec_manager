@@ -8,16 +8,16 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class PathDependency extends Section implements Dependency {
-  PathDependency._fromLine(this._dependencies, this._line) {
+class DependencyPath extends Section implements Dependency {
+  DependencyPath._fromLine(this._dependencies, this._line) {
     _name = _line.key;
     _pathLine = line.findRequiredKeyChild('path');
     path = _pathLine.value;
     comments = Comments(this);
   }
 
-  PathDependency._attach(
-      PubSpec pubspec, Line lineBefore, PathDependencyBuilder dependency) {
+  DependencyPath._attach(
+      PubSpec pubspec, Line lineBefore, DependencyPathBuilder dependency) {
     _name = dependency.name;
     path = dependency.path;
 

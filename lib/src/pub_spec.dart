@@ -26,7 +26,7 @@ class PubSpec {
     homepage = Homepage.missing(document);
     repository = RepositoryAttached.missing(document);
     issueTracker = IssueTracker.missing(document);
-    documentation = DocumentationAttached.missing(document);
+    documentation = Documentation.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
@@ -50,7 +50,7 @@ class PubSpec {
     homepage = Homepage._fromLine(document);
     repository = RepositoryAttached._fromLine(document);
     issueTracker = IssueTracker._fromLine(document);
-    documentation = DocumentationAttached._fromLine(document);
+    documentation = Documentation._fromLine(document);
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
@@ -126,7 +126,7 @@ class PubSpec {
   late final Homepage homepage;
   late final RepositoryAttached repository;
   late final IssueTracker issueTracker;
-  late final DocumentationAttached documentation;
+  late final Documentation documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
   late final Dependencies dependencyOverrides;

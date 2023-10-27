@@ -1,14 +1,34 @@
 part of 'internal_parts.dart';
 
-class Documentation implements SingleLine {
-  Documentation(this.url);
-  Documentation.missing() : url = '';
+class Documentation extends SectionSingleLine {
+  factory Documentation._fromLine(Document document) {
+    final line = document.getLineForKey(Documentation._key);
+    if (line.missing) {
+      return Documentation.missing(document);
+    } else {
+      return Documentation._(line);
+    }
+  }
 
-  String url;
+  Documentation._(super.line)
+      : documentation = DocumentationBuilder(line.value),
+        super.fromLine();
 
-  // DocumentationAttached attach(Pubspec pubspec, int lineNo) =>
-  //     DocumentationAttached.attach(pubspec, lineNo, this);
+  Documentation.missing(Document document)
+      : documentation = DocumentationBuilder.missing(),
+        super.missing(document, _key);
+
+  final DocumentationBuilder documentation;
 
   @override
-  String get value => url;
+  // ignore: avoid_renaming_method_parameters
+  Documentation set(String url) {
+    documentation.url = url;
+    super.set(url);
+
+    // ignore: avoid_returning_this
+    return this;
+  }
+
+  static const String _key = 'documentation';
 }

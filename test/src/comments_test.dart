@@ -21,7 +21,7 @@ void main() {
     const version = '1.5.1';
     final pubspec = PubSpec.loadFromString(content);
     final devDependencies = pubspec.devDependencies
-      ..append(PubHostedDependencyBuilder(name: 'test', version: version));
+      ..append(DependencyPubHostedBuilder(name: 'test', version: version));
     expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
@@ -30,7 +30,7 @@ void main() {
     expect((testDep as DependencyVersioned).version, equals(version));
 
     final dependencies = pubspec.dependencies
-      ..append(PubHostedDependencyBuilder(name: 'dcli_core', version: version));
+      ..append(DependencyPubHostedBuilder(name: 'dcli_core', version: version));
     expect(dependencies.exists('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
