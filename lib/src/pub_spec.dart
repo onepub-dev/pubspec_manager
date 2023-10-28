@@ -129,6 +129,11 @@ class PubSpec {
   late final Documentation documentation;
   late final Dependencies dependencies;
   late final Dependencies devDependencies;
+
+  /// During the development process, you might need to temporarily override
+  /// a dependency.
+  /// It is now recommended that you place overrides in a separate file
+  /// pubpsec_overrides.yaml
   late final Dependencies dependencyOverrides;
   late final SimpleSection platforms;
   late final Executables executables;
