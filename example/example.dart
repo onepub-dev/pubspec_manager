@@ -18,14 +18,14 @@ void main() {
         .set('https://onepub.dev/Issues')
         .comments
         .append('The code is here')
-    ..documentation
-        .set('https://onepub.dev')
-        .comments
-        .append('This is the doco')
     ..issueTracker
         .set('https://onepub.dev/Issues')
         .comments
         .append('Log bugs here')
+    ..documentation
+        .set('https://onepub.dev')
+        .comments
+        .append('This is the doco')
     ..dependencies
         .append(DependencyAltHostedBuilder(
           name: 'dcli',
@@ -44,6 +44,12 @@ void main() {
           name: 'test_it',
           version: '1.0.0',
         ))
+    ..dependencyOverrides.append(DependencyPathBuilder(
+      name: 'dcli',
+      path: '../up/dcli',
+      comments: const ['Override dcli with a local version'],
+    ))
+    ..environment.
     ..save(filename: 'example.yaml');
 
   print(File(pubspec.loadedFrom).readAsStringSync());
