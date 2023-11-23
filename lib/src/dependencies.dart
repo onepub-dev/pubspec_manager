@@ -3,23 +3,17 @@ part of 'internal_parts.dart';
 /// Used to hold a list of [DependencyBuilder]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Dependencies extends Section with IterableMixin<Dependency> {
+class Dependencies with IterableMixin<Dependency> {
   Dependencies._missing(this._pubspec, this.name)
-      : document = _pubspec.document,
-        super.missing();
+      : _section = Section.missing(_pubspec.document, name);
 
-  Dependencies._fromLine(this._pubspec, this.line) {
-    document = _pubspec.document;
-    missing = false;
+  Dependencies._fromLine(this._pubspec, Line line) {
     name = line.key;
-    comments = Comments(this);
+    _section = Section.fromLine(line);
   }
 
-  @override
-  late final Document document;
-
-  @override
-  late final Line line;
+  /// The [Document] [Section] that holds the dependencies
+  late Section _section;
 
   /// The name of the dependency section such as
   /// dev_dpendencies
@@ -37,17 +31,17 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   @override
   int get length => _dependencies.length;
 
-  @override
-  List<Line> get lines {
-    final lines = <Line>[];
-    if (missing) {
-      return lines;
-    }
-    for (final dependency in _dependencies) {
-      lines.addAll(dependency.lines);
-    }
-    return lines;
-  }
+  // @override
+  // List<Line> get lines {
+  //   final lines = <Line>[];
+  //   if (missing) {
+  //     return lines;
+  //   }
+  //   for (final dependency in _dependencies) {
+  //     lines.addAll(dependency.lines);
+  //   }
+  //   return lines;
+  // }
 
   /// returns the [DependencyBuilder] with the given [name]
   /// if it exists in this section.
@@ -65,14 +59,14 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// after the last dependency.
   Dependency append(DependencyBuilder dependency) {
     // if we don't have a dependencies section then create it.
-    if (missing) {
-      missing = false;
-      line = document.append(LineDetached('$name:'));
+    if (_section.missing) {
+      _section =
+          Section.fromLine(_section.document.append(LineDetached('$name:')));
     }
 
-    var lineBefore = line;
+    var lineBefore = _section.line;
     if (_dependencies.isNotEmpty) {
-      lineBefore = _dependencies.last.lines.last;
+      lineBefore = _dependencies.last._section.lines.last;
     }
     final attached = dependency._attach(this, _pubspec, lineBefore);
 
@@ -104,7 +98,7 @@ class Dependencies extends Section with IterableMixin<Dependency> {
     }
 
     _dependencies.remove(dependency);
-    final lines = dependency.lines;
+    final lines = dependency._section.lines;
     _pubspec.document.removeAll(lines);
   }
 
@@ -112,12 +106,7 @@ class Dependencies extends Section with IterableMixin<Dependency> {
   /// with the given name.
   bool exists(String name) => this[name] != null;
 
-  @override
-  late final Comments comments;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  Comments get comments => _section.comments;
 
   @override
   Iterator<Dependency> get iterator => DependencyIterator(_dependencies);

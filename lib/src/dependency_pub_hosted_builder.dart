@@ -25,8 +25,8 @@ class DependencyPubHostedBuilder implements DependencyBuilder {
   @override
   Dependency _attach(
       Dependencies dependencies, PubSpec pubspec, Line lineBefore) {
-    final attached =
-        DependencyPubHosted._attach(dependencies, pubspec, lineBefore, this);
+    final attached = DependencyPubHosted._insertAfter(
+        dependencies, pubspec, lineBefore, this);
 
     return attached;
   }

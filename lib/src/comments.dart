@@ -6,19 +6,19 @@ part of 'internal_parts.dart';
 /// A comment section is all comments/blank lines that are above
 /// a section upto where the proceeding section ends.
 class Comments {
-  Comments(this.section) {
+  Comments(this._section) {
     _lines = _commentsAsLine();
   }
-  Comments.empty(this.section) : _lines = <Line>[];
+  Comments.empty(this._section) : _lines = <Line>[];
 
   /// The section these comments are attached to.
-  Section section;
+  final Section _section;
 
-  /// Gets the set of comments that suffix the passed in [section]
+  /// Gets the set of comments that suffix the passed in [_section]
   /// This will include any blank lines upto the end of the prior
   /// section.
   List<Line> _commentsAsLine() {
-    final document = section.document;
+    final document = _section.document;
 
     final suffix = <Line>[];
 
@@ -26,11 +26,11 @@ class Comments {
 
     /// there can be no comments if we are the first
     /// line of the pubspec.yaml
-    if (section.line.lineNo == 1) {
+    if (_section.line.lineNo == 1) {
       return suffix;
     }
     // search for comments starting from the prior line
-    var lineNo = section.line.lineNo - 2;
+    var lineNo = _section.line.lineNo - 2;
 
     for (; lineNo > 0; lineNo--) {
       final line = lines[lineNo];
@@ -49,7 +49,7 @@ class Comments {
 
   List<Line> get lines => _lines;
 
-  /// the number of dependencies in this section
+  /// the number of comment lines prepended to this section
   int get length => _lines.length;
 
   /// Add [comment] to the PubSpec
@@ -57,11 +57,11 @@ class Comments {
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
   Comments append(String comment) {
-    final document = section.line.document;
+    final document = _section.line.document;
     final commentLine = Line.forInsertion(
-        document, '${spaces(section.line.indent * 2)}# $comment');
+        document, '${spaces(_section.line.indent * 2)}# $comment');
     _lines.add(commentLine);
-    document.insertBefore(commentLine, section.line);
+    document.insertBefore(commentLine, _section.line);
     return this;
   }
 
@@ -69,14 +69,14 @@ class Comments {
   /// of comments for this section. [index] is zero based.
   /// If no comment exists at [index] then a [RangeError] is thrown.
   void removeAt(int index) {
-    final document = section.document;
+    final document = _section.document;
     if (index < 0) {
       throw OutOfBoundsException(
-          section.line, 'Index must be >= 0 found $index}');
+          _section.line, 'Index must be >= 0 found $index}');
     }
     if (index > _lines.length) {
       throw OutOfBoundsException(
-          section.line, 'Index must be < ${_lines.length} found $index}');
+          _section.line, 'Index must be < ${_lines.length} found $index}');
     }
 
     final line = _lines.removeAt(index);
@@ -84,7 +84,7 @@ class Comments {
   }
 
   void removeAll() {
-    section.document.removeAll(_lines);
+    _section.document.removeAll(_lines);
     _lines.removeRange(0, _lines.length);
   }
 }

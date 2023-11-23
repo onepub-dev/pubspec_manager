@@ -25,7 +25,7 @@ void main() {
     expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
-    expect(testDep!.line.lineNo, equals(13));
+    expect(testDep!._section.line.lineNo, equals(13));
     expect(testDep, isA<DependencyVersioned>());
     expect((testDep as DependencyVersioned).version, equals(version));
 
@@ -85,7 +85,7 @@ void main() {
     final dcli = dependencies['dcli'];
     dcli!.comments.append('Hellow World for dcli');
     dcli.comments.removeAt(0);
-    dcli.comments.removeAt(0);
+    dcli._section.comments.removeAt(0);
     expect(dcli.comments.length, equals(0));
     expect(document.lines.length, equals(12));
   });

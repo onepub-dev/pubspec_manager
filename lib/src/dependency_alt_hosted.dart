@@ -6,10 +6,10 @@ part of 'internal_parts.dart';
 ///     hosted: https://onepub.dev
 ///     version: ^2.3.1
 /// If no version is specified then 'any' is assumed.
-class DependencyAltHosted extends Section
-    implements Dependency, DependencyVersioned {
-  /// build a hosted dependency from a line in the document
-  DependencyAltHosted._fromLine(this._dependencies, this._line) {
+class DependencyAltHosted implements Dependency, DependencyVersioned {
+  /// build an [DependencyAltHosted] from an existing line in the document
+  DependencyAltHosted._fromLine(this._dependencies, this._line)
+      : _section = Section.fromLine(_line) {
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -19,16 +19,19 @@ class DependencyAltHosted extends Section
     if (!_versionLine.missing) {
       _version = _versionLine.value;
     }
-    comments = Comments(this);
   }
 
-  DependencyAltHosted.attach(this._dependencies, PubSpec pubspec,
+  /// Creates an  [DependencyAltHosted] inserting it into the document after
+  /// [lineBefore]
+  DependencyAltHosted._insertAfter(this._dependencies, PubSpec pubspec,
       Line lineBefore, DependencyAltHostedBuilder dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
     _version = dependency.version;
 
     _line = Line.forInsertion(pubspec.document, '  $_name: ');
+    _section = Section.fromLine(_line);
+
     lineBefore = pubspec.document.insertAfter(_line, lineBefore);
     _hostedUrlLine =
         Line.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
@@ -39,16 +42,17 @@ class DependencyAltHosted extends Section
           Line.forInsertion(pubspec.document, '    version: $_version');
       lineBefore = pubspec.document.insertAfter(_versionLine, lineBefore);
     } else {
-      _versionLine = Line.missing(document, LineType.key);
+      _versionLine = Line.missing(pubspec.document, LineType.key);
     }
-    comments = Comments(this);
 
-    // ignore: prefer_foreach
-    for (final comment in dependency.comments) {
-      comments.append(comment);
-    }
+    // // ignore: prefer_foreach
+    // for (final comment in dependency.comments) {
+    //   _section.comments.append(comment);
+    // }
   }
   static const key = 'hosted';
+
+  late Section _section;
 
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
@@ -56,9 +60,6 @@ class DependencyAltHosted extends Section
   late String _name;
   late String _hostedUrl;
   late String? _version;
-
-  @override
-  late final Comments comments;
 
   late final Line _line;
   late final Line _hostedUrlLine;
@@ -88,26 +89,17 @@ class DependencyAltHosted extends Section
     _versionLine.value = version;
   }
 
-  @override
-  Line get line => _line;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  @override
-  List<Line> get lines => [
-        ...comments.lines,
-        _line,
-        _hostedUrlLine,
-        if (!_versionLine.missing) _versionLine
-      ];
+  // @override
+  // List<Line> get lines => [
+  //       ...comments.lines,
+  //       _line,
+  //       _hostedUrlLine,
+  //       if (!_versionLine.missing) _versionLine
+  //     ];
 
   /// The last line number used by this  section_versionLine
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  // @override
+  // int get lastLineNo => lines.last.lineNo;
 
   @override
   Dependency append(DependencyBuilder dependency) {

@@ -4,17 +4,17 @@ part of 'internal_parts.dart';
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
-class DependencyPubHosted extends Section
-    implements Dependency, DependencyVersioned {
-  DependencyPubHosted._fromLine(this._dependencies, Line line) : _line = line {
+class DependencyPubHosted implements Dependency, DependencyVersioned {
+  DependencyPubHosted._fromLine(this._dependencies, Line line)
+      : _line = line,
+        _section = Section.fromLine(line) {
     // the line is of the form '<name>: <version>'
     _name = line.key;
     _version = line.value;
-    comments = Comments(this);
   }
 
   @override
-  DependencyPubHosted._attach(
+  DependencyPubHosted._insertAfter(
     this._dependencies,
     PubSpec pubspec,
     Line lineBefore,
@@ -23,14 +23,17 @@ class DependencyPubHosted extends Section
     _name = dependency.name;
     _version = dependency.version;
     _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
-    pubspec.document.insertAfter(line, lineBefore);
-    comments = Comments(this);
+    _line = pubspec.document.insertAfter(_line, lineBefore);
+    _section = Section.fromLine(_line);
 
-    // ignore: prefer_foreach
-    for (final comment in dependency.comments) {
-      comments.append(comment);
-    }
+    // // ignore: prefer_foreach
+    // for (final comment in dependency.comments) {
+    //   comments.append(comment);
+    // }
   }
+
+  @override
+  late Section _section;
 
   late String _name;
   late String? _version;
@@ -57,24 +60,8 @@ class DependencyPubHosted extends Section
     _line.value = version;
   }
 
-  @override
-  Line get line => _line;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line];
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  @override
-  late final Comments comments;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  // @override
+  // List<Line> get lines => [...comments.lines, _line];
 
   @override
   Dependency append(DependencyBuilder dependency) {

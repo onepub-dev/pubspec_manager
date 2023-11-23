@@ -26,5 +26,5 @@ class DependencyPathBuilder implements DependencyBuilder {
   @override
   Dependency _attach(
           Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
-      DependencyPath._attach(pubspec, lineBefore, this);
+      DependencyPath._insertAfter(pubspec, lineBefore, this);
 }

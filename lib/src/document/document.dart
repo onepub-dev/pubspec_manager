@@ -9,7 +9,7 @@ import 'line_detached.dart';
 import 'line_section.dart';
 import 'line_type.dart';
 import 'multi_line.dart';
-import 'simple_section.dart';
+import 'section.dart';
 
 class Document {
   /// Load the pubspec.yaml from the file located at [pathTo]
@@ -67,16 +67,16 @@ class Document {
 
   /// Finds a section for the given [key].
   /// If the [key] doesn't exist then returns null.
-  SimpleSection findSectionForKey(String key) {
+  Section findSectionForKey(String key) {
     for (final line in lines) {
       if (line.type == LineType.key) {
         final keyValue = KeyValue.fromLine(line);
         if (keyValue.key == key) {
-          return SimpleSection.fromLine(line);
+          return Section.fromLine(line);
         }
       }
     }
-    return SimpleSection.missing(this, key);
+    return Section.missing(this, key);
   }
 
   /// Finds the line for the given [key].

@@ -8,35 +8,39 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class DependencyPath extends Section implements Dependency {
-  DependencyPath._fromLine(this._dependencies, this._line) {
+class DependencyPath implements Dependency {
+  /// Creates Path dependency from an existing [Line] in
+  /// the document.
+  DependencyPath._fromLine(this._dependencies, this._line)
+      : _section = Section.fromLine(_line) {
     _name = _line.key;
-    _pathLine = line.findRequiredKeyChild('path');
+    _pathLine = _line.findRequiredKeyChild('path');
     path = _pathLine.value;
-    comments = Comments(this);
   }
 
-  DependencyPath._attach(
+  /// Creates a  Path Dependency inserting it into the document after
+  /// [lineBefore]
+  DependencyPath._insertAfter(
       PubSpec pubspec, Line lineBefore, DependencyPathBuilder dependency) {
     _name = dependency.name;
     path = dependency.path;
 
     _line = Line.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
+    _section = Section.fromLine(_line);
 
     _pathLine =
         Line.forInsertion(pubspec.document, '${_line.childIndent}path: $path');
     pubspec.document.insertAfter(_pathLine, _line);
 
-    comments = Comments(this);
-
-    // ignore: prefer_foreach
-    for (final comment in dependency.comments) {
-      comments.append(comment);
-    }
+    // // ignore: prefer_foreach
+    // for (final comment in dependency.comments) {
+    //   comments.append(comment);
+    // }
   }
   static const key = 'path';
 
+  late final Section _section;
   late final String _name;
   late final String path;
 
@@ -50,25 +54,6 @@ class DependencyPath extends Section implements Dependency {
   @override
   String get name => _name;
 
-  @override
-  Line get line => _line;
-
-  @override
-  Document get document => line.document;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line];
-
-  @override
-  late final Comments comments;
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
-
   /// Allows cascading calls to append
   @override
   Dependency append(DependencyBuilder dependency) {
@@ -77,5 +62,5 @@ class DependencyPath extends Section implements Dependency {
   }
 
   @override
-  String toString() => lines.join('\n');
+  String toString() => _section.lines.join('\n');
 }

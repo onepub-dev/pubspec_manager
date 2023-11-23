@@ -16,7 +16,7 @@ class PubSpec {
     document = Document.loadFromString('');
 
     this.name =
-        LineSection.fromLine(document.append(LineDetached('name: $name')));
+        SectionSingleLine.fromLine(document.append(LineDetached('name: $name')));
     this.version =
         VersionBuilder.parse(key: 'version', version: version)._append(this);
     this.description = MultiLine.fromLine(
@@ -30,12 +30,12 @@ class PubSpec {
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
-    platforms = SimpleSection.missing(document, 'platforms');
+    platforms = Section.missing(document, 'platforms');
     executables = Executables._missing(this);
-    funding = SimpleSection.missing(document, 'funding');
-    falseSecrets = SimpleSection.missing(document, 'false_secrets');
-    screenshots = SimpleSection.missing(document, 'screenshots');
-    topics = SimpleSection.missing(document, 'topics');
+    funding = Section.missing(document, 'funding');
+    falseSecrets = Section.missing(document, 'false_secrets');
+    screenshots = Section.missing(document, 'screenshots');
+    topics = Section.missing(document, 'topics');
   }
 
   /// Loads the content of a pubspec.yaml from the string [content].
@@ -135,12 +135,12 @@ class PubSpec {
   /// It is now recommended that you place overrides in a separate file
   /// pubpsec_overrides.yaml
   late final Dependencies dependencyOverrides;
-  late final SimpleSection platforms;
+  late final Section platforms;
   late final Executables executables;
-  late final SimpleSection funding;
-  late final SimpleSection falseSecrets;
-  late final SimpleSection screenshots;
-  late final SimpleSection topics;
+  late final Section funding;
+  late final Section falseSecrets;
+  late final Section screenshots;
+  late final Section topics;
 
   Environment get environment => _environment;
 
@@ -230,9 +230,9 @@ class PubSpec {
       ..render(repository)
       ..render(issueTracker)
       ..render(documentation)
-      ..render(dependencies)
-      ..render(devDependencies)
-      ..render(dependencyOverrides)
+      ..render(dependencies._section)
+      ..render(devDependencies._section)
+      ..render(dependencyOverrides._section)
       ..render(executables)
       ..render(platforms)
       ..render(funding)

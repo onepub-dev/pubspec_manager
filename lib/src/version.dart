@@ -2,14 +2,14 @@
 
 part of 'internal_parts.dart';
 
-/// Holds a dependency version
-class Version extends SectionSingleLine {
+/// Holds package version as declared in the pubspec.yaml
+class Version {
   ///
   /// extract a version for an attached line.
   ///
   Version._fromLine(Line line, {bool required = false})
       : _missing = false,
-        super.fromLine(line) {
+        _section = SectionSingleLine.fromLine(line) {
     if (Strings.isBlank(line.value)) {
       if (required) {
         throw PubSpecException(line, 'Required version missing.');
@@ -44,6 +44,8 @@ class Version extends SectionSingleLine {
     return Version._fromLine(line);
   }
 
+  Section _section;
+
   /// There was a version key but no value
   bool get isEmpty => !_missing && _version.isEmpty;
 
@@ -62,7 +64,7 @@ class Version extends SectionSingleLine {
 
   set value(sm.Version value) {
     _version = value;
-    line.value = value.toString();
+    _section.line.value = value.toString();
   }
 
   @override
@@ -76,8 +78,8 @@ class Version extends SectionSingleLine {
     }
     quoted = _isQuoted(version);
 
-    line.value = _stripQuotes(version);
-    missing = false;
+    _section.line.value = _stripQuotes(version);
+    _section.missing = false;
   }
 
   String get version {
@@ -135,7 +137,4 @@ class Version extends SectionSingleLine {
       throw e;
     }
   }
-
-  @override
-  List<Line> get lines => [line];
 }

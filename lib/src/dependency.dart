@@ -1,7 +1,7 @@
 part of 'internal_parts.dart';
 
-/// Base class for each of the [DependencyBuilder] types.
-abstract class Dependency extends Section {
+/// Base class for each of the [Dependency] types.
+abstract class Dependency {
   /// Loads a dependency located at [line].
   factory Dependency._loadFrom(Dependencies dependencies, Line line) {
     final children = line.childrenOf(type: LineType.key);
@@ -43,8 +43,7 @@ abstract class Dependency extends Section {
   /// the name of the dependency package
   String get name;
 
-  /// The line the dependeny starts on - ignoring leading comments
-  int get lineNo;
+  Section get section;
 
   Dependency append(DependencyBuilder pubHostedDependency);
 }

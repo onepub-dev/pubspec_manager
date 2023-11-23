@@ -49,7 +49,7 @@ void main() {
       path: '../up/dcli',
       comments: const ['Override dcli with a local version'],
     ))
-    ..environment.
+    // ..environment.
     ..save(filename: 'example.yaml');
 
   print(File(pubspec.loadedFrom).readAsStringSync());

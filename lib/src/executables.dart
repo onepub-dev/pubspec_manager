@@ -3,19 +3,18 @@ part of 'internal_parts.dart';
 /// Used to hold a list of [DependencyBuilder]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Executables extends Section with IterableMixin<Executable> {
-  Executables._missing(this._pubspec) : super.missing();
+class Executables with IterableMixin<Executable> {
+  Executables._missing(this._pubspec)
+      : _section = Section.missing(_pubspec.document, key);
 
-  Executables._fromLine(this._pubspec, this.line) {
-    missing = false;
+  Executables._fromLine(this._pubspec, Line line)
+      : _section = Section.fromLine(line) {
     name = line.key;
-    comments = Comments(this);
   }
 
   static const String key = 'executables';
 
-  @override
-  late final Line line;
+  Section _section;
 
   /// The name of the dependency section such as
   /// dev_dpendencies
@@ -33,17 +32,17 @@ class Executables extends Section with IterableMixin<Executable> {
   @override
   int get length => _executables.length;
 
-  @override
-  List<Line> get lines {
-    final lines = <Line>[];
-    if (missing) {
-      return lines;
-    }
-    for (final executable in _executables) {
-      lines.addAll(executable.lines);
-    }
-    return lines;
-  }
+  // @override
+  // List<Line> get lines {
+  //   final lines = <Line>[];
+  //   if (missing) {
+  //     return lines;
+  //   }
+  //   for (final executable in _executables) {
+  //     lines.addAll(executable.lines);
+  //   }
+  //   return lines;
+  // }
 
   /// returns the [ExecutableBuilder] with the given [name]
   /// if it exists in this section.
@@ -60,12 +59,12 @@ class Executables extends Section with IterableMixin<Executable> {
   /// Add [executable] to the PubSpec
   /// after the last dependency.
   Executables append(ExecutableBuilder executable) {
-    var lineBefore = line;
+    var lineBefore = _section.line;
 
-    if (missing) {
-      missing = false;
+    if (_section.missing) {
       // create the section.
-      line = document.append(LineDetached(key));
+      final line = _section.document.append(LineDetached(key));
+      _section = Section.fromLine(line);
     } else {
       if (_executables.isNotEmpty) {
         lineBefore = _executables.last.line;
@@ -102,16 +101,6 @@ class Executables extends Section with IterableMixin<Executable> {
   /// returns true if the list of dependencies contains a dependency
   /// with the given name.
   bool exists(String name) => this[name] != null;
-
-  @override
-  late final Comments comments;
-
-  @override
-  Document get document => line.document;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
 
   @override
   Iterator<Executable> get iterator => ExecutableIterator(_executables);

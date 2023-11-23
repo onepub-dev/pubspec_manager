@@ -1,10 +1,12 @@
 part of 'internal_parts.dart';
 
 /// Git style dependency.
-class DependencyGit extends Section implements Dependency {
-  /// Load the git dependency details starting
+class DependencyGit implements Dependency {
+  /// Load the git dependency from the [Document]  starting
   /// from [line].
-  DependencyGit._fromLine(this._dependencies, Line line) : _line = line {
+  DependencyGit._fromLine(this._dependencies, Line line)
+      : _line = line,
+        _section = Section.fromLine(line) {
     _name = _line.key;
     final details = GitDetails.fromLine(_line);
 
@@ -12,25 +14,28 @@ class DependencyGit extends Section implements Dependency {
       throw PubSpecException(_line,
           '''The git dependency for '$name has the url specified twice. ''');
     }
-
-    comments = Comments(this);
   }
 
-  DependencyGit._attach(
+  /// Create a Git dependency and insert it into the document
+  DependencyGit._insertAfter(
       PubSpec pubspec, Line lineBefore, DependencyGitBuilder dependency) {
     _name = dependency.name;
     _line = Line.forInsertion(pubspec.document, '  $_name:');
+    _section = Section.fromLine(_line);
     pubspec.document.insertAfter(_line, lineBefore);
 
     _details = GitDetails(dependency);
-    _details._attach(this, line);
+    _details._attach(_section, _line);
 
-    // ignore: prefer_foreach
-    for (final comment in dependency.comments) {
-      comments.append(comment);
-    }
+    // // ignore: prefer_foreach
+    // for (final comment in dependency.comments) {
+    //   comments.append(comment);
+    // }
   }
   static const key = 'git';
+
+  @override
+  late final Section _section;
 
   late final String _name;
 
@@ -49,24 +54,9 @@ class DependencyGit extends Section implements Dependency {
     _line.key = name;
   }
 
-  @override
-  Line get line => _line;
-
-  @override
-  late final Comments comments;
-
-  @override
-  List<Line> get lines => [...comments.lines, _line, ..._details.lines];
-
-  @override
-  int get lineNo => _line.lineNo;
-
-  @override
-  Document get document => line.document;
-
-  /// The last line number used by this  section
-  @override
-  int get lastLineNo => lines.last.lineNo;
+  // @override
+  // List<Line> get lines =>
+  //     [..._section.comments.lines, _line, ..._details.lines];
 
   @override
   Dependency append(DependencyBuilder dependency) {

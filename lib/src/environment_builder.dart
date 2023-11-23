@@ -17,7 +17,7 @@ class EnvironmentBuilder {
   EnvironmentBuilder.missing();
 
   Environment _attach(PubSpec pubspec, Line lineBefore) =>
-      Environment._attach(pubspec, lineBefore, this);
+      Environment._insertAfter(pubspec, lineBefore, this);
 
   late final String? _sdk;
   late final String? _flutter;

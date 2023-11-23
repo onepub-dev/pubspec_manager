@@ -2,11 +2,11 @@ import '../internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 import 'line_detached.dart';
-import 'simple_section.dart';
+import 'section.dart';
 
 /// A section which is a single line with no children
 /// but which can have comments.
-class SectionSingleLine extends SimpleSection {
+class SectionSingleLine extends Section {
   SectionSingleLine.fromLine(super._line) : super.fromLine() {
     key = line.key;
   }

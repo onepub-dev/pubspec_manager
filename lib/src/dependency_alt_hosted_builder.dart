@@ -28,5 +28,5 @@ class DependencyAltHostedBuilder implements DependencyBuilder {
   @override
   Dependency _attach(
           Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
-      DependencyAltHosted.attach(dependencies, pubspec, lineBefore, this);
+      DependencyAltHosted._insertAfter(dependencies, pubspec, lineBefore, this);
 }
