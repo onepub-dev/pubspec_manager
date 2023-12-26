@@ -12,6 +12,8 @@ environment:
 dependencies: 
   dcli: 2.3.0
   dcli_core: 2.3.1
+  flutter: 
+    sdk: flutter
   
 # only used during dev.
 dev_dependencies: 
