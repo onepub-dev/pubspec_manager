@@ -7,7 +7,7 @@ class VersionConstraint extends LineSection {
   ///
   /// extract a version from an attached line.
   ///
-  VersionConstraint._fromLine(this.line, {bool required = false})
+  VersionConstraint._fromLine(LineImpl line, {bool required = false})
       : _missingValue = false,
         super.fromLine(line) {
     if (Strings.isBlank(line.value)) {
@@ -27,8 +27,7 @@ class VersionConstraint extends LineSection {
 
   /// The version key wasn't present in the pubspec
   VersionConstraint._missing(super.document, super.key)
-      : line = Line.missing(document, LineType.key),
-        _missingValue = true,
+      : _missingValue = true,
         super.missing();
 
   // @override
@@ -58,9 +57,6 @@ class VersionConstraint extends LineSection {
   bool quoted = false;
 
   late sm.VersionConstraint _versionConstraint;
-
-  @override
-  late Line line;
 
   // The pubspec doc says that a blank version is to be
   // treated as 'any'. We however need to record that the

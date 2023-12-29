@@ -5,9 +5,9 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli: ^3.0.1
 class DependencyPubHosted implements Dependency, DependencyVersioned {
-  DependencyPubHosted._fromLine(this._dependencies, Line line)
+  DependencyPubHosted._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        _section = Section.fromLine(line) {
+        section = SectionImpl.fromLine(line) {
     // the line is of the form '<name>: <version>'
     _name = line.key;
     _version = line.value;
@@ -22,24 +22,19 @@ class DependencyPubHosted implements Dependency, DependencyVersioned {
   ) {
     _name = dependency.name;
     _version = dependency.version;
-    _line = Line.forInsertion(pubspec.document, '  $_name: $_version');
-    _line = pubspec.document.insertAfter(_line, lineBefore);
-    _section = Section.fromLine(_line);
-
-    // // ignore: prefer_foreach
-    // for (final comment in dependency.comments) {
-    //   comments.append(comment);
-    // }
+    final line = LineImpl.forInsertion(pubspec.document, '  $_name: $_version');
+    _line = pubspec.document.insertAfter(line, lineBefore);
+    section = SectionImpl.fromLine(_line);
   }
 
   @override
-  late Section _section;
+  late Section section;
 
   late String _name;
   late String? _version;
 
   /// The line this dependency is attached to.
-  late final Line _line;
+  late final LineImpl _line;
 
   late final Dependencies _dependencies;
 

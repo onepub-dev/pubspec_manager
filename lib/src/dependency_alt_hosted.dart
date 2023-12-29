@@ -9,7 +9,7 @@ part of 'internal_parts.dart';
 class DependencyAltHosted implements Dependency, DependencyVersioned {
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
-      : _section = Section.fromLine(_line) {
+      : section = SectionImpl.fromLine(_line) {
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -29,20 +29,20 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     _hostedUrl = dependency.hostedUrl;
     _version = dependency.version;
 
-    _line = Line.forInsertion(pubspec.document, '  $_name: ');
-    _section = Section.fromLine(_line);
+    _line = LineImpl.forInsertion(pubspec.document, '  $_name: ');
+    section = SectionImpl.fromLine(_line);
 
     lineBefore = pubspec.document.insertAfter(_line, lineBefore);
     _hostedUrlLine =
-        Line.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
+        LineImpl.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
     lineBefore = pubspec.document.insertAfter(_hostedUrlLine, lineBefore);
 
     if (_version != null) {
       _versionLine =
-          Line.forInsertion(pubspec.document, '    version: $_version');
+          LineImpl.forInsertion(pubspec.document, '    version: $_version');
       lineBefore = pubspec.document.insertAfter(_versionLine, lineBefore);
     } else {
-      _versionLine = Line.missing(pubspec.document, LineType.key);
+      _versionLine = LineImpl.missing(pubspec.document, LineType.key);
     }
 
     // // ignore: prefer_foreach
@@ -52,7 +52,8 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
   }
   static const key = 'hosted';
 
-  late Section _section;
+  @override
+  late Section section;
 
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
@@ -61,9 +62,9 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
   late String _hostedUrl;
   late String? _version;
 
-  late final Line _line;
-  late final Line _hostedUrlLine;
-  late final Line _versionLine;
+  late final LineImpl _line;
+  late final LineImpl _hostedUrlLine;
+  late final LineImpl _versionLine;
 
   @override
   String get name => _name;

@@ -4,17 +4,17 @@ part of 'internal_parts.dart';
 /// i.e. flutter and sdk versions.
 class Environment {
   Environment.missing(Document document)
-      : _line = Line.missing(document, LineType.key),
+      : _line = LineImpl.missing(document, LineType.key),
         _sdk = VersionConstraint._missing(document, sdkKey),
         _flutter = VersionConstraint._missing(document, flutterKey),
-        _section = Section.missing(document, _key);
+        _section = SectionImpl.missing(document, _key);
 
   /// Load the existing environment [Section] starting from the
   /// given attached [_line].
   Environment.fromLine(this._line) {
     _sdkLine = _line.findKeyChild('sdk');
     _flutterLine = _line.findKeyChild('flutter');
-    _section = Section.fromLine(_line);
+    _section = SectionImpl.fromLine(_line);
 
     _sdk = _sdkLine.missing
         ? VersionConstraint._missing(_line.document, sdkKey)
@@ -30,30 +30,32 @@ class Environment {
       PubSpec pubspec, Line lineBefore, EnvironmentBuilder environment) {
     final document = pubspec.document;
 
-    _line = Line.forInsertion(document, 'environment:');
+    _line = LineImpl.forInsertion(document, 'environment:');
     document.insertAfter(_line, lineBefore);
+
 
     if (environment._sdk != null) {
       lineBefore = pubspec.document.insertAfter(
-          _sdkLine = Line.forInsertion(
+          _sdkLine = LineImpl.forInsertion(
               pubspec.document, '  $sdkKey: ${environment._sdk}'),
           _line);
       _sdk = VersionConstraint._fromLine(_sdkLine);
     } else {
-      _sdkLine = Line.missing(document, LineType.key);
+      _sdkLine = LineImpl.missing(document, LineType.key);
       _sdk = VersionConstraint._missing(document, sdkKey);
     }
 
     if (environment._flutter != null) {
       pubspec.document.insertAfter(
-          _flutterLine = Line.forInsertion(
+          _flutterLine = LineImpl.forInsertion(
               pubspec.document, '  $flutterKey: ${environment._flutter}'),
           lineBefore);
       _flutter = VersionConstraint._fromLine(_flutterLine);
     } else {
-      _flutterLine = Line.missing(document, LineType.key);
+      _flutterLine = LineImpl.missing(document, LineType.key);
       _flutter = VersionConstraint._missing(document, flutterKey);
     }
+    _section = SectionImpl.fromLine(_line);
   }
 
   static const sdkKey = 'sdk';
@@ -62,19 +64,20 @@ class Environment {
   late VersionConstraint _sdk;
   late VersionConstraint _flutter;
 
-  late final Section _section;
+  late final SectionImpl _section;
 
   /// The starting line of the environment section.
-  late final Line _line;
-  late Line _sdkLine;
-  late Line _flutterLine;
+  late final LineImpl _line;
+  late LineImpl _sdkLine;
+  late LineImpl _flutterLine;
 
   String get sdk => _sdk.version;
   String get flutter => _flutter.version;
 
   set sdk(String version) {
     if (_sdk.missing) {
-      final sdkLine = Line.forInsertion(_section.document, '  sdk: $version');
+      final sdkLine =
+          LineImpl.forInsertion(_section.document, '  sdk: $version');
       _section.insertAfter(sdkLine, _line);
       _sdkLine = sdkLine;
       _sdk = VersionConstraint._fromLine(_sdkLine);
@@ -87,7 +90,7 @@ class Environment {
   set flutter(String version) {
     if (_flutter.missing) {
       final flutterLine =
-          Line.forInsertion(_section.document, '  flutter: $version');
+          LineImpl.forInsertion(_section.document, '  flutter: $version');
       _section.insertAfter(flutterLine, _line);
       _flutterLine = flutterLine;
       _flutter = VersionConstraint._fromLine(_flutterLine);

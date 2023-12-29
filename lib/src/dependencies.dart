@@ -5,15 +5,15 @@ part of 'internal_parts.dart';
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Dependencies with IterableMixin<Dependency> {
   Dependencies._missing(this._pubspec, this.name)
-      : _section = Section.missing(_pubspec.document, name);
+      : _section = SectionImpl.missing(_pubspec.document, name);
 
-  Dependencies._fromLine(this._pubspec, Line line) {
+  Dependencies._fromLine(this._pubspec, LineImpl line) {
     name = line.key;
-    _section = Section.fromLine(line);
+    _section = SectionImpl.fromLine(line);
   }
 
   /// The [Document] [Section] that holds the dependencies
-  late Section _section;
+  late SectionImpl _section;
 
   /// The name of the dependency section such as
   /// dev_dpendencies
@@ -60,13 +60,13 @@ class Dependencies with IterableMixin<Dependency> {
   Dependency append(DependencyBuilder dependency) {
     // if we don't have a dependencies section then create it.
     if (_section.missing) {
-      _section =
-          Section.fromLine(_section.document.append(LineDetached('$name:')));
+      _section = SectionImpl.fromLine(
+          _section.document.append(LineDetached('$name:')));
     }
 
-    var lineBefore = _section.line;
+    Line lineBefore = _section.line;
     if (_dependencies.isNotEmpty) {
-      lineBefore = _dependencies.last._section.lines.last;
+      lineBefore = _dependencies.last.section.lines.last;
     }
     final attached = dependency._attach(this, _pubspec, lineBefore);
 
@@ -98,7 +98,10 @@ class Dependencies with IterableMixin<Dependency> {
     }
 
     _dependencies.remove(dependency);
-    final lines = dependency._section.lines;
+    final lines = dependency.section.lines;
+    for (final line in lines) {
+      _section.remove(line);
+    }
     _pubspec.document.removeAll(lines);
   }
 

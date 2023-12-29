@@ -5,10 +5,10 @@ part of 'internal_parts.dart';
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Executables with IterableMixin<Executable> {
   Executables._missing(this._pubspec)
-      : _section = Section.missing(_pubspec.document, key);
+      : _section = SectionImpl.missing(_pubspec.document, key);
 
-  Executables._fromLine(this._pubspec, Line line)
-      : _section = Section.fromLine(line) {
+  Executables._fromLine(this._pubspec, LineImpl line)
+      : _section = SectionImpl.fromLine(line) {
     name = line.key;
   }
 
@@ -64,7 +64,7 @@ class Executables with IterableMixin<Executable> {
     if (_section.missing) {
       // create the section.
       final line = _section.document.append(LineDetached(key));
-      _section = Section.fromLine(line);
+      _section = SectionImpl.fromLine(line);
     } else {
       if (_executables.isNotEmpty) {
         lineBefore = _executables.last.line;

@@ -15,8 +15,7 @@ class PubSpec {
       required EnvironmentBuilder environment}) {
     document = Document.loadFromString('');
 
-    this.name =
-        SectionSingleLine.fromLine(document.append(LineDetached('name: $name')));
+    this.name = Name._fromString(document, name);
     this.version =
         VersionBuilder.parse(key: 'version', version: version)._append(this);
     this.description = MultiLine.fromLine(
@@ -30,23 +29,23 @@ class PubSpec {
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
-    platforms = Section.missing(document, 'platforms');
+    platforms = SectionImpl.missing(document, 'platforms');
     executables = Executables._missing(this);
-    funding = Section.missing(document, 'funding');
-    falseSecrets = Section.missing(document, 'false_secrets');
-    screenshots = Section.missing(document, 'screenshots');
-    topics = Section.missing(document, 'topics');
+    funding = SectionImpl.missing(document, 'funding');
+    falseSecrets = SectionImpl.missing(document, 'false_secrets');
+    screenshots = SectionImpl.missing(document, 'screenshots');
+    topics = SectionImpl.missing(document, 'topics');
   }
 
   /// Loads the content of a pubspec.yaml from the string [content].
   PubSpec.loadFromString(String content) {
     document = Document.loadFromString(content);
 
-    name = document.getLineForRequiredKey('name');
-    version = Version._fromLine(document.getLineForRequiredKey('version'));
+    name = Name._fromLine(document);
+    version = Version._fromLine(document.getLineForRequiredKey('version').line);
     description = document.getMultiLineForRequiredKey('description');
-    _environment =
-        Environment.fromLine(document.getLineForRequiredKey(Environment._key));
+    _environment = Environment.fromLine(
+        document.getLineForRequiredKey(Environment._key).line);
     homepage = Homepage._fromLine(document);
     repository = RepositoryAttached._fromLine(document);
     issueTracker = IssueTracker._fromLine(document);
@@ -118,7 +117,7 @@ class PubSpec {
 
   /// attibutes of the pubspec.yaml follow.
 
-  late LineSection name;
+  late Name name;
   late Version version;
   late MultiLine description;
   late Environment _environment;
@@ -223,9 +222,9 @@ class PubSpec {
     /// that each section is written to disk.
     DocumentWriter(document)
       ..render(name)
-      ..render(version)
+      ..render(version._section)
       ..render(description)
-      ..render(_environment)
+      ..render(_environment._section)
       ..render(homepage)
       ..render(repository)
       ..render(issueTracker)
@@ -233,7 +232,7 @@ class PubSpec {
       ..render(dependencies._section)
       ..render(devDependencies._section)
       ..render(dependencyOverrides._section)
-      ..render(executables)
+      ..render(executables._section)
       ..render(platforms)
       ..render(funding)
       ..render(falseSecrets)

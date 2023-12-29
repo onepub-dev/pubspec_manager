@@ -7,7 +7,7 @@ class Version {
   ///
   /// extract a version for an attached line.
   ///
-  Version._fromLine(Line line, {bool required = false})
+  Version._fromLine(LineImpl line, {bool required = false})
       : _missing = false,
         _section = SectionSingleLine.fromLine(line) {
     if (Strings.isBlank(line.value)) {
@@ -44,7 +44,7 @@ class Version {
     return Version._fromLine(line);
   }
 
-  Section _section;
+  SectionImpl _section;
 
   /// There was a version key but no value
   bool get isEmpty => !_missing && _version.isEmpty;

@@ -8,20 +8,20 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class DependencyPath implements Dependency {
+class DependencySdk implements Dependency {
   /// Creates Path dependency from an existing [Line] in
   /// the document.
-  DependencyPath._fromLine(this._dependencies, this._line)
+  DependencySdk._fromLine(this._dependencies, this._line)
       : section = SectionImpl.fromLine(_line) {
     _name = _line.key;
-    _pathLine = _line.findRequiredKeyChild('path');
+    _pathLine = _line.findRequiredKeyChild(key);
     path = _pathLine.value;
   }
 
-  /// Creates a  Path Dependency inserting it into the document after
+  /// Creates an Sdk Dependency inserting it into the document after
   /// [lineBefore]
-  DependencyPath._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyPathBuilder dependency) {
+  DependencySdk._insertAfter(
+      PubSpec pubspec, Line lineBefore, DependencySdkBuilder dependency) {
     _name = dependency.name;
     path = dependency.path;
 
@@ -30,7 +30,7 @@ class DependencyPath implements Dependency {
     section = SectionImpl.fromLine(_line);
 
     _pathLine = LineImpl.forInsertion(
-        pubspec.document, '${_line.childIndent}path: $path');
+        pubspec.document, '${_line.childIndent}$key: $path');
     pubspec.document.insertAfter(_pathLine, _line);
 
     // // ignore: prefer_foreach
@@ -38,7 +38,7 @@ class DependencyPath implements Dependency {
     //   comments.append(comment);
     // }
   }
-  static const key = 'path';
+  static const key = 'sdk';
 
   @override
   late final Section section;

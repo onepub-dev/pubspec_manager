@@ -25,7 +25,7 @@ void main() {
     expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
-    expect(testDep!._section.line.lineNo, equals(13));
+    expect(testDep!.section.line.lineNo, equals(13));
     expect(testDep, isA<DependencyVersioned>());
     expect((testDep as DependencyVersioned).version, equals(version));
 
@@ -34,7 +34,7 @@ void main() {
     expect(dependencies.exists('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
-    expect(dcliCore!.line.lineNo, equals(10));
+    expect(dcliCore!.section.line.lineNo, equals(10));
     expect(dcliCore, isA<DependencyVersioned>());
     expect((dcliCore as DependencyVersioned).version, equals(version));
     expect(pubspec.document.lines.length, equals(15));
@@ -59,8 +59,8 @@ void main() {
     final pubspec = PubSpec.loadFromString(content);
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
-    dcli!.comments.append('Hellow World for dcli');
-    expect(dcli.comments.length, equals(2));
+    dcli!.section.comments.append('Hellow World for dcli');
+    expect(dcli.section.comments.length, equals(2));
     print(pubspec);
   });
 
@@ -71,8 +71,8 @@ void main() {
 
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
-    dcli!.comments.removeAll();
-    expect(dcli.comments.length, equals(0));
+    dcli!.section.comments.removeAll();
+    expect(dcli.section.comments.length, equals(0));
     expect(document.lines.length, equals(12));
   });
 
@@ -83,10 +83,10 @@ void main() {
 
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
-    dcli!.comments.append('Hellow World for dcli');
-    dcli.comments.removeAt(0);
-    dcli._section.comments.removeAt(0);
-    expect(dcli.comments.length, equals(0));
+    dcli!.section.comments.append('Hellow World for dcli');
+    dcli.section.comments.removeAt(0);
+    dcli.section.comments.removeAt(0);
+    expect(dcli.section.comments.length, equals(0));
     expect(document.lines.length, equals(12));
   });
 
@@ -95,8 +95,8 @@ void main() {
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
 
-    dcli!.comments.removeAt(0);
-    expect(() => dcli.comments.removeAt(0), throwsA(isA<RangeError>()));
+    dcli!.section.comments.removeAt(0);
+    expect(() => dcli.section.comments.removeAt(0), throwsA(isA<RangeError>()));
   });
   test('dependency removeAll empty list ', () async {
     final pubspec = PubSpec.loadFromString(content);
@@ -105,9 +105,9 @@ void main() {
     final dependencies = pubspec.dependencies;
     final dcli = dependencies['dcli'];
 
-    dcli!.comments.removeAll();
-    dcli.comments.removeAll();
-    expect(dcli.comments.length, equals(0));
+    dcli!.section.comments.removeAll();
+    dcli.section.comments.removeAll();
+    expect(dcli.section.comments.length, equals(0));
     expect(document.lines.length, equals(12));
   });
 }

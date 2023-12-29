@@ -12,11 +12,11 @@ class Repository implements SingleLine {
 
 class RepositoryAttached extends SectionSingleLine {
   factory RepositoryAttached._fromLine(Document document) {
-    final line = document.getLineForKey(RepositoryAttached._key);
-    if (line.missing) {
+    final lineSection = document.getLineForKey(RepositoryAttached._key);
+    if (lineSection.missing) {
       return RepositoryAttached.missing(document);
     } else {
-      return RepositoryAttached._(line);
+      return RepositoryAttached._(lineSection.line);
     }
   }
 
@@ -30,11 +30,9 @@ class RepositoryAttached extends SectionSingleLine {
 
   final Repository repository;
 
-  @override
-  // ignore: avoid_renaming_method_parameters
   RepositoryAttached set(String url) {
     repository.url = url;
-    super.set(url);
+    super.value = url;
     // ignore: avoid_returning_this
     return this;
   }

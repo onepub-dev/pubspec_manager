@@ -58,7 +58,7 @@ class Comments {
   /// method adds the '#'.
   Comments append(String comment) {
     final document = _section.line.document;
-    final commentLine = Line.forInsertion(
+    final commentLine = LineImpl.forInsertion(
         document, '${spaces(_section.line.indent * 2)}# $comment');
     _lines.add(commentLine);
     document.insertBefore(commentLine, _section.line);

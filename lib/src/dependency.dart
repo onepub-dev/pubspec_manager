@@ -3,7 +3,7 @@ part of 'internal_parts.dart';
 /// Base class for each of the [Dependency] types.
 abstract class Dependency {
   /// Loads a dependency located at [line].
-  factory Dependency._loadFrom(Dependencies dependencies, Line line) {
+  factory Dependency._loadFrom(Dependencies dependencies, LineImpl line) {
     final children = line.childrenOf(type: LineType.key);
 
     if (children.isEmpty) {
@@ -15,8 +15,12 @@ abstract class Dependency {
     /// So not a pub hosted dep, we use the main key
     /// from each of the dependency types to discover
     /// which type of dependeny we have.
-    final depTypeLine = line.findOneOf(
-        [DependencyAltHosted.key, DependencyPath.key, DependencyGit.key]);
+    final depTypeLine = line.findOneOf([
+      DependencyAltHosted.key,
+      DependencyPath.key,
+      DependencyGit.key,
+      DependencySdk.key
+    ]);
 
     // none of the children had one of the expected keys.
     if (depTypeLine == null) {
@@ -34,6 +38,8 @@ abstract class Dependency {
         return DependencyPath._fromLine(dependencies, line);
       case DependencyGit.key:
         return DependencyGit._fromLine(dependencies, line);
+      case DependencySdk.key:
+        return DependencySdk._fromLine(dependencies, line);
     }
 
     throw PubSpecException(

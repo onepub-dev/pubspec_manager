@@ -8,13 +8,37 @@ abstract class Renderer {
   String render();
 }
 
+abstract class Line {
+  Document get document;
+
+  String get text;
+
+  int get lineNo;
+
+  int get indent;
+
+  LineType get type;
+
+  bool get missing;
+
+  String get key;
+
+  String get value;
+
+  String? get inlineComment;
+
+  int? get commentOffset;
+
+  String render();
+}
+
 /// Each line read from the pubspec.yaml is stored into a [Line]
 /// and categorised into one of the [LineType]s.
-class Line implements Renderer {
+class LineImpl implements Line, Renderer {
   /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
-  Line(this.document, this.text, this.lineNo) : missing = false {
+  LineImpl(this.document, this.text, this.lineNo) : missing = false {
     final trimmed = text.trimLeft();
 
     // no further processing required for blank lines.
@@ -58,7 +82,7 @@ class Line implements Renderer {
     }
   }
 
-  Line.copy(Line line)
+  LineImpl.copy(LineImpl line)
       : document = line.document,
         text = line.text,
         lineNo = line.lineNo,
@@ -69,7 +93,7 @@ class Line implements Renderer {
         inlineComment = line.inlineComment,
         commentOffset = line.commentOffset;
 
-  Line.missing(this.document, this.type)
+  LineImpl.missing(this.document, this.type)
       : lineNo = -1,
         text = '',
         indent = 0,
@@ -77,19 +101,25 @@ class Line implements Renderer {
 
   /// Creates a line that is ready to be inserted.
   /// It will not have a line number until it has been inserted.
-  factory Line.forInsertion(Document document, String text) {
-    final line = Line(document, text, -1);
+  factory LineImpl.forInsertion(Document document, String text) {
+    final line = LineImpl(document, text, -1);
     return line;
   }
 
+  @override
   late final Document document;
 
   /// The text content of the line.
+  @override
   String text;
+  @override
   int lineNo;
+  @override
   late int indent;
+  @override
   late final LineType type;
 
+  @override
   bool missing;
 
   // If the [type] is [LineType.key] then this will hold the
@@ -98,8 +128,10 @@ class Line implements Renderer {
 
   // If the line isn't a full line comment but
   // contains an inline comment then the comment is stored here.
+  @override
   String? inlineComment;
   // the column the inline comment starts in
+  @override
   int? commentOffset;
 
   // bool get continues {
@@ -146,6 +178,7 @@ class Line implements Renderer {
   /// of a line of type [LineType.key].
   /// If the line is not of type [LineType.key] then a [PubSpecException]
   /// is thrown.
+  @override
   String get value => keyValue.value;
 
   set value(String value) {
@@ -161,6 +194,7 @@ class Line implements Renderer {
   /// of a line of type [LineType.key].
   /// If the line is not of type [LineType.key] then a [PubSpecException]
   /// is thrown.
+  @override
   String get key => keyValue.key;
 
   set key(String key) {
@@ -170,11 +204,11 @@ class Line implements Renderer {
 
   /// Find the child of the current line that has the given [key]
   /// Return null if the [key] can't be found.
-  Line findKeyChild(String key) => document.findKeyChild(this, key);
+  LineImpl findKeyChild(String key) => document.findKeyChild(this, key);
 
   /// Find the child of the current line that has the given [key],
   /// Throw a [PubSpecException] if the key can't be found.
-  Line findRequiredKeyChild(String key) {
+  LineImpl findRequiredKeyChild(String key) {
     if (type != LineType.key) {
       throw PubSpecException(
           this, 'This line is not a valid parent for a key ($key)');
@@ -193,7 +227,7 @@ class Line implements Renderer {
   /// be returned.
   /// If [descendants] is true then all descendants are returned
   /// not just he immediate children.
-  List<Line> childrenOf({LineType? type, bool descendants = false}) =>
+  List<LineImpl> childrenOf({LineType? type, bool descendants = false}) =>
       document.childrenOf(this, type: type, descendants: descendants);
 
   /// Search for a child that has key that matches one of the
@@ -202,7 +236,7 @@ class Line implements Renderer {
   Line? findOneOf(List<String> keys) {
     final children = childrenOf(type: LineType.key);
 
-    Line? found;
+    LineImpl? found;
     for (final child in children) {
       if (keys.contains(child.keyValue.key)) {
         if (found != null) {

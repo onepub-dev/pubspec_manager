@@ -2,11 +2,11 @@ part of 'internal_parts.dart';
 
 class IssueTracker extends SectionSingleLine {
   factory IssueTracker._fromLine(Document document) {
-    final line = document.getLineForKey(IssueTracker._key);
-    if (line.missing) {
+    final lineSection = document.getLineForKey(IssueTracker._key);
+    if (lineSection.missing) {
       return IssueTracker.missing(document);
     } else {
-      return IssueTracker._(line);
+      return IssueTracker._(lineSection.line);
     }
   }
 
@@ -20,11 +20,9 @@ class IssueTracker extends SectionSingleLine {
 
   final IssueTrackerBuilder issueTracker;
 
-  @override
-  // ignore: avoid_renaming_method_parameters
   IssueTracker set(String url) {
     issueTracker.url = url;
-    super.set(url);
+    super.value = url;
     // ignore: avoid_returning_this
     return this;
   }

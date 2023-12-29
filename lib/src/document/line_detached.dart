@@ -5,5 +5,5 @@ class LineDetached {
   LineDetached(this.text);
   String text;
 
-  Line attach(Document document) => Line.forInsertion(document, text);
+  LineImpl attach(Document document) => LineImpl.forInsertion(document, text);
 }

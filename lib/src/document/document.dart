@@ -26,7 +26,7 @@ class Document {
     var lineNo = 1;
     pathTo = '<Loaded from lines>';
     for (final line in contentLines) {
-      lines.add(Line(this, line, lineNo++));
+      lines.add(LineImpl(this, line, lineNo++));
     }
   }
 
@@ -45,7 +45,7 @@ class Document {
   }
 
   /// The set of lines that hold the pubspec.yaml
-  List<Line> lines = <Line>[];
+  List<LineImpl> lines = <LineImpl>[];
 
   /// The path to the file that the pubspec.yaml was loaded from.
   late String pathTo;
@@ -72,11 +72,11 @@ class Document {
       if (line.type == LineType.key) {
         final keyValue = KeyValue.fromLine(line);
         if (keyValue.key == key) {
-          return Section.fromLine(line);
+          return SectionImpl.fromLine(line);
         }
       }
     }
-    return Section.missing(this, key);
+    return SectionImpl.missing(this, key);
   }
 
   /// Finds the line for the given [key].
@@ -99,25 +99,25 @@ class Document {
           this, "Required key '$key' is missing.");
     }
 
-    return MultiLine.fromLine(line);
+    return MultiLine.fromLine(line.line);
   }
 
   // Finds the next line that is of [LineType.key]
   // that is a child of the passed line which has the
   // given [key].  If no matching child is found then
   // null is returned.
-  Line findKeyChild(Line line, String key) {
+  LineImpl findKeyChild(Line line, String key) {
     for (final child in childrenOf(line)) {
       if (child.keyValue.key == key) {
         return child;
       }
     }
-    return Line.missing(this, LineType.key);
+    return LineImpl.missing(this, LineType.key);
   }
 
   /// Finds the first root key with the name [key]
   /// returns Line.missing if [key] was not found.
-  Line findTopLevelKey(String key) {
+  LineImpl findTopLevelKey(String key) {
     for (final child in lines) {
       if (child.indent != 0) {
         continue;
@@ -130,7 +130,7 @@ class Document {
         return child;
       }
     }
-    return Line.missing(this, LineType.key);
+    return LineImpl.missing(this, LineType.key);
   }
 
   /// Returns the list child for [parent].
@@ -138,9 +138,9 @@ class Document {
   /// are returned.
   /// If [descendants] is true then all descendants of [parent]
   /// are returned not just immediate children.
-  List<Line> childrenOf(Line parent,
+  List<LineImpl> childrenOf(Line parent,
       {LineType? type, bool descendants = false}) {
-    final children = <Line>[];
+    final children = <LineImpl>[];
     for (final line in lines) {
       /// wait until we see a line that is after the parent.
       if (line.lineNo > parent.lineNo) {
@@ -169,7 +169,7 @@ class Document {
   /// Appends the passed line to the end of the document.
   /// The lines [Line.lineNo] will be updated to reflect
   /// the actual line number in the document.
-  Line append(LineDetached line) {
+  LineImpl append(LineDetached line) {
     final attached = line.attach(this)..lineNo = lines.length + 1;
     lines.add(attached);
     _validate();
@@ -181,7 +181,7 @@ class Document {
   /// The line numbers of subsequent lines are updated
   /// to reflect their new position.
   /// Returns the inserted line.
-  Line insertAfter(Line line, Line lineBefore) {
+  LineImpl insertAfter(LineImpl line, Line lineBefore) {
     line.lineNo = lineBefore.lineNo + 1;
     assert(lines.isNotEmpty,
         "We should never be able to get here as lineBefore wouldn't exist");
@@ -189,7 +189,7 @@ class Document {
     if (lineBefore.lineNo == lastLine!.lineNo) {
       lines.add(line);
     } else {
-      lines.insert(line.lineNo, line);
+      lines.insert(lineBefore.lineNo, line);
     }
 
     for (var i = line.lineNo; i < lines.length; i++) {
@@ -201,7 +201,7 @@ class Document {
   }
 
   /// Inserts a line before the passed [lineAfter]
-  void insertBefore(Line line, Line lineAfter) {
+  void insertBefore(LineImpl line, Line lineAfter) {
     line.lineNo = lineAfter.lineNo - 1;
     lines.insert(line.lineNo, line);
 

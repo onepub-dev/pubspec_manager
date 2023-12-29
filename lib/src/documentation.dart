@@ -2,11 +2,11 @@ part of 'internal_parts.dart';
 
 class Documentation extends SectionSingleLine {
   factory Documentation._fromLine(Document document) {
-    final line = document.getLineForKey(Documentation._key);
-    if (line.missing) {
+    final lineSection = document.getLineForKey(Documentation._key);
+    if (lineSection.missing) {
       return Documentation.missing(document);
     } else {
-      return Documentation._(line);
+      return Documentation._(lineSection.line);
     }
   }
 
@@ -20,11 +20,10 @@ class Documentation extends SectionSingleLine {
 
   final DocumentationBuilder documentation;
 
-  @override
   // ignore: avoid_renaming_method_parameters
   Documentation set(String url) {
     documentation.url = url;
-    super.set(url);
+    super.value = url;
 
     // ignore: avoid_returning_this
     return this;

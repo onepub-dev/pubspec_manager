@@ -4,9 +4,9 @@ part of 'internal_parts.dart';
 class DependencyGit implements Dependency {
   /// Load the git dependency from the [Document]  starting
   /// from [line].
-  DependencyGit._fromLine(this._dependencies, Line line)
+  DependencyGit._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        _section = Section.fromLine(line) {
+        section = SectionImpl.fromLine(line) {
     _name = _line.key;
     final details = GitDetails.fromLine(_line);
 
@@ -20,12 +20,12 @@ class DependencyGit implements Dependency {
   DependencyGit._insertAfter(
       PubSpec pubspec, Line lineBefore, DependencyGitBuilder dependency) {
     _name = dependency.name;
-    _line = Line.forInsertion(pubspec.document, '  $_name:');
-    _section = Section.fromLine(_line);
+    _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
+    section = SectionImpl.fromLine(_line);
     pubspec.document.insertAfter(_line, lineBefore);
 
     _details = GitDetails(dependency);
-    _details._attach(_section, _line);
+    _details._attach(section, _line);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {
@@ -35,7 +35,7 @@ class DependencyGit implements Dependency {
   static const key = 'git';
 
   @override
-  late final Section _section;
+  late final Section section;
 
   late final String _name;
 
@@ -44,7 +44,7 @@ class DependencyGit implements Dependency {
 
   late final GitDetails _details;
 
-  late final Line _line;
+  late final LineImpl _line;
 
   @override
   String get name => _name;
@@ -75,7 +75,7 @@ class GitDetails {
 
   /// Load the git details associated with the git dependency
   /// at [line]
-  GitDetails.fromLine(Line line)
+  GitDetails.fromLine(LineImpl line)
       : urlLine = line.findKeyChild('url'),
         refLine = line.findKeyChild('ref'),
         pathLine = line.findKeyChild('path') {
@@ -88,9 +88,9 @@ class GitDetails {
   String? ref;
   String? path;
 
-  Line? urlLine;
-  Line? refLine;
-  Line? pathLine;
+  LineImpl? urlLine;
+  LineImpl? refLine;
+  LineImpl? pathLine;
 
   List<Line> get lines => [
         if (urlLine != null) urlLine!,
@@ -98,7 +98,7 @@ class GitDetails {
         if (pathLine != null) pathLine!
       ];
 
-  void _attach(Section section, Line lineBefore) {
+  void _attach(Section section, LineImpl lineBefore) {
     if (_attachLine(section, lineBefore,
         key: 'url', value: url, inserted: (line) => urlLine = line)) {
       lineBefore = urlLine!;
@@ -116,10 +116,10 @@ class GitDetails {
   bool _attachLine(Section section, Line lineBefore,
       {required String key,
       required String? value,
-      required void Function(Line) inserted}) {
+      required void Function(LineImpl) inserted}) {
     var attached = false;
     if (value != null) {
-      final _line = Line.forInsertion(section.document, '    $key: $value');
+      final _line = LineImpl.forInsertion(section.document, '    $key: $value');
       section.document.insertAfter(_line, lineBefore);
       inserted(_line);
       attached = true;

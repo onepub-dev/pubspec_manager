@@ -11,7 +11,7 @@ void main() {
   });
 
   /// from: https://yaml-multiline.info/
-  test('folded, clip, 2spaces', () async {
+  test('folding block, clip, 2spaces', () async {
     const input = '''
 >
   Several lines of text,\n
@@ -181,7 +181,7 @@ StateBuilder<FoldingBlock> foldingBlockBuilder(
 
       /// costate
       ..state<Trim>((b) => b
-        ..on<OnSimpleChar, Trim>(condition: (e) => false)
+        ..on<OnSimpleChar, Trim>(sideEffect: (e) async => append(e))
         ..state<TrimClip>((b) =>
             b.on<OnApplyTrim, Trim>(sideEffect: (e) async => TrimClip.trim()))
         ..state<TrimKeep>((b) => {})

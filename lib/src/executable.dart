@@ -12,13 +12,13 @@ class Executable extends SectionSingleLine {
       PubSpec pubspec, Line lineBefore, ExecutableBuilder executable)
       : _name = executable.name,
         _script = executable.script,
-        _line = Line.forInsertion(pubspec.document, _buildLine(executable)),
+        _line = LineImpl.forInsertion(pubspec.document, _buildLine(executable)),
         super.attach(pubspec, lineBefore, executable.name, executable.script);
 
   String _name;
   String _script;
 
-  late final Line _line;
+  late final LineImpl _line;
 
   String get name => _name;
 
@@ -51,7 +51,7 @@ class Executable extends SectionSingleLine {
   String get scriptPath => join('bin', '$script.dart');
 
   @override
-  Line get line => _line;
+  LineImpl get line => _line;
 
   @override
   Document get document => line.document;

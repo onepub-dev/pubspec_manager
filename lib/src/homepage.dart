@@ -13,11 +13,11 @@ part of 'internal_parts.dart';
 class Homepage extends SectionSingleLine {
   /// build homepage from an imported document line
   factory Homepage._fromLine(Document document) {
-    final line = document.getLineForKey(Homepage._key);
-    if (line.missing) {
+    final lineSection = document.getLineForKey(Homepage._key);
+    if (lineSection.missing) {
       return Homepage.missing(document);
     } else {
-      return Homepage._(line);
+      return Homepage._(lineSection.line);
     }
   }
 
@@ -31,11 +31,9 @@ class Homepage extends SectionSingleLine {
 
   String _url;
 
-  @override
-  // ignore: avoid_renaming_method_parameters
   Homepage set(String url) {
     _url = url;
-    super.set(url);
+    super.value = url;
     // ignore: avoid_returning_this
     return this;
   }

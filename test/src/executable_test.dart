@@ -1,3 +1,4 @@
+import 'package:path/path.dart' hide equals;
 import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
@@ -14,11 +15,12 @@ executables:
   dcli:
    ''');
 
-      expect(pubspec.executables['dcli']!.scriptPath, equals('bin/dcli.dart'));
+      expect(pubspec.executables['dcli']!.scriptPath,
+          equals(join('bin', 'dcli.dart')));
       pubspec.executables['dcli']!.script = 'dcli_tool';
       expect(pubspec.executables['dcli']!.script, equals('dcli_tool'));
       expect(pubspec.executables['dcli']!.scriptPath,
-          equals('bin/dcli_tool.dart'));
+          equals(join('bin', 'dcli_tool.dart')));
 
       pubspec.executables['dcli']!.name = 'dcli1';
       expect(pubspec.executables['dcli'], isNull);

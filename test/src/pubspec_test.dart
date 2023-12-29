@@ -40,7 +40,7 @@ void main() {
           equals('A simple command-line application created by dcli'));
 
       expect(pubspec.environment.sdk, equals("'>=2.19.0 <3.0.0'"));
-      expect(pubspec.dependencies.length, equals(2));
+      expect(pubspec.dependencies.length, equals(3));
     });
 
     test('save', () {

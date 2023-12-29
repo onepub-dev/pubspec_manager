@@ -6,7 +6,7 @@ import 'pubspec_test.dart';
 void main() {
   test('pub hosted dependency ...', () async {
     final pubspec = PubSpec.loadFromString(goodContent);
-    expect(pubspec.dependencies.length, equals(2));
+    expect(pubspec.dependencies.length, equals(3));
 
     final one = pubspec.dependencies.list.first;
     expect(one is DependencyPubHosted, isTrue);
@@ -19,5 +19,11 @@ void main() {
     pubHosted = two as DependencyPubHosted;
     expect(two.name, equals('dcli_core'));
     expect(pubHosted.version, equals('2.3.1'));
+
+    final three = pubspec.dependencies.list.elementAt(2);
+    expect(three is DependencySdk, isTrue);
+    final sdk = three as DependencySdk;
+    expect(three.name, equals('flutter'));
+    expect(sdk.name, equals('flutter'));
   });
 }
