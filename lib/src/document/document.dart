@@ -102,6 +102,13 @@ class Document {
     return MultiLine.fromLine(line.line);
   }
 
+  /// Finds the line for the given [key].
+  MultiLine getMultiLineForKey(String key) {
+    final line = getLineForKey(key);
+
+    return MultiLine.fromLine(line.line);
+  }
+
   // Finds the next line that is of [LineType.key]
   // that is a child of the passed line which has the
   // given [key].  If no matching child is found then
