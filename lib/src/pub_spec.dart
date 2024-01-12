@@ -10,16 +10,19 @@ class PubSpec {
   /// It can be saved to disk by calling [save].
   PubSpec(
       {required String name,
-      required String version,
-      required String description,
-      required EnvironmentBuilder environment}) {
+      String? version,
+      String? description,
+      EnvironmentBuilder? environment}) {
+    environment ??= EnvironmentBuilder.missing();
     document = Document.loadFromString('');
 
     this.name = Name._fromString(document, name);
     this.version =
         VersionBuilder.parse(key: 'version', version: version)._append(this);
-    this.description = MultiLine.fromLine(
-        document.append(LineDetached('description: $description')));
+    this.description = description == null
+        ? MultiLine.missing(document, Environment._key)
+        : MultiLine.fromLine(
+            document.append(LineDetached('description: $description')));
 
     _environment = environment._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
@@ -42,10 +45,10 @@ class PubSpec {
     document = Document.loadFromString(content);
 
     name = Name._fromLine(document);
-    version = Version._fromLine(document.getLineForRequiredKey('version').line);
+    version = Version._fromLine(document.getLineForKey('version').line);
     description = document.getMultiLineForRequiredKey('description');
-    _environment = Environment.fromLine(
-        document.getLineForRequiredKey(Environment._key).line);
+    _environment =
+        Environment.fromLine(document.getLineForKey(Environment._key).line);
     homepage = Homepage._fromLine(document);
     repository = RepositoryAttached._fromLine(document);
     issueTracker = IssueTracker._fromLine(document);
