@@ -1,0 +1,94 @@
+
+Start {
+	Start => Start : OnWhitespace;
+	Start => FlowPlain : OnSimpleChar;
+	Start => FlowDoubleQuoted : OnDoubleQuoteChar;
+	Start => FlowSingleQuoted : OnSingleQuoteChar;
+	Start => ]Start.fork : OnBlockReplaceChar;
+	]Start.fork => ReplaceNewLines ;
+	Start => ]Start.fork : OnBlockKeepChar;
+	]Start.fork => FoldingBlock.parallel ;
+	]Start.fork => KeepNewLines ;
+	]Start.fork => TrimClip ;
+},
+Finished,
+FlowPlain {
+	PlainEscaping {
+		PlainEscaping => FlowPlain : OnEscapeChar;
+		PlainEscaping => FlowPlain : OnSimpleChar;
+	};
+	PlainEscaping.initial => PlainEscaping;
+	FlowPlain => PlainEscaping : OnEscapeChar;
+	FlowPlain => FlowPlain : OnSimpleChar;
+	FlowPlain => FlowPlain : OnWhitespace;
+	FlowPlain => FlowPlain : OnNewLine;
+	FlowPlain => Finished : OnDoubleQuoteChar;
+	FlowPlain => Finished : OnFinish;
+},
+FlowDoubleQuoted {
+	DoubleQuotedEscaping {
+		DoubleQuotedEscaping => FlowDoubleQuoted : OnEscapeChar;
+		DoubleQuotedEscaping => FlowDoubleQuoted : OnSimpleChar;
+	};
+	DoubleQuotedEscaping.initial => DoubleQuotedEscaping;
+	FlowDoubleQuoted => DoubleQuotedEscaping : OnEscapeChar;
+	FlowDoubleQuoted => FlowDoubleQuoted : OnSimpleChar;
+	FlowDoubleQuoted => FlowDoubleQuoted : OnWhitespace;
+	FlowDoubleQuoted => Finished : OnDoubleQuoteChar;
+},
+FlowSingleQuoted {
+	StartOfLine {
+		WhiteSpace {
+			WhiteSpace => WhiteSpace : OnWhitespace;
+			WhiteSpace => FlowSingleQuoted : OnSimpleChar;
+		};
+		WhiteSpace.initial => WhiteSpace;
+		StartOfLine => StartOfLine : OnNewLine;
+		StartOfLine => WhiteSpace : OnWhitespace;
+		StartOfLine => FlowSingleQuoted : OnSimpleChar;
+		StartOfLine => Finished : OnFinish;
+	},
+	PossibleQuoteEscape {
+		PossibleQuoteEscape => FlowSingleQuoted : OnSingleQuoteChar;
+		PossibleQuoteEscape => Finished : OnFinish;
+	};
+	StartOfLine.initial => StartOfLine;
+	FlowSingleQuoted => FlowSingleQuoted : OnWhitespace;
+	FlowSingleQuoted => FlowSingleQuoted : OnSimpleChar;
+	FlowSingleQuoted => FlowSingleQuoted : OnEscapeChar;
+	FlowSingleQuoted => StartOfLine : OnNewLine;
+	FlowSingleQuoted => PossibleQuoteEscape : OnSingleQuoteChar;
+},
+FoldingBlock.parallel [label="FoldingBlock"] {
+	Folding {
+		FoldingEscaping {
+			FoldingEscaping => FlowDoubleQuoted : OnEscapeChar;
+			FoldingEscaping => FlowDoubleQuoted : OnSimpleChar;
+		};
+		FoldingEscaping.initial => FoldingEscaping;
+		Folding => ]Folding.fork : OnPlusChar;
+		]Folding.fork => TrimKeep ;
+		Folding => ]Folding.fork : OnMinusChar;
+		]Folding.fork => TrimStrip ;
+		Folding => FoldingEscaping : OnEscapeChar;
+		Folding => FlowDoubleQuoted : OnSimpleChar;
+	},
+	Trim {
+		TrimClip {
+			TrimClip => Trim : OnApplyTrim;
+		},
+		TrimKeep,
+		TrimStrip;
+		TrimClip.initial => TrimClip;
+		Trim => Trim : OnSimpleChar;
+	},
+	NewLine {
+		ReplaceNewLines {
+			ReplaceNewLines => ReplaceNewLines : OnNewLine;
+			ReplaceNewLines => ReplaceNewLines : OnWhitespace;
+		},
+		KeepNewLines;
+		ReplaceNewLines.initial => ReplaceNewLines;
+	};
+};
+initial => Start : Start;
