@@ -44,15 +44,15 @@ class PubSpec {
   PubSpec.loadFromString(String content) {
     document = Document.loadFromString(content);
 
-    name = Name._fromLine(document);
-    version = Version._fromLine(document.getLineForKey('version').line);
-    description = document.getMultiLineForRequiredKey('description');
+    name = Name._fromDocument(document);
+    version = Version._fromDocument(document);
+    description = document.getMultiLineForKey('description');
     _environment =
-        Environment.fromLine(document.getLineForKey(Environment._key).line);
-    homepage = Homepage._fromLine(document);
-    repository = RepositoryAttached._fromLine(document);
-    issueTracker = IssueTracker._fromLine(document);
-    documentation = Documentation._fromLine(document);
+        Environment._fromDocument(document);
+    homepage = Homepage._fromDocument(document);
+    repository = RepositoryAttached._fromDocument(document);
+    issueTracker = IssueTracker._fromDocument(document);
+    documentation = Documentation._fromDocument(document);
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');

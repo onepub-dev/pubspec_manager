@@ -2,7 +2,7 @@ part of 'internal_parts.dart';
 
 class Name extends SectionSingleLine {
   /// build name from an imported document line
-  factory Name._fromLine(Document document) {
+  factory Name._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Name._key);
     if (lineSection.missing) {
       return Name.missing(document);

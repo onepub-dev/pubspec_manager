@@ -1,7 +1,7 @@
 part of 'internal_parts.dart';
 
 class Documentation extends SectionSingleLine {
-  factory Documentation._fromLine(Document document) {
+  factory Documentation._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Documentation._key);
     if (lineSection.missing) {
       return Documentation.missing(document);

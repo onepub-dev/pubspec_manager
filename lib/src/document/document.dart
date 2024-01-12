@@ -94,10 +94,6 @@ class Document {
   /// If the [key] isn't found then throws a [PubSpecException].
   MultiLine getMultiLineForRequiredKey(String key) {
     final line = getLineForKey(key);
-    if (line.missing) {
-      throw PubSpecException.forDocument(
-          this, "Required key '$key' is missing.");
-    }
 
     return MultiLine.fromLine(line.line);
   }
@@ -105,6 +101,10 @@ class Document {
   /// Finds the line for the given [key].
   MultiLine getMultiLineForKey(String key) {
     final line = getLineForKey(key);
+
+    if (line.missing) {
+      return MultiLine.missing(this, key);
+    }
 
     return MultiLine.fromLine(line.line);
   }

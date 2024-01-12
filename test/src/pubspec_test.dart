@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
+import 'util/read_file.dart';
+import 'util/with_temp_file.dart';
+
 const goodContent = '''
 name: pubspec3
 version: 0.0.1
@@ -48,6 +51,32 @@ void main() {
         ..save(directory: Directory.systemTemp.path);
 
       print(File(pubspec.loadedFrom).readAsStringSync());
+    });
+
+    test('name only', () async {
+      const content = '''
+name: test_1
+''';
+      final pubspec = PubSpec.loadFromString(content);
+
+      await withTempFile((output) async {
+        pubspec.saveTo(output);
+        expect(readFile(output), equals(content));
+      });
+    });
+
+    test('name only and enviorment', () async {
+      const content = '''
+name: test_1
+environment: 
+  sdk: '>=3.0.0 <4.0.0'
+''';
+      final pubspec = PubSpec.loadFromString(content);
+
+      await withTempFile((output) async {
+        pubspec.saveTo(output);
+        expect(readFile(output), equals(content));
+      });
     });
   });
 }

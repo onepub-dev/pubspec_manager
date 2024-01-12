@@ -12,7 +12,7 @@ part of 'internal_parts.dart';
 
 class Homepage extends SectionSingleLine {
   /// build homepage from an imported document line
-  factory Homepage._fromLine(Document document) {
+  factory Homepage._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Homepage._key);
     if (lineSection.missing) {
       return Homepage.missing(document);

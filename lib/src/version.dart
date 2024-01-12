@@ -7,44 +7,35 @@ class Version {
   ///
   /// extract a version for an attached line.
   ///
-  Version._fromLine(LineImpl line, {bool required = false})
-      : _missing = false,
-        _section = SectionSingleLine.fromLine(line) {
-    if (Strings.isBlank(line.value)) {
-      if (required) {
-        throw PubSpecException(line, 'Required version missing.');
-      }
-      _version = sm.Version.none;
-      return;
-    }
-    _version = parseVersion(line, line.value);
-    quoted = _isQuoted(line.value);
+  factory Version._fromDocument(Document document) {
+    final section = document.getLineForKey(_key);
+
+    return Version._fromLine(section.line);
   }
 
-  // /// The version key wasn't present in the pubspec
-  // Version._missing(super.document, super.key)
-  //     : _missing = true,
-  // super.missing();
-
-  /// Attached the passed [VersionBuilder] to the [Document].
-  // @override
-  // factory Version._attach(
-  //     PubSpec pubspec, Line lineBefore, VersionBuilder versionBuilder) {
-  //   final line = Line.forInsertion(
-  //       pubspec.document, '  version: ${versionBuilder._version}');
-  //   pubspec.document.insertAfter(line, lineBefore);
-
-  //   return Version._fromLine(line);
-  // }
+  ///
+  /// extract a version for an attached line.
+  ///
+  Version._fromLine(LineImpl line) {
+    _missing = line.missing;
+    if (_missing) {
+      _section = SectionSingleLine.missing(line.document, _key);
+      _version = sm.Version.none;
+    } else {
+      _section = SectionSingleLine.fromLine(line);
+      _version = parseVersion(line, line.value);
+      quoted = _isQuoted(line.value);
+    }
+  }
 
   factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
-    final detached = LineDetached('  version: ${versionBuilder._version}');
+    final detached = LineDetached('  $_key: ${versionBuilder._version}');
     final line = pubspec.document.append(detached);
 
     return Version._fromLine(line);
   }
 
-  SectionImpl _section;
+  late final SectionImpl _section;
 
   /// There was a version key but no value
   bool get isEmpty => !_missing && _version.isEmpty;
@@ -52,7 +43,7 @@ class Version {
   /// There was no version in the pubspec.
   bool get isMissing => _missing;
 
-  final bool _missing;
+  late final bool _missing;
 
   bool quoted = false;
 
@@ -137,4 +128,6 @@ class Version {
       throw e;
     }
   }
+
+  static const String _key = 'version';
 }

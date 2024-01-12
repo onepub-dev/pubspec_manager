@@ -11,7 +11,7 @@ class Repository implements SingleLine {
 }
 
 class RepositoryAttached extends SectionSingleLine {
-  factory RepositoryAttached._fromLine(Document document) {
+  factory RepositoryAttached._fromDocument(Document document) {
     final lineSection = document.getLineForKey(RepositoryAttached._key);
     if (lineSection.missing) {
       return RepositoryAttached.missing(document);

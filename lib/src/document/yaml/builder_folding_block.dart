@@ -37,5 +37,10 @@ StateBuilder<FoldingBlock> foldingBlockBuilder(
 
       /// costate
       ..state<NewLine>((b) => b
-        ..state<ReplaceNewLines>((b) => {})
+        ..state<ReplaceNewLines>((b) => b
+          // replace newlines with spaces.
+          ..on<OnNewLine, ReplaceNewLines>(
+              sideEffect: (e) async => parser.append(OnEmitChar(' ')))
+          ..on<OnWhitespace, ReplaceNewLines>(
+              sideEffect: (e) async => parser.append(e)))
         ..state<KeepNewLines>((b) => {}));

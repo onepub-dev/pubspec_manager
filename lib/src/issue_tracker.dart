@@ -1,7 +1,7 @@
 part of 'internal_parts.dart';
 
 class IssueTracker extends SectionSingleLine {
-  factory IssueTracker._fromLine(Document document) {
+  factory IssueTracker._fromDocument(Document document) {
     final lineSection = document.getLineForKey(IssueTracker._key);
     if (lineSection.missing) {
       return IssueTracker.missing(document);

@@ -10,8 +10,11 @@ import 'yaml_string_parser.dart';
 StateBuilder<FlowDoubleQuoted> doubleQuoteBuilder(
         YamlStringParser parser, StateBuilder<FlowDoubleQuoted> b) =>
     b
+      ..onEnter((fromState, e) async => parser.append(OnEmitChar('"')))
       ..on<OnEscapeChar, DoubleQuotedEscaping>()
       ..on<OnSimpleChar, FlowDoubleQuoted>(
+          sideEffect: (e) async => parser.append(e))
+      ..on<OnWhitespace, FlowDoubleQuoted>(
           sideEffect: (e) async => parser.append(e))
       ..on<OnDoubleQuoteChar, Finished>(
           sideEffect: (e) async => parser.append(e))

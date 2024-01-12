@@ -9,9 +9,19 @@ class Environment {
         _flutter = VersionConstraint._missing(document, flutterKey),
         _section = SectionImpl.missing(document, _key);
 
+  factory Environment._fromDocument(Document document) {
+    final line = document.getLineForKey(Environment._key).line;
+
+    if (line.missing) {
+      return Environment.missing(document);
+    }
+
+    return Environment._fromLine(line);
+  }
+
   /// Load the existing environment [Section] starting from the
   /// given attached [_line].
-  Environment.fromLine(this._line) {
+  Environment._fromLine(this._line) {
     _sdkLine = _line.findKeyChild('sdk');
     _flutterLine = _line.findKeyChild('flutter');
     _section = SectionImpl.fromLine(_line);
@@ -32,7 +42,6 @@ class Environment {
 
     _line = LineImpl.forInsertion(document, 'environment:');
     document.insertAfter(_line, lineBefore);
-
 
     if (environment._sdk != null) {
       lineBefore = pubspec.document.insertAfter(
