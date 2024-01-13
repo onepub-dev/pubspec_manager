@@ -115,7 +115,7 @@ Future<void> doTest(String input, String expected) async {
 //       ..coregion<FoldingBlock>((b) => foldingBlockBuilder(b, append))
 //       ..onTransition(
 //           // ignore: avoid_print
-//           (fromState, event, toState) 
+//           (fromState, event, toState)
 //  => print('$fromState $event $toState ')));
 
 // ///
@@ -125,14 +125,14 @@ Future<void> doTest(String input, String expected) async {
 //         StateBuilder<FlowPlain> b, void Function(OnChar) append) =>
 //     b
 //       ..on<OnEscapeChar, PlainEscaping>()
-//       ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async 
+//       ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async
 //=> append(e))
 //       ..on<OnDoubleQuoteChar, Finished>(sideEffect: (e) async => append(e))
 
 //       /// We just saw an escape charater \
 //       ..state<PlainEscaping>((b) => b
 //         // nested escape char is just a slash
-//         ..on<OnEscapeChar, FlowDoubleQuoted>(sideEffect: (e) async 
+//         ..on<OnEscapeChar, FlowDoubleQuoted>(sideEffect: (e) async
 //=> append(e))
 //         ..on<OnSimpleChar, FlowDoubleQuoted>(
 //             sideEffect: (e) async => onEscapeChar(e, append)));
@@ -157,14 +157,14 @@ Future<void> doTest(String input, String expected) async {
 //         StateBuilder<FlowDoubleQuoted> b, void Function(OnChar) append) =>
 //     b
 //       ..on<OnEscapeChar, DoubleQuotedEscaping>()
-//       ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async 
+//       ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async
 //=> append(e))
 //       ..on<OnDoubleQuoteChar, Finished>(sideEffect: (e) async => append(e))
 
 //       /// We just saw an escape charater \
 //       ..state<DoubleQuotedEscaping>((b) => b
 //         // nested escape char is just a slash
-//         ..on<OnEscapeChar, FlowDoubleQuoted>(sideEffect: (e) async 
+//         ..on<OnEscapeChar, FlowDoubleQuoted>(sideEffect: (e) async
 //=> append(e))
 //         ..on<OnSimpleChar, FlowDoubleQuoted>(
 //             sideEffect: (e) async => onEscapeChar(e, append)));
@@ -181,7 +181,7 @@ Future<void> doTest(String input, String expected) async {
 //         ..onFork<OnMinusChar>((b) => b..target<TrimStrip>(),
 //             sideEffect: (e) async => append(e))
 //         ..on<OnEscapeChar, FoldingEscaping>()
-//         ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async 
+//         ..on<OnSimpleChar, FlowDoubleQuoted>(sideEffect: (e) async
 //=> append(e))
 
 //         /// We just saw an escape charater \
@@ -196,7 +196,7 @@ Future<void> doTest(String input, String expected) async {
 //       ..state<Trim>((b) => b
 //         ..on<OnSimpleChar, Trim>(sideEffect: (e) async => append(e))
 //         ..state<TrimClip>((b) =>
-//             b.on<OnApplyTrim, Trim>(sideEffect: (e) async 
+//             b.on<OnApplyTrim, Trim>(sideEffect: (e) async
 //=> TrimClip.trim()))
 //         ..state<TrimKeep>((b) => {})
 //         ..state<TrimStrip>((b) => {}))

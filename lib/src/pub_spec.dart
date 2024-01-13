@@ -47,8 +47,7 @@ class PubSpec {
     name = Name._fromDocument(document);
     version = Version._fromDocument(document);
     description = document.getMultiLineForKey('description');
-    _environment =
-        Environment._fromDocument(document);
+    _environment = Environment._fromDocument(document);
     homepage = Homepage._fromDocument(document);
     repository = RepositoryAttached._fromDocument(document);
     issueTracker = IssueTracker._fromDocument(document);
