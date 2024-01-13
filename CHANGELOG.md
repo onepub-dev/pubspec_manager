@@ -1,3 +1,6 @@
+# 1.0.0-alpha.13
+- Fixes: #3 when loading a pubspec an an exception was thrown we reported that the pubspec was being loaded from a string even when it was loaded from a file.
+
 # 1.0.0-alpha.12
 - BREAKING dependency classes have been renamed to begin with Dependency
 so PubHostedDependency becomes DependencyPubHosted. This is to help with discovery and auto-completion.
