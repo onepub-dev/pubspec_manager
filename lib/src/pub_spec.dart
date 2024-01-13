@@ -41,9 +41,13 @@ class PubSpec {
   }
 
   /// Loads the content of a pubspec.yaml from the string [content].
-  PubSpec.loadFromString(String content) {
-    document = Document.loadFromString(content);
+  factory PubSpec.loadFromString(String content) {
+    final document = Document.loadFromString(content);
 
+    return PubSpec._loadFromDocument(document);
+  }
+
+  PubSpec._loadFromDocument(this.document) {
     name = Name._fromDocument(document);
     version = Version._fromDocument(document);
     description = document.getMultiLineForKey('description');
@@ -94,9 +98,10 @@ class PubSpec {
       bool search = true}) {
     final loadedFrom =
         _findPubSpecFile(directory ?? Directory.current.path, filename, search);
-    final content = File(loadedFrom).readAsStringSync();
 
-    final pubspec = PubSpec.loadFromString(content)
+    final document = Document.loadFrom(loadedFrom);
+
+    final pubspec = PubSpec._loadFromDocument(document)
       .._loadedFromDirectory = dirname(loadedFrom)
       .._loadedFromFilename = basename(loadedFrom);
     return pubspec;
