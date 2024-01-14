@@ -68,7 +68,7 @@ name: test_1
     test('name only and enviorment', () async {
       const content = '''
 name: test_1
-environment: 
+environment:
   sdk: '>=3.0.0 <4.0.0'
 ''';
       final pubspec = PubSpec.loadFromString(content);
@@ -77,6 +77,38 @@ environment:
         pubspec.saveTo(output);
         expect(readFile(output), equals(content));
       });
+    });
+  });
+
+  /// The # path: line was generating a duplicate line bug.
+  test('Section comments', () async {
+    const content = '''
+  # an indented comment
+# a non indented comment
+name: dcli_test
+environment:  # line comment
+  sdk: ^3.1.3
+
+# Add regular dependencies here.
+  # in
+# out
+dependencies:
+  fred: ^1.0.0
+    # nested comment
+  uuid: ^4.1.0
+  # path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  # deeply indented comment
+
+# a trailing comment.
+''';
+    final pubspec = PubSpec.loadFromString(content);
+
+    await withTempFile((output) async {
+      pubspec.saveTo(output);
+      expect(readFile(output), equals(content));
     });
   });
 }

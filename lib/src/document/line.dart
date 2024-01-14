@@ -1,3 +1,5 @@
+import 'package:strings/strings.dart';
+
 import '../internal_parts.dart';
 import 'document.dart';
 import 'key_value.dart';
@@ -75,7 +77,8 @@ class LineImpl implements Line, Renderer {
     for (; i < text.length; i++) {
       final c = text.substring(i, i + 1);
       if (c == '#') {
-        inlineComment = text.substring(i);
+        final whitespace = _preserverWhiteSpace(text, i);
+        inlineComment = whitespace + text.substring(i);
         commentOffset = i;
         break;
       }
@@ -133,12 +136,6 @@ class LineImpl implements Line, Renderer {
   // the column the inline comment starts in
   @override
   int? commentOffset;
-
-  // bool get continues {
-  //   if (text.endsWith('|') || text.endsWith('|>'))
-
-  //   return false;
-  // }
 
   /// calculate how far the line is idented.
   /// zero based.
@@ -226,7 +223,7 @@ class LineImpl implements Line, Renderer {
   /// If [type] is passed then only children of the given type will
   /// be returned.
   /// If [descendants] is true then all descendants are returned
-  /// not just he immediate children.
+  /// not just the immediate children.
   List<LineImpl> childrenOf({LineType? type, bool descendants = false}) =>
       document.childrenOf(this, type: type, descendants: descendants);
 
@@ -256,7 +253,11 @@ class LineImpl implements Line, Renderer {
     String rendered;
     switch (type) {
       case LineType.key:
-        rendered = '$expand$key: $value';
+        if (value.isBlank()) {
+          rendered = '$expand$key:';
+        } else {
+          rendered = '$expand$key: $value';
+        }
         return '$rendered${renderInlineComment(rendered.length)}';
       case LineType.blank:
       case LineType.comment:
@@ -273,9 +274,8 @@ class LineImpl implements Line, Renderer {
     if (inlineComment == null) {
       return '';
     }
-    final space = commentOffset! - contentLength - 1;
 
-    return '${spaces(space)}${inlineComment!}';
+    return inlineComment!;
   }
 
   @override
@@ -287,6 +287,28 @@ class LineImpl implements Line, Renderer {
   /// returns the number of spaces to correctly indent
   /// a child of this line.
   String get childIndent => spaces((indent + 1) * 2);
+
+  /// If there is whitespace before an inline comment
+  /// we want to preserve that whitespace so that
+  /// when we write a file out it is identical to what we
+  /// read in. So this method returns the whitespace
+  /// before the comment.
+  String _preserverWhiteSpace(String text, int startOfComment) {
+    final whitespace = StringBuffer();
+    if (startOfComment == 0) {
+      return '';
+    }
+    var index = startOfComment - 1;
+
+    for (; index > 0; index--) {
+      final char = text.substring(index, index + 1);
+      if (!Strings.isWhitespace(char)) {
+        break;
+      }
+      whitespace.write(char);
+    }
+    return whitespace.toString();
+  }
 }
 
 String spaces(int count) => ' ' * count;

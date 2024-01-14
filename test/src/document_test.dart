@@ -47,7 +47,7 @@ key:
         indent: 1,
         lineNo: index++,
         lineType: LineType.key,
-        inline: '#inline comment',
+        inline: ' #inline comment',
         inlineIndex: 10);
   });
 }
