@@ -1,3 +1,7 @@
+# 1.0.0-alpha.14
+- Fixed a formatting issue where inline comments didn't preserve leading whitespace. We now do.
+- Fixed a bug where a comment after a dep was being associated with two sections.
+
 # 1.0.0-alpha.13
 - Fixes: #3 when loading a pubspec an an exception was thrown we reported that the pubspec was being loaded from a string even when it was loaded from a file.
 
