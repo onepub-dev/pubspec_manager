@@ -249,4 +249,27 @@ $line ''');
       expectedLineNo++;
     }
   }
+
+  /// Check if [line] is attached to any section.
+  /// Used when processing comments as it can be a little
+  /// tricky to determine (base in indent) which section the
+  /// comment is attached to.
+  bool isAttachedToSection(LineImpl line) {
+    for (final section in sections.values) {
+      if (section.lines.contains(line)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// registeres a comment as belonging to a section.
+  void registerComment(LineImpl line, SectionImpl sectionImpl) {
+    sections.putIfAbsent(line, () => sectionImpl);
+  }
+
+  /// List of sections that exist in this document.
+  final sections = <Line, Section>{};
 }
+
+typedef Key = String;

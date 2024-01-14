@@ -4,7 +4,7 @@ part of 'internal_parts.dart';
 
 /// Used to hold the comments that prefix a section.
 /// A comment section is all comments/blank lines that are above
-/// a section upto where the proceeding section ends.
+/// a section that are not owned by a (prior) section.
 class Comments {
   Comments(this._section) {
     _lines = _commentsAsLine();
@@ -12,36 +12,44 @@ class Comments {
   Comments.empty(this._section) : _lines = <Line>[];
 
   /// The section these comments are attached to.
-  final Section _section;
+  final SectionImpl _section;
 
-  /// Gets the set of comments that suffix the passed in [_section]
+  /// Gets the set of comments that prefix the passed in [_section]
   /// This will include any blank lines upto the end of the prior
   /// section.
   List<Line> _commentsAsLine() {
     final document = _section.document;
 
-    final suffix = <Line>[];
+    final prefix = <Line>[];
 
     final lines = document.lines;
 
-    /// there can be no comments if we are the first
-    /// line of the pubspec.yaml
-    if (_section.line.lineNo == 1) {
-      return suffix;
-    }
-    // search for comments starting from the prior line
+    // search upwards for comments starting from the prior line
     var lineNo = _section.line.lineNo - 2;
+
+    final toRegister = <LineImpl>[];
 
     for (; lineNo > 0; lineNo--) {
       final line = lines[lineNo];
       final type = line.type;
       if (type == LineType.comment || type == LineType.blank) {
-        suffix.insert(0, line);
+        if (!document.isAttachedToSection(line)) {
+          prefix.insert(0, line);
+          toRegister.add(line);
+        }
       } else {
         break;
       }
     }
-    return suffix;
+
+    /// we need to delay the registration as the section
+    /// isn't fully initialised and registering a line
+    /// to a non-initialised section causes [document.isAttachedToSection]
+    /// to bail.
+    for (final register in toRegister) {
+      document.registerComment(register, _section);
+    }
+    return prefix;
   }
 
   /// All of the lines that make up this comment.
