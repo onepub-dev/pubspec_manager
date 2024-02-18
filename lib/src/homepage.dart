@@ -1,15 +1,5 @@
 part of 'internal_parts.dart';
 
-// class Homepage {
-//   Homepage({required this.url, this.comments = const <String>[]});
-//   Homepage.missing()
-//       : url = '',
-//         comments = const <String>[];
-
-//   final String url;
-//   final List<String> comments;
-// }
-
 class Homepage extends SectionSingleLine {
   /// build homepage from an imported document line
   factory Homepage._fromDocument(Document document) {
