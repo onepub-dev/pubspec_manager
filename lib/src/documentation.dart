@@ -11,18 +11,18 @@ class Documentation extends SectionSingleLine {
   }
 
   Documentation._(super.line)
-      : documentation = DocumentationBuilder(line.value),
+      : builder = DocumentationBuilder(line.value),
         super.fromLine();
 
   Documentation.missing(Document document)
-      : documentation = DocumentationBuilder.missing(),
+      : builder = DocumentationBuilder.missing(),
         super.missing(document, _key);
 
-  final DocumentationBuilder documentation;
+  final DocumentationBuilder builder;
 
   // ignore: avoid_renaming_method_parameters
   Documentation set(String url) {
-    documentation.url = url;
+    builder.url = url;
     super.value = url;
 
     // ignore: avoid_returning_this
