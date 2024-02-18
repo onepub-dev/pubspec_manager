@@ -5,24 +5,23 @@ part of 'internal_parts.dart';
 /// Builds a Version that can be attached to a document.
 class VersionBuilder {
   VersionBuilder({
-    required this.key,
     required sm.Version version,
     List<String>? comments,
   })  : missing = false,
+        key = _key,
         _version = version,
         _comments = comments ?? <String>[];
 
-  factory VersionBuilder.parse({required String key, String? version}) =>
-      version != null
-          ? VersionBuilder(key: key, version: parseVersion(version))
-          : VersionBuilder.missing();
+  factory VersionBuilder.parse(String? version) => version != null
+      ? VersionBuilder(version: parseVersion(version))
+      : VersionBuilder.missing();
 
   /// Used to indicate that that a version key doesn't exist.
   /// This is different from [Version.empty()] which indicates
   /// that a version key was provided but the value was empty.
   VersionBuilder.missing()
       : missing = true,
-        key = 'version',
+        key = _key,
         _version = sm.Version.none;
 
   /// A version for which no value was supplied yet
@@ -33,7 +32,7 @@ class VersionBuilder {
   /// of the original document is maintained.
   VersionBuilder.empty()
       : missing = false,
-        key = 'version',
+        key = _key,
         _version = sm.Version.none;
 
   late final bool missing;
@@ -93,4 +92,8 @@ class VersionBuilder {
 
     return attached;
   }
+
+  Version attach(PubSpec pubspec) => _append(pubspec);
+
+  static const String _key = 'version';
 }
