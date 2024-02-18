@@ -30,7 +30,6 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     _version = dependency.version;
 
     _line = LineImpl.forInsertion(pubspec.document, '  $_name: ');
-    section = SectionImpl.fromLine(_line);
 
     lineBefore = pubspec.document.insertAfter(_line, lineBefore);
     _hostedUrlLine =
@@ -44,6 +43,7 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     } else {
       _versionLine = LineImpl.missing(pubspec.document, LineType.key);
     }
+    section = SectionImpl.fromLine(_line);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {

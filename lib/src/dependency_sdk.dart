@@ -27,11 +27,12 @@ class DependencySdk implements Dependency {
 
     _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
-    section = SectionImpl.fromLine(_line);
 
     _pathLine = LineImpl.forInsertion(
         pubspec.document, '${_line.childIndent}$key: $path');
     pubspec.document.insertAfter(_pathLine, _line);
+
+    section = SectionImpl.fromLine(_line);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {

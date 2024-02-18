@@ -21,11 +21,12 @@ class DependencyGit implements Dependency {
       PubSpec pubspec, Line lineBefore, DependencyGitBuilder dependency) {
     _name = dependency.name;
     _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
-    section = SectionImpl.fromLine(_line);
     pubspec.document.insertAfter(_line, lineBefore);
 
     _details = GitDetails(dependency);
     _details._attach(section, _line);
+
+    section = SectionImpl.fromLine(_line);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {
