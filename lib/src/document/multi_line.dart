@@ -1,3 +1,4 @@
+import 'line_detached.dart';
 import 'section.dart';
 
 /// Used to hold a single line that can have a multi-line scalar
@@ -21,4 +22,15 @@ class MultiLine extends SectionImpl implements Section {
   // List<Line> get lines => [...comments.lines, line];
 
   String get value => line.value;
+
+  // ignore: use_setters_to_change_properties
+  void set(String value) {
+    if (missing) {
+       final detached = LineDetached('$key: $value');
+      line = document.append(detached);
+      missing = false;
+    } else {
+      super.line.value = '$key: $value';
+    }
+  }
 }

@@ -56,6 +56,8 @@ class SectionImpl implements Section {
       ..clear()
       ..addAll(line.childrenOf(descendants: true));
 
+    missing = false;
+
     return line;
   }
 

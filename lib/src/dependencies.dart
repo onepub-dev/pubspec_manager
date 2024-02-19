@@ -1,6 +1,6 @@
 part of 'internal_parts.dart';
 
-/// Used to hold a list of [DependencyBuilder]s from
+/// Used to hold a list of [Dependency]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
 class Dependencies with IterableMixin<Dependency> {

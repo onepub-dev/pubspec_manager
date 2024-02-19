@@ -14,11 +14,13 @@ class EnvironmentBuilder {
         _flutter = flutter;
 
   // Used to indicate that an environment wasn't specified
-  EnvironmentBuilder.missing();
+  EnvironmentBuilder.missing()
+      : _sdk = null,
+        _flutter = null;
 
   Environment _attach(PubSpec pubspec, Line lineBefore) =>
       Environment._insertAfter(pubspec, lineBefore, this);
 
-  late final String? _sdk;
-  late final String? _flutter;
+  final String? _sdk;
+  final String? _flutter;
 }

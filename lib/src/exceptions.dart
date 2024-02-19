@@ -61,6 +61,13 @@ class ExecutableNotFound extends PubSpecException {
       : super.forDocument();
 }
 
+/// Thrown when you try to access a platform by name
+/// and that platform doesn't exist.
+class PlatformNotFound extends PubSpecException {
+  PlatformNotFound(Document super.document, super.message)
+      : super.forDocument();
+}
+
 class OutOfBoundsException extends PubSpecException {
   OutOfBoundsException(super.line, super.message);
 }

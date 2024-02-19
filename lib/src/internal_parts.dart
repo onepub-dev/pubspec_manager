@@ -44,6 +44,8 @@ part 'homepage.dart';
 part 'issue_tracker.dart';
 part 'issue_tracker_builder.dart';
 part 'name.dart';
+part 'platform.dart';
+part 'platforms.dart';
 part 'pub_spec.dart';
 part 'publish_to.dart';
 part 'repository.dart';

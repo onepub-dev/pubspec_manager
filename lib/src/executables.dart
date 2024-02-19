@@ -1,8 +1,13 @@
 part of 'internal_parts.dart';
 
-/// Used to hold a list of [DependencyBuilder]s from
-/// a single dependency section in the pubspec.yaml
-/// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
+/// Used to hold a list of [Executable]s from
+/// To add additinal executables use:
+///
+/// ```dart
+/// final pubspec = PubSpecl.load();
+/// pubspec.executables.append(ExecutableBuilder(name: 'test'));
+/// pubspec.save();
+/// ```
 class Executables with IterableMixin<Executable> {
   Executables._missing(this._pubspec)
       : _section = SectionImpl.missing(_pubspec.document, key);
@@ -59,18 +64,18 @@ class Executables with IterableMixin<Executable> {
   /// Add [executable] to the PubSpec
   /// after the last dependency.
   Executables append(ExecutableBuilder executable) {
-    var lineBefore = _section.line;
+    var line = _section.line;
 
     if (_section.missing) {
       // create the section.
-      final line = _section.document.append(LineDetached(key));
-      _section = SectionImpl.fromLine(line);
+      line = _section.document.append(LineDetached('$key:'));
+      _section = SectionImpl.fromLine(line as LineImpl);
     } else {
       if (_executables.isNotEmpty) {
-        lineBefore = _executables.last.line;
+        line = _executables.last.line;
       }
     }
-    final attached = executable._attach(_pubspec, lineBefore);
+    final attached = executable._attach(_pubspec, line);
 
     _executables.add(attached);
 

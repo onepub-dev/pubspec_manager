@@ -1,43 +1,35 @@
 part of 'internal_parts.dart';
 
-class Repository implements SingleLine {
-  Repository(this.url);
-  Repository.missing() : url = '';
 
-  String url;
-
-  @override
-  String get value => url;
-}
-
-class RepositoryAttached extends SectionSingleLine {
-  factory RepositoryAttached._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(RepositoryAttached._key);
+class Repository extends SectionSingleLine {
+  /// build Repository from an imported document line
+  factory Repository._fromDocument(Document document) {
+    final lineSection = document.getLineForKey(Repository._key);
     if (lineSection.missing) {
-      return RepositoryAttached.missing(document);
+      return Repository.missing(document);
     } else {
-      return RepositoryAttached._(lineSection.line);
+      return Repository._(lineSection.line);
     }
   }
 
-  RepositoryAttached._(super.line)
-      : repository = Repository(line.value),
+  Repository._(super.line)
+      : _url = line.value,
         super.fromLine();
 
-  RepositoryAttached.missing(Document document)
-      : repository = Repository.missing(),
+  Repository.missing(Document document)
+      : _url = '',
         super.missing(document, _key);
 
-  final Repository repository;
+  String _url;
 
-  RepositoryAttached set(String url) {
-    repository.url = url;
+  Repository set(String url) {
+    _url = url;
     super.value = url;
     // ignore: avoid_returning_this
     return this;
   }
 
-  String get url => repository.url;
+  String get url => _url;
 
   static const String _key = 'repository';
 }

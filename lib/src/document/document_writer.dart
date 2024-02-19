@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 
 import '../../pubspec_manager.dart';
 import 'document.dart';
@@ -27,7 +27,7 @@ class StringWriter implements Writer {
 }
 
 class FileWriter implements Writer {
-  FileWriter(this.pathTo) : file = File(pathTo);
+  FileWriter(this.pathTo) : file = io.File(pathTo);
 
   @override
   void init() {
@@ -37,18 +37,18 @@ class FileWriter implements Writer {
   }
 
   String pathTo;
-  File file;
+  io.File file;
 
   void close() {}
 
   @override
   void write(String line) {
-    file.writeAsStringSync('$line$_lineTerminator', mode: FileMode.append);
+    file.writeAsStringSync('$line$_lineTerminator', mode: io.FileMode.append);
   }
 
   /// Platform specific line terminator.
   String get _lineTerminator {
-    if (Platform.isWindows) {
+    if (io.Platform.isWindows) {
       return '\r\n';
     } else {
       return '\n';

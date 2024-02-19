@@ -12,27 +12,27 @@ class PubSpec {
       {required String name,
       String? version,
       String? description,
-      EnvironmentBuilder? environment}) {
-    environment ??= EnvironmentBuilder.missing();
+      EnvironmentBuilder? environmentBuilder}) {
+    environmentBuilder ??= EnvironmentBuilder.missing();
     document = Document.loadFromString('');
 
     this.name = Name._fromString(document, name);
-    this.version =
-        VersionBuilder.parse(key: 'version', version: version)._append(this);
+    this.version = VersionBuilder.parse(version)._append(this);
     this.description = description == null
-        ? MultiLine.missing(document, Environment._key)
+        ? MultiLine.missing(document, 'description')
         : MultiLine.fromLine(
             document.append(LineDetached('description: $description')));
 
-    _environment = environment._attach(this, document.lastLine!);
+    environment = environmentBuilder._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
-    repository = RepositoryAttached.missing(document);
+    publishTo = PublishTo.missing(document);
+    repository = Repository.missing(document);
     issueTracker = IssueTracker.missing(document);
     documentation = Documentation.missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
-    platforms = SectionImpl.missing(document, 'platforms');
+    platforms = Platforms._missing(this);
     executables = Executables._missing(this);
     funding = SectionImpl.missing(document, 'funding');
     falseSecrets = SectionImpl.missing(document, 'false_secrets');
@@ -51,16 +51,17 @@ class PubSpec {
     name = Name._fromDocument(document);
     version = Version._fromDocument(document);
     description = document.getMultiLineForKey('description');
-    _environment = Environment._fromDocument(document);
+    environment = Environment._fromDocument(document);
     homepage = Homepage._fromDocument(document);
-    repository = RepositoryAttached._fromDocument(document);
+    publishTo = PublishTo._fromDocument(document);
+    repository = Repository._fromDocument(document);
     issueTracker = IssueTracker._fromDocument(document);
     documentation = Documentation._fromDocument(document);
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
     dependencyOverrides = _initDependencies('dependency_overrides');
-    platforms = document.findSectionForKey('platforms');
+    platforms = _initPlatforms();
 
     executables = _initExecutables();
     funding = document.findSectionForKey('funding');
@@ -127,10 +128,11 @@ class PubSpec {
   late Name name;
   late Version version;
   late MultiLine description;
-  late Environment _environment;
+  late Environment environment;
 
   late final Homepage homepage;
-  late final RepositoryAttached repository;
+  late final PublishTo publishTo;
+  late final Repository repository;
   late final IssueTracker issueTracker;
   late final Documentation documentation;
   late final Dependencies dependencies;
@@ -141,14 +143,12 @@ class PubSpec {
   /// It is now recommended that you place overrides in a separate file
   /// pubpsec_overrides.yaml
   late final Dependencies dependencyOverrides;
-  late final Section platforms;
+  late final Platforms platforms;
   late final Executables executables;
   late final Section funding;
   late final Section falseSecrets;
   late final Section screenshots;
   late final Section topics;
-
-  Environment get environment => _environment;
 
   /// Returns the path that the pubspec was loaded from.
   ///
@@ -197,6 +197,23 @@ class PubSpec {
     return executables;
   }
 
+  Platforms _initPlatforms() {
+    final line = document.findTopLevelKey(Platforms.key);
+    if (line.missing) {
+      return Platforms._missing(this);
+    }
+
+    final platforms = Platforms._fromLine(this, line);
+
+    for (final child in line.childrenOf()) {
+      if (child.type != LineType.key) {
+        continue;
+      }
+      platforms._appendAttached(Platform._fromLine(child));
+    }
+    return platforms;
+  }
+
   /// Save the pubspec.yaml to [directory] with the given [filename].
   ///
   /// If you don't pass in the [directory] then
@@ -231,8 +248,9 @@ class PubSpec {
       ..render(name)
       ..render(version._section)
       ..render(description)
-      ..render(_environment._section)
+      ..render(environment._section)
       ..render(homepage)
+      ..render(publishTo)
       ..render(repository)
       ..render(issueTracker)
       ..render(documentation)
@@ -240,7 +258,7 @@ class PubSpec {
       ..render(devDependencies._section)
       ..render(dependencyOverrides._section)
       ..render(executables._section)
-      ..render(platforms)
+      ..render(platforms._section)
       ..render(funding)
       ..render(falseSecrets)
       ..render(screenshots)

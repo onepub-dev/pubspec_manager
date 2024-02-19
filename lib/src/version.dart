@@ -50,18 +50,27 @@ class Version {
   late sm.Version _version;
 
   /// If a version has not been specified we return [sm.Version.none]
-  sm.Version get value =>
+  sm.Version get getVersion =>
       _version.isEmpty || _missing ? sm.Version.none : _version;
 
-  set value(sm.Version value) {
+  // ignore: avoid_setters_without_getters
+  set setVersion(sm.Version value) {
     _version = value;
     _section.line.value = value.toString();
+  }
+
+  String get asString {
+    if (quoted) {
+      return "'${toString()}'";
+    } else {
+      return toString();
+    }
   }
 
   @override
   String toString() => _version.toString();
 
-  set version(String version) {
+  void set(String version) {
     try {
       sm.VersionConstraint.parse(version);
     } on FormatException catch (e) {
@@ -73,13 +82,7 @@ class Version {
     _section.missing = false;
   }
 
-  String get version {
-    if (quoted) {
-      return "'${toString()}'";
-    } else {
-      return toString();
-    }
-  }
+  // void set(String version) => this.version = version;
 
   bool _isQuoted(String version) =>
       version.contains("'") || version.contains('"');
