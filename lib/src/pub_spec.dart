@@ -12,8 +12,8 @@ class PubSpec {
       {required String name,
       String? version,
       String? description,
-      EnvironmentBuilder? environmentBuilder}) {
-    environmentBuilder ??= EnvironmentBuilder.missing();
+      EnvironmentBuilder? environment}) {
+    environment ??= EnvironmentBuilder.missing();
     document = Document.loadFromString('');
 
     this.name = Name._fromString(document, name);
@@ -23,7 +23,7 @@ class PubSpec {
         : MultiLine.fromLine(
             document.append(LineDetached('description: $description')));
 
-    environment = environmentBuilder._attach(this, document.lastLine!);
+    this.environment = environment._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
     publishTo = PublishTo.missing(document);
     repository = Repository.missing(document);
