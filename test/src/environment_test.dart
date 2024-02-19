@@ -13,7 +13,7 @@ void main() {
       final pubspec = PubSpec(
           name: 'test',
           description: 'test desc',
-          environmentBuilder: EnvironmentBuilder(sdk: '1.0.0'),
+          environment: EnvironmentBuilder(sdk: '1.0.0'),
           version: '1.0.0');
 
       expect(pubspec.environment.sdk, equals('1.0.0'));
@@ -34,7 +34,7 @@ void main() {
       final pubspec = PubSpec(
           name: 'test',
           description: 'test desc',
-          environmentBuilder: EnvironmentBuilder(sdk: '>=3.0.0 <4.0.0'),
+          environment: EnvironmentBuilder(sdk: '>=3.0.0 <4.0.0'),
           version: '1.0.0');
 
       final environment = pubspec.environment;

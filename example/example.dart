@@ -7,8 +7,7 @@ void main() {
     name: 'new eric',
     version: '1.0.0-alpha.2',
     description: 'An example',
-    environmentBuilder:
-        EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0'),
+    environment: EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0'),
   )
     ..homepage
         .set('https://onepub.dev/home')
