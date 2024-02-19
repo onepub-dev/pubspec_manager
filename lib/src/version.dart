@@ -50,11 +50,11 @@ class Version {
   late sm.Version _version;
 
   /// If a version has not been specified we return [sm.Version.none]
-  sm.Version get getVersion =>
+  sm.Version getSemVersion() =>
       _version.isEmpty || _missing ? sm.Version.none : _version;
 
   // ignore: avoid_setters_without_getters
-  set setVersion(sm.Version value) {
+  void setSemVersion(sm.Version value) {
     _version = value;
     _section.line.value = value.toString();
   }
