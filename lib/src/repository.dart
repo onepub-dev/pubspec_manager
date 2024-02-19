@@ -1,6 +1,5 @@
 part of 'internal_parts.dart';
 
-
 class Repository extends SectionSingleLine {
   /// build Repository from an imported document line
   factory Repository._fromDocument(Document document) {

@@ -24,7 +24,7 @@ class DependencyPubHosted implements Dependency, DependencyVersioned {
     _version = dependency.version;
     final line = LineImpl.forInsertion(pubspec.document, '  $_name: $_version');
     _line = pubspec.document.insertAfter(line, lineBefore);
-    
+
     section = SectionImpl.fromLine(_line);
   }
 

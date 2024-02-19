@@ -26,7 +26,7 @@ class MultiLine extends SectionImpl implements Section {
   // ignore: use_setters_to_change_properties
   void set(String value) {
     if (missing) {
-       final detached = LineDetached('$key: $value');
+      final detached = LineDetached('$key: $value');
       line = document.append(detached);
       missing = false;
     } else {

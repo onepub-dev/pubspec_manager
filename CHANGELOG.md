@@ -1,3 +1,12 @@
+# 1.0.0-alpha.15
+- updated tests and example in line with api changes.
+- change getVersion and setVersion to getSemVersion and setSemVersion to make their nature more apparent.
+- renaned the environmentBuilder arg to PubSpec to environment in keeping with the naming pattern elsewhere.
+- Fixed a number of the setters for pubspec keys.
+- removed the need to pass the key to the versionbuider as it is known by the builder.
+- added publishTo key.
+- Fixed a bug where the section for a dependency wasn't being created correctly as we created it before all of the dependencies' lines had been added to the document.
+
 # 1.0.0-alpha.14
 - Fixed a formatting issue where inline comments didn't preserve leading whitespace. We now do.
 - Fixed a bug where a comment after a dep was being associated with two sections.
