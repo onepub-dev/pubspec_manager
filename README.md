@@ -79,5 +79,9 @@ void main() {
 Updating a puspec version is a common task:
 
 ```dart
+  final pubspec = PubSpec.load();
+  pubspec.version.set('1.2.1');
+  pubspec.save();
 
+```
 
