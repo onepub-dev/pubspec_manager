@@ -3,6 +3,12 @@ import 'dart:io';
 import 'package:pubspec_manager/pubspec_manager.dart';
 
 void main() {
+  create();
+
+  updateVersion();
+}
+
+void create() {
   final pubspec = PubSpec(
     name: 'new eric',
     version: '1.0.0-alpha.2',
@@ -53,4 +59,10 @@ void main() {
     ..save(filename: 'example.yaml');
 
   print(File(pubspec.loadedFrom).readAsStringSync());
+}
+
+void updateVersion() {
+  final pubspec = PubSpec.load();
+  pubspec.version.set('1.2.1');
+  pubspec.save();
 }
