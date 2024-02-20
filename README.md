@@ -21,6 +21,8 @@ So the aim of pubspec_manager is to fix three problems
 5) retention of non pubspec specific content
 
 
+The following examples shows how to create a new pubspec.yaml from scratch.
+
 ```dart
 import 'dart:io';
 import 'package:pubspec_manager/pubspec_manager.dart';
@@ -72,3 +74,10 @@ void main() {
   print(File(pubspec.loadedFrom).readAsStringSync());
 }
 ```
+
+# update the version
+Updating a puspec version is a common task:
+
+```dart
+
+
