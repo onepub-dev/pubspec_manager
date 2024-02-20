@@ -1,3 +1,6 @@
+# 1.0.0-alpha.16
+- Fixed a bug in the iterator for dependencies, exectuables and platforms.
+
 # 1.0.0-alpha.15
 - updated tests and example in line with api changes.
 - change getVersion and setVersion to getSemVersion and setSemVersion to make their nature more apparent.
