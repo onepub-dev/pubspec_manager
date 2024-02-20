@@ -120,25 +120,5 @@ class Platforms with IterableMixin<Platform> {
   bool exists(PlatformEnum platformEnum) => this[platformEnum] != null;
 
   @override
-  Iterator<Platform> get iterator => PlatformIterator(_platforms);
-}
-
-class PlatformIterator implements Iterator<Platform> {
-  PlatformIterator(this._platforms);
-
-  int index = -1;
-
-  final List<Platform> _platforms;
-
-  @override
-  Platform get current => _platforms.elementAt(0);
-
-  @override
-  bool moveNext() {
-    if (index >= _platforms.length) {
-      return false;
-    }
-    index++;
-    return true;
-  }
+  Iterator<Platform> get iterator => IteratorImpl(_platforms);
 }

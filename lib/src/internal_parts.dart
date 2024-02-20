@@ -17,6 +17,7 @@ import 'document/line_type.dart';
 import 'document/multi_line.dart';
 import 'document/section.dart';
 import 'document/section_single_line.dart';
+import 'iterator_impl.dart';
 
 part 'comments.dart';
 part 'dependencies.dart';

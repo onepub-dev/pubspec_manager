@@ -108,25 +108,5 @@ class Executables with IterableMixin<Executable> {
   bool exists(String name) => this[name] != null;
 
   @override
-  Iterator<Executable> get iterator => ExecutableIterator(_executables);
-}
-
-class ExecutableIterator implements Iterator<Executable> {
-  ExecutableIterator(this._executables);
-
-  int index = -1;
-
-  final List<Executable> _executables;
-
-  @override
-  Executable get current => _executables.elementAt(0);
-
-  @override
-  bool moveNext() {
-    if (index >= _executables.length) {
-      return false;
-    }
-    index++;
-    return true;
-  }
+  Iterator<Executable> get iterator => IteratorImpl(_executables);
 }

@@ -112,25 +112,5 @@ class Dependencies with IterableMixin<Dependency> {
   Comments get comments => _section.comments;
 
   @override
-  Iterator<Dependency> get iterator => DependencyIterator(_dependencies);
-}
-
-class DependencyIterator implements Iterator<Dependency> {
-  DependencyIterator(this._dependencies);
-
-  int index = -1;
-
-  final List<Dependency> _dependencies;
-
-  @override
-  Dependency get current => _dependencies.elementAt(0);
-
-  @override
-  bool moveNext() {
-    if (index >= _dependencies.length) {
-      return false;
-    }
-    index++;
-    return true;
-  }
+  Iterator<Dependency> get iterator => IteratorImpl(_dependencies);
 }
