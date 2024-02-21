@@ -40,7 +40,8 @@ class LineImpl implements Line, Renderer {
   /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
-  LineImpl(this.document, this._text, this.lineNo) : missing = false {
+  LineImpl(this.document, this._text, this.lineNo, [LineType? lineType])
+      : missing = false {
     final trimmed = _text.trimLeft();
 
     // no further processing required for blank lines.
@@ -51,12 +52,16 @@ class LineImpl implements Line, Renderer {
     }
 
     // determine line type
-    if (trimmed.startsWith('#')) {
+    if (lineType != null) {
+      type = lineType;
+    } else if (trimmed.startsWith('#')) {
       type = LineType.comment;
     } else if (trimmed.startsWith('-')) {
       type = LineType.indexed;
-    } else {
+    } else if (trimmed.startsWith(RegExp(r'[a-zA-z0-9_\-]+:'))) {
       type = LineType.key;
+    } else {
+      type = LineType.unknown;
     }
     // we must assign a type before we check for indent
     // as _indent can thrown an exception and if the [type]
@@ -104,8 +109,9 @@ class LineImpl implements Line, Renderer {
 
   /// Creates a line that is ready to be inserted.
   /// It will not have a line number until it has been inserted.
-  factory LineImpl.forInsertion(Document document, String text) {
-    final line = LineImpl(document, text, -1);
+  factory LineImpl.forInsertion(Document document, String text,
+      [LineType? lineType]) {
+    final line = LineImpl(document, text, -1, lineType);
     return line;
   }
 

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:strings/strings.dart';
 
 import 'document.dart';
+import 'key_value.dart';
 import 'line_detached.dart';
+import 'line_type.dart';
 import 'section.dart';
 
 /// Used to hold a single line that can have a multi-line scalar
@@ -34,8 +36,47 @@ class MultiLine extends SectionImpl implements Section {
 
   // List<Line> get lines => [...comments.lines, line];
 
-  String get value => sectionHeading.value;
+  String get value {
+    if (missing) {
+      return '';
+    }
+    final sb = StringBuffer();
 
+    final first = lines.first.value;
+
+    /// Is it a yaml multi-line scalar string
+    final scalar = first.startsWith(RegExp(r'^\s*[|>][+-]?[1-9]?\s*'));
+
+    if (!scalar) {
+      /// If this is a scalar then the first line will have the
+      /// sclar indicator (| or >) which we don't output.
+      sb.write(lines.first.value);
+    } else {
+      for (final line in lines.skip(1)) {
+        if (line == lines.last) {
+          // no trailing newline on the last line.
+          // This means that for a single line description we
+          // don't have a trailing newline
+          sb.write(line.text.trim());
+        } else {
+          // we strip the leading indentation as that is part of the
+          // yaml structure not the string.
+          sb.writeln(line.text.trim());
+        }
+      }
+    }
+
+    return sb.toString();
+  }
+
+  /// Replace the existing string.
+  /// [value] may contain newlines in which case
+  /// we will write out a multi-line yaml scalar string.
+  /// ```
+  /// description: |
+  ///   first line
+  ///   second line
+  /// ```
   // ignore: use_setters_to_change_properties
   void set(String value) {
     /// we are not going to write out whitespace.
@@ -43,24 +84,41 @@ class MultiLine extends SectionImpl implements Section {
       value = '';
     }
 
+    // remove existing child lines as we are replacing them.
+    clearChildren();
+
     final valueLines = LineSplitter.split(value);
+    final detachedLines = <LineDetached>[];
 
-    final lines = <LineDetached>[];
     if (valueLines.length == 1) {
-      lines.add(LineDetached('$key: $value'));
+      /// single line scaler (string)
+      detachedLines.add(LineDetached('$key: $value'));
     } else {
-      // start a multi-line segment
-      lines.add(LineDetached('$key: |'));
+      // start a multi-line scaler (string)
+      detachedLines.add(LineDetached('$key: |'));
 
+      /// each of the subsequent lines are indented.
       for (final line in valueLines) {
-        lines.add(LineDetached('  $line'));
+        detachedLines.add(LineDetached('  $line'));
       }
     }
     if (missing) {
-      super.sectionHeading = document.append(lines[0]);
+      super.sectionHeading = document.append(detachedLines[0]);
       missing = false;
     } else {
-      super.sectionHeading.value = lines[0].text;
+      super.sectionHeading.value =
+          KeyValue.fromText(detachedLines[0].text).value;
+    }
+
+    /// If the string is multi-line then append
+    /// each additional line as a child.
+    for (final detached in detachedLines.skip(1)) {
+      append(detached.attach(document, LineType.multiline));
     }
   }
+
+  /// outputs the raw text of the line as it
+  /// would appear in the pubspec.yaml
+  @override
+  String toString() => value;
 }

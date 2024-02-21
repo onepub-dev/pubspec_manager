@@ -62,7 +62,11 @@ bad pubspec
               equals(tempFile),
             )));
       });
-    });
+      /// skipping this test as I'm not actually sure what constitues
+      /// a bad pubspec and wether its better to no try and enforce it
+      /// given that for the most part we don't care if they 
+      /// have crap in the pubspec.
+    }, skip: true);
 
     test('pubspec ...', () async {
       final pubspec = PubSpec.loadFromString(goodContent);

@@ -86,8 +86,13 @@ class SectionImpl implements Section {
 
   /// Remove the [line] from the list of existing children.
   void remove(Line line) {
-    _children.remove(line);
     document.removeAll([line]);
+    _children.remove(line);
+  }
+
+  void clearChildren() {
+    document.removeAll(_children);
+    _children.clear();
   }
 
   /// Append a child line after all existing child lines

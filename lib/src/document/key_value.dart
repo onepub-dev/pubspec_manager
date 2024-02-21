@@ -4,19 +4,28 @@ import 'line.dart';
 class KeyValue {
   KeyValue(this.key, this.value);
 
-  KeyValue.fromLine(Line line) {
+  factory KeyValue.fromLine(Line line) {
     var content = line.text;
     if (line.inlineComment != null) {
       content = content.substring(0, line.commentOffset);
     }
-    final delimiter = content.indexOf(':');
+
+    try {
+      return KeyValue.fromText(content);
+    } on PubSpecException catch (e) {
+      throw PubSpecException(line, e.message);
+    }
+  }
+
+  KeyValue.fromText(String text) {
+    final delimiter = text.indexOf(':');
 
     if (delimiter == -1) {
       throw PubSpecException(
-          line, 'Line contained invalid key format - missing colon(:)');
+          null, 'Line contained invalid key format - missing colon(:)');
     }
-    key = content.substring(0, delimiter).trim();
-    value = content.substring(delimiter + 1).trim();
+    key = text.substring(0, delimiter).trim();
+    value = text.substring(delimiter + 1).trim();
   }
 
   KeyValue copy({String? key, String? value}) =>
