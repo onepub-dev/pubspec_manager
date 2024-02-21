@@ -6,7 +6,7 @@ class IssueTracker extends SectionSingleLine {
     if (lineSection.missing) {
       return IssueTracker.missing(document);
     } else {
-      return IssueTracker._(lineSection.line);
+      return IssueTracker._(lineSection.sectionHeading);
     }
   }
 

@@ -49,7 +49,7 @@ class PubSpec {
   PubSpec._loadFromDocument(this.document) {
     name = Name._fromDocument(document);
     version = Version._fromDocument(document);
-    description = document.getMultiLineForKey('description');
+    description = Description._fromDocument(document);
     environment = Environment._fromDocument(document);
     homepage = Homepage._fromDocument(document);
     publishTo = PublishTo._fromDocument(document);
@@ -245,9 +245,9 @@ class PubSpec {
     /// that each section is written to disk.
     DocumentWriter(document)
       ..render(name)
-      ..render(version._section)
+      ..render(version)
       ..render(description)
-      ..render(environment._section)
+      ..render(environment)
       ..render(homepage)
       ..render(publishTo)
       ..render(repository)

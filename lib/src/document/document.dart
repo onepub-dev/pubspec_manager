@@ -8,7 +8,6 @@ import 'line.dart';
 import 'line_detached.dart';
 import 'line_section.dart';
 import 'line_type.dart';
-import 'multi_line.dart';
 import 'section.dart';
 
 class Document {
@@ -88,25 +87,6 @@ class Document {
           this, "Required key '$key' is missing.");
     }
     return line;
-  }
-
-  /// Finds the line for the given [key].
-  /// If the [key] isn't found then throws a [PubSpecException].
-  MultiLine getMultiLineForRequiredKey(String key) {
-    final line = getLineForKey(key);
-
-    return MultiLine.fromLine(line.line);
-  }
-
-  /// Finds the line for the given [key].
-  MultiLine getMultiLineForKey(String key) {
-    final line = getLineForKey(key);
-
-    if (line.missing) {
-      return MultiLine.missing(this, key);
-    }
-
-    return MultiLine.fromLine(line.line);
   }
 
   // Finds the next line that is of [LineType.key]

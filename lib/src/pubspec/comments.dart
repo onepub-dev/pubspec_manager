@@ -25,7 +25,7 @@ class Comments {
     final lines = document.lines;
 
     // search upwards for comments starting from the prior line
-    var lineNo = _section.line.lineNo - 2;
+    var lineNo = _section.sectionHeading.lineNo - 2;
 
     final toRegister = <LineImpl>[];
 
@@ -65,11 +65,11 @@ class Comments {
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
   Comments append(String comment) {
-    final document = _section.line.document;
+    final document = _section.sectionHeading.document;
     final commentLine = LineImpl.forInsertion(
-        document, '${spaces(_section.line.indent * 2)}# $comment');
+        document, '${spaces(_section.sectionHeading.indent * 2)}# $comment');
     _lines.add(commentLine);
-    document.insertBefore(commentLine, _section.line);
+    document.insertBefore(commentLine, _section.sectionHeading);
     return this;
   }
 
@@ -80,11 +80,11 @@ class Comments {
     final document = _section.document;
     if (index < 0) {
       throw OutOfBoundsException(
-          _section.line, 'Index must be >= 0 found $index}');
+          _section.sectionHeading, 'Index must be >= 0 found $index}');
     }
     if (index > _lines.length) {
-      throw OutOfBoundsException(
-          _section.line, 'Index must be < ${_lines.length} found $index}');
+      throw OutOfBoundsException(_section.sectionHeading,
+          'Index must be < ${_lines.length} found $index}');
     }
 
     final line = _lines.removeAt(index);

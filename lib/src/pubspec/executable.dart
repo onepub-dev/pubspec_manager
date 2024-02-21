@@ -51,10 +51,10 @@ class Executable extends SectionSingleLine {
   String get scriptPath => join('bin', '$script.dart');
 
   @override
-  LineImpl get line => _line;
+  LineImpl get sectionHeading => _line;
 
   @override
-  Document get document => line.document;
+  Document get document => sectionHeading.document;
 
   @override
   List<Line> get lines => [...comments.lines, _line];

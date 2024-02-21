@@ -3,39 +3,44 @@
 part of 'internal_parts.dart';
 
 /// Holds package version as declared in the pubspec.yaml
-class Version {
+class Version extends SectionImpl implements Section {
   ///
   /// extract a version for an attached line.
   ///
   factory Version._fromDocument(Document document) {
     final section = document.getLineForKey(_key);
 
-    return Version._fromLine(section.line);
+    return Version._fromLine(section.sectionHeading);
+  }
+
+  Version.missing(Document document)
+      : _missing = true,
+        super.missing(document, _key) {
+    sectionHeading = LineImpl.missing(document, LineType.key);
   }
 
   ///
   /// extract a version for an attached line.
   ///
-  Version._fromLine(LineImpl line) {
-    _missing = line.missing;
-    if (_missing) {
-      _section = SectionSingleLine.missing(line.document, _key);
-      _version = sm.Version.none;
+  factory Version._fromLine(LineImpl line) {
+    final missing = line.missing;
+    if (missing) {
+      return Version.missing(line.document);
     } else {
-      _section = SectionSingleLine.fromLine(line);
-      _version = parseVersion(line, line.value);
-      quoted = _isQuoted(line.value);
+      return Version.missing(line.document)
+        ..sectionHeading = line
+        .._version = parseVersion(line, line.value)
+        ..quoted = _isQuoted(line.value)
+        ..missing = false;
     }
   }
 
   factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
-    final detached = LineDetached('  $_key: ${versionBuilder._version}');
+    final detached = LineDetached('$_key: ${versionBuilder._version}');
     final line = pubspec.document.append(detached);
 
     return Version._fromLine(line);
   }
-
-  late final SectionImpl _section;
 
   /// There was a version key but no value
   bool get isEmpty => !_missing && _version.isEmpty;
@@ -56,7 +61,7 @@ class Version {
   // ignore: avoid_setters_without_getters
   void setSemVersion(sm.Version value) {
     _version = value;
-    _section.line.value = value.toString();
+    sectionHeading.value = value.toString();
   }
 
   String get asString {
@@ -78,13 +83,17 @@ class Version {
     }
     quoted = _isQuoted(version);
 
-    _section.line.value = _stripQuotes(version);
-    _section.missing = false;
+    if (missing) {
+      missing = false;
+      sectionHeading = document.append(LineDetached('$_key: $version'));
+    } else {
+      sectionHeading.value = _stripQuotes(version);
+    }
   }
 
   // void set(String version) => this.version = version;
 
-  bool _isQuoted(String version) =>
+  static bool _isQuoted(String version) =>
       version.contains("'") || version.contains('"');
 
   @override

@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:strings/strings.dart';
+
+import 'document.dart';
 import 'line_detached.dart';
 import 'section.dart';
 
@@ -16,21 +21,46 @@ import 'section.dart';
 /// depth of the parent.
 /// Scalars may include blank lines.
 class MultiLine extends SectionImpl implements Section {
-  MultiLine.fromLine(super.line) : super.fromLine();
+  MultiLine.fromLine(super.sectionHeading) : super.fromLine();
   MultiLine.missing(super.document, super.key) : super.missing();
+
+  factory MultiLine.fromDocument(Document document, String key) {
+    final line = document.getLineForKey(key);
+    if (line.missing) {
+      return MultiLine.missing(document, key);
+    }
+    return MultiLine.fromLine(line.sectionHeading);
+  }
 
   // List<Line> get lines => [...comments.lines, line];
 
-  String get value => line.value;
+  String get value => sectionHeading.value;
 
   // ignore: use_setters_to_change_properties
   void set(String value) {
+    /// we are not going to write out whitespace.
+    if (Strings.isBlank(value)) {
+      value = '';
+    }
+
+    final valueLines = LineSplitter.split(value);
+
+    final lines = <LineDetached>[];
+    if (valueLines.length == 1) {
+      lines.add(LineDetached('$key: $value'));
+    } else {
+      // start a multi-line segment
+      lines.add(LineDetached('$key: |'));
+
+      for (final line in valueLines) {
+        lines.add(LineDetached('  $line'));
+      }
+    }
     if (missing) {
-      final detached = LineDetached('$key: $value');
-      line = document.append(detached);
+      super.sectionHeading = document.append(lines[0]);
       missing = false;
     } else {
-      super.line.value = '$key: $value';
+      super.sectionHeading.value = lines[0].text;
     }
   }
 }

@@ -7,15 +7,15 @@ import 'section.dart';
 /// A section which is a single line with no children
 /// but which can have comments.
 class SectionSingleLine extends SectionImpl implements Section {
-  SectionSingleLine.fromLine(super._line) : super.fromLine() {
-    key = line.key;
+  SectionSingleLine.fromLine(super.sectionHeading) : super.fromLine() {
+    key = sectionHeading.key;
   }
 
   SectionSingleLine.attach(
       PubSpec pubspec, Line lineBefore, this.key, String value)
       : super.fromLine(
             LineImpl.forInsertion(pubspec.document, '$key: $value')) {
-    document.insertAfter(line, lineBefore);
+    document.insertAfter(sectionHeading, lineBefore);
   }
 
   SectionSingleLine.append(Document document, this.key, String value)
@@ -29,15 +29,15 @@ class SectionSingleLine extends SectionImpl implements Section {
   @override
   late final String key;
 
-  String get value => line.value;
+  String get value => sectionHeading.value;
 
   set value(String value) {
     if (missing) {
       final detached = LineDetached('$key: $value');
-      line = document.append(detached);
+      sectionHeading = document.append(detached);
       missing = false;
     } else {
-      line.value = value;
+      sectionHeading.value = value;
     }
   }
 }

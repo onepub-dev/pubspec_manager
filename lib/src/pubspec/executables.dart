@@ -64,7 +64,7 @@ class Executables with IterableMixin<Executable> {
   /// Add [executable] to the PubSpec
   /// after the last dependency.
   Executables append(ExecutableBuilder executable) {
-    var line = _section.line;
+    var line = _section.sectionHeading;
 
     if (_section.missing) {
       // create the section.
@@ -72,7 +72,7 @@ class Executables with IterableMixin<Executable> {
       _section = SectionImpl.fromLine(line as LineImpl);
     } else {
       if (_executables.isNotEmpty) {
-        line = _executables.last.line;
+        line = _executables.last.sectionHeading;
       }
     }
     final attached = executable._attach(_pubspec, line);

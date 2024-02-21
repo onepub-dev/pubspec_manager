@@ -7,7 +7,7 @@ class Homepage extends SectionSingleLine {
     if (lineSection.missing) {
       return Homepage.missing(document);
     } else {
-      return Homepage._(lineSection.line);
+      return Homepage._(lineSection.sectionHeading);
     }
   }
 

@@ -6,7 +6,7 @@ class Documentation extends SectionSingleLine {
     if (lineSection.missing) {
       return Documentation.missing(document);
     } else {
-      return Documentation._(lineSection.line);
+      return Documentation._(lineSection.sectionHeading);
     }
   }
 

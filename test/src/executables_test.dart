@@ -19,7 +19,7 @@ void main() {
       final pubspec = PubSpec.loadFromString(_testPubspec);
       pubspec.executables.append(ExecutableBuilder(name: 'full'));
       expect(pubspec.executables['full'], isNotNull);
-      expect(pubspec.executables['full']!.line.text, '  full:');
+      expect(pubspec.executables['full']!.sectionHeading.text, '  full:');
 
       expect(pubspec.executables['dcli']!.scriptPath,
           equals(join('bin', 'dcli.dart')));

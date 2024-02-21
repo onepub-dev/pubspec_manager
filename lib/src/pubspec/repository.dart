@@ -7,7 +7,7 @@ class Repository extends SectionSingleLine {
     if (lineSection.missing) {
       return Repository.missing(document);
     } else {
-      return Repository._(lineSection.line);
+      return Repository._(lineSection.sectionHeading);
     }
   }
 

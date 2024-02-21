@@ -77,7 +77,7 @@ class Platforms with IterableMixin<Platform> {
   /// Add [platformEnum] to the PubSpec
   /// after the last dependency.
   Platforms append(PlatformEnum platformEnum) {
-    var line = _section.line;
+    var line = _section.sectionHeading;
 
     if (_section.missing) {
       // create the section.
@@ -85,7 +85,7 @@ class Platforms with IterableMixin<Platform> {
       _section = SectionImpl.fromLine(line as LineImpl);
     } else {
       if (_platforms.isNotEmpty) {
-        line = _platforms.last.line;
+        line = _platforms.last.sectionHeading;
       }
     }
     final attached = Platform._attach(_pubspec, line, platformEnum);

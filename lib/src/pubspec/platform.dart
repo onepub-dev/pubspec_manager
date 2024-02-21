@@ -28,10 +28,10 @@ class Platform extends SectionSingleLine {
   }
 
   @override
-  LineImpl get line => _line;
+  LineImpl get sectionHeading => _line;
 
   @override
-  Document get document => line.document;
+  Document get document => sectionHeading.document;
 
   @override
   List<Line> get lines => [...comments.lines, _line];

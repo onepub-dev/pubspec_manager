@@ -25,7 +25,7 @@ void main() {
     expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
-    expect(testDep!.section.line.lineNo, equals(13));
+    expect(testDep!.section.sectionHeading.lineNo, equals(13));
     expect(testDep, isA<DependencyVersioned>());
     expect((testDep as DependencyVersioned).version, equals(version));
 
@@ -34,7 +34,7 @@ void main() {
     expect(dependencies.exists('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
-    expect(dcliCore!.section.line.lineNo, equals(10));
+    expect(dcliCore!.section.sectionHeading.lineNo, equals(10));
     expect(dcliCore, isA<DependencyVersioned>());
     expect((dcliCore as DependencyVersioned).version, equals(version));
     expect(pubspec.document.lines.length, equals(15));

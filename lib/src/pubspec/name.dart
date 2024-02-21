@@ -7,7 +7,7 @@ class Name extends SectionSingleLine {
     if (lineSection.missing) {
       return Name.missing(document);
     } else {
-      return Name._(lineSection.line);
+      return Name._(lineSection.sectionHeading);
     }
   }
 

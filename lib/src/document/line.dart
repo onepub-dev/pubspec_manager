@@ -40,8 +40,8 @@ class LineImpl implements Line, Renderer {
   /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
-  LineImpl(this.document, this.text, this.lineNo) : missing = false {
-    final trimmed = text.trimLeft();
+  LineImpl(this.document, this._text, this.lineNo) : missing = false {
+    final trimmed = _text.trimLeft();
 
     // no further processing required for blank lines.
     if (trimmed.isEmpty) {
@@ -62,7 +62,7 @@ class LineImpl implements Line, Renderer {
     // as _indent can thrown an exception and if the [type]
     // hasn't been initialised then a secondary exception
     // will be thrown.
-    indent = _indent(text);
+    indent = _indent(_text);
 
     // a comment can't have an inline comment
     // so no further process of the line is required.
@@ -74,11 +74,11 @@ class LineImpl implements Line, Renderer {
     // name: fred # an inline comment
     var i = 0;
     commentOffset = 0;
-    for (; i < text.length; i++) {
-      final c = text.substring(i, i + 1);
+    for (; i < _text.length; i++) {
+      final c = _text.substring(i, i + 1);
       if (c == '#') {
-        final whitespace = _preserverWhiteSpace(text, i);
-        inlineComment = whitespace + text.substring(i);
+        final whitespace = _preserverWhiteSpace(_text, i);
+        inlineComment = whitespace + _text.substring(i);
         commentOffset = i;
         break;
       }
@@ -87,7 +87,7 @@ class LineImpl implements Line, Renderer {
 
   LineImpl.copy(LineImpl line)
       : document = line.document,
-        text = line.text,
+        _text = line._text,
         lineNo = line.lineNo,
         indent = line.indent,
         type = line.type,
@@ -98,7 +98,7 @@ class LineImpl implements Line, Renderer {
 
   LineImpl.missing(this.document, this.type)
       : lineNo = -1,
-        text = '',
+        _text = '',
         indent = 0,
         missing = true;
 
@@ -113,8 +113,8 @@ class LineImpl implements Line, Renderer {
   late final Document document;
 
   /// The text content of the line.
-  @override
-  String text;
+  String _text;
+
   @override
   int lineNo;
   @override
@@ -124,6 +124,9 @@ class LineImpl implements Line, Renderer {
 
   @override
   bool missing;
+
+  @override
+  String get text => _text;
 
   // If the [type] is [LineType.key] then this will hold the
   // key/value pair.
@@ -184,7 +187,7 @@ class LineImpl implements Line, Renderer {
     } else {
       _keyValue = keyValue.copy(value: value);
     }
-    text = _keyValue.toString();
+    _text = _keyValue.toString();
   }
 
   /// a short hand way of getting the key component
@@ -196,7 +199,7 @@ class LineImpl implements Line, Renderer {
 
   set key(String key) {
     _keyValue = keyValue.copy(key: key);
-    text = _keyValue.toString();
+    _text = _keyValue.toString();
   }
 
   /// Find the child of the current line that has the given [key]
@@ -264,7 +267,7 @@ class LineImpl implements Line, Renderer {
       case LineType.indexed:
       case LineType.multiline:
       case LineType.unknown:
-        return text;
+        return _text;
     }
   }
 
@@ -279,7 +282,7 @@ class LineImpl implements Line, Renderer {
   }
 
   @override
-  String toString() => 'Line No: $lineNo Type: ${type.name} $text';
+  String toString() => 'Line No: $lineNo Type: ${type.name} $_text';
 
   /// Returns a [indent] * 2 spaces
   String get expand => spaces(indent * 2);

@@ -88,9 +88,11 @@ class VersionBuilder {
   // }
 
   Version _append(PubSpec pubspec) {
-    final attached = Version._append(pubspec, this);
-
-    return attached;
+    if (missing) {
+      return Version.missing(pubspec.document);
+    } else {
+      return Version._append(pubspec, this);
+    }
   }
 
   Version attach(PubSpec pubspec) => _append(pubspec);

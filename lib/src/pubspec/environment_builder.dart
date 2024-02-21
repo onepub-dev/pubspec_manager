@@ -11,16 +11,23 @@ class EnvironmentBuilder {
   /// ```
   EnvironmentBuilder({String? sdk, String? flutter})
       : _sdk = sdk,
-        _flutter = flutter;
+        _flutter = flutter,
+        missing = false;
 
   // Used to indicate that an environment wasn't specified
   EnvironmentBuilder.missing()
       : _sdk = null,
-        _flutter = null;
+        _flutter = null,
+        missing = true;
 
-  Environment _attach(PubSpec pubspec, Line lineBefore) =>
-      Environment._insertAfter(pubspec, lineBefore, this);
+  Environment _attach(PubSpec pubspec, Line lineBefore) {
+    if (missing) {
+      return Environment.missing(pubspec.document);
+    }
+    return Environment._insertAfter(pubspec, lineBefore, this);
+  }
 
   final String? _sdk;
   final String? _flutter;
+  final bool missing;
 }

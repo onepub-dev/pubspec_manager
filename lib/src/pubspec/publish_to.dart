@@ -7,7 +7,7 @@ class PublishTo extends SectionSingleLine {
     if (lineSection.missing) {
       return PublishTo.missing(document);
     } else {
-      return PublishTo._(lineSection.line);
+      return PublishTo._(lineSection.sectionHeading);
     }
   }
 
