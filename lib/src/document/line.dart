@@ -1,6 +1,6 @@
 import 'package:strings/strings.dart';
 
-import '../internal_parts.dart';
+import '../pubspec/internal_parts.dart';
 import 'document.dart';
 import 'key_value.dart';
 import 'line_type.dart';

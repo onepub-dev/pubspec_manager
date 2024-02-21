@@ -1,4 +1,4 @@
-import '../internal_parts.dart';
+import '../pubspec/internal_parts.dart';
 import 'line.dart';
 
 class KeyValue {

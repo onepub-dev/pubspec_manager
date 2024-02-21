@@ -8,15 +8,15 @@ import 'package:path/path.dart';
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:strings/strings.dart';
 
-import 'document/document.dart';
-import 'document/document_writer.dart';
-import 'document/line.dart';
-import 'document/line_detached.dart';
-import 'document/line_section.dart';
-import 'document/line_type.dart';
-import 'document/multi_line.dart';
-import 'document/section.dart';
-import 'document/section_single_line.dart';
+import '../document/document.dart';
+import '../document/document_writer.dart';
+import '../document/line.dart';
+import '../document/line_detached.dart';
+import '../document/line_section.dart';
+import '../document/line_type.dart';
+import '../document/multi_line.dart';
+import '../document/section.dart';
+import '../document/section_single_line.dart';
 import 'iterator_impl.dart';
 
 part 'comments.dart';

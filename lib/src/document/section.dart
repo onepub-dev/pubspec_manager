@@ -1,4 +1,4 @@
-import '../internal_parts.dart';
+import '../pubspec/internal_parts.dart';
 import 'document.dart';
 import 'line.dart';
 import 'line_type.dart';

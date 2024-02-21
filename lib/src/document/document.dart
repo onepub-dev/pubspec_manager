@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:strings/strings.dart';
 
-import '../internal_parts.dart';
+import '../pubspec/internal_parts.dart';
 import 'key_value.dart';
 import 'line.dart';
 import 'line_detached.dart';
