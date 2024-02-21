@@ -19,9 +19,8 @@ class PubSpec {
     this.name = Name._fromString(document, name);
     this.version = VersionBuilder.parse(version)._append(this);
     this.description = description == null
-        ? MultiLine.missing(document, 'description')
-        : MultiLine.fromLine(
-            document.append(LineDetached('description: $description')));
+        ? Description.missing(document)
+        : Description.fromString(document, description);
 
     this.environment = environment._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
@@ -127,7 +126,7 @@ class PubSpec {
 
   late Name name;
   late Version version;
-  late MultiLine description;
+  late Description description;
   late Environment environment;
 
   late final Homepage homepage;

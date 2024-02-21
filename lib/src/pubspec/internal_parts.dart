@@ -33,6 +33,7 @@ part 'dependency_pub_hosted.dart';
 part 'dependency_pub_hosted_builder.dart';
 part 'dependency_sdk.dart';
 part 'dependency_sdk_builder.dart';
+part 'description.dart';
 part 'documentation.dart';
 part 'documentation_builder.dart';
 part 'environment.dart';
