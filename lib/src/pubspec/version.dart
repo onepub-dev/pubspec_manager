@@ -69,7 +69,6 @@ class Version extends SectionImpl implements Section {
       return "'$_version'";
     } else {
       return _version.toString();
-      ;
     }
   }
 

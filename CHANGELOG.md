@@ -1,3 +1,14 @@
+# 1.0.0-alpha.17
+- changed publishTo.set to value - not certain this is consistent. executables.append no directly takes a name rather than requiring a builder.
+- renamed Platform to PlatformSupport to avoid a conflict with the dart core Platform class.
+- implemented value and set for version.
+- added additional examples to the readme.
+- fixed the processing of multi-line strings - essentially the description field.
+- made version and environment sections and dealt with the fall out. renamed section.line to section.sectionHeading to make its use more obvious.
+- added specific description class
+- added update example to README.md
+- added an example on how to update the version no.
+
 # 1.0.0-alpha.16
 - Fixed a bug in the iterator for dependencies, exectuables and platforms.
 
