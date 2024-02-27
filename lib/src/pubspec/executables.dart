@@ -8,24 +8,17 @@ part of 'internal_parts.dart';
 /// pubspec.executables.append(ExecutableBuilder(name: 'test'));
 /// pubspec.save();
 /// ```
-class Executables with IterableMixin<Executable> {
-  Executables._missing(this._pubspec)
-      : _section = SectionImpl.missing(_pubspec.document, key);
+class Executables extends SectionImpl
+    with IterableMixin<Executable>
+    implements Section {
+  Executables._missing(PubSpec pubspec)
+      : _pubspec = pubspec,
+        super.missing(pubspec.document, keyName);
 
-  Executables._fromLine(this._pubspec, LineImpl line)
-      : _section = SectionImpl.fromLine(line) {
-    name = line.key;
-  }
+  Executables._fromLine(PubSpec pubspec, super.line)
+      : _pubspec = pubspec,
+        super.fromLine();
 
-  static const String key = 'executables';
-
-  Section _section;
-
-  /// The name of the dependency section such as
-  /// dev_dpendencies
-  late final String name;
-
-  /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
 
   final List<Executable> _executables = <Executable>[];
@@ -61,26 +54,35 @@ class Executables with IterableMixin<Executable> {
     return null;
   }
 
-  /// Add [executable] to the PubSpec
-  /// after the last dependency.
-  Executables append(ExecutableBuilder executable) {
-    var line = _section.sectionHeading;
+  /// Add an executable to the PubSpec
+  /// after the last executable or at the end of the file.
+  Executables append({required String name, String? script}) {
+    _ensure();
+    final executable = ExecutableBuilder(name: name, script: script);
+    var lineBefore = headerLine;
 
-    if (_section.missing) {
+    if (missing) {
       // create the section.
-      line = _section.document.append(LineDetached('$key:'));
-      _section = SectionImpl.fromLine(line as LineImpl);
+      lineBefore = document.append(LineDetached('$key:'));
     } else {
       if (_executables.isNotEmpty) {
-        line = _executables.last.sectionHeading;
+        lineBefore = _executables.last.headerLine;
       }
     }
-    final attached = executable._attach(_pubspec, line);
+    final attached = executable._attach(_pubspec, lineBefore);
 
     _executables.add(attached);
 
     // ignore: avoid_returning_this
     return this;
+  }
+
+  /// Ensure that the executable section has been created
+  /// by creating it if it doesn't exist.
+  void _ensure() {
+    if (missing) {
+      headerLine = document.append(LineDetached('$key:'));
+    }
   }
 
   void _appendAttached(Executable attached) {
@@ -95,7 +97,7 @@ class Executables with IterableMixin<Executable> {
 
     if (executable == null) {
       throw ExecutableNotFound(
-          _pubspec.document, '$name not found in the ${this.name} section');
+          _pubspec.document, '$name not found in the $name section');
     }
 
     _executables.remove(executable);
@@ -109,4 +111,6 @@ class Executables with IterableMixin<Executable> {
 
   @override
   Iterator<Executable> get iterator => IteratorImpl(_executables);
+
+  static const String keyName = 'executables';
 }
