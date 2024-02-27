@@ -13,7 +13,8 @@ class Executable extends SectionSingleLine {
       : _name = executable.name,
         _script = executable.script,
         _line = LineImpl.forInsertion(pubspec.document, _buildLine(executable)),
-        super.attach(pubspec, lineBefore, executable.name, executable.script);
+        super.attach(
+            pubspec, lineBefore, 1, executable.name, executable.script);
 
   String _name;
   String _script;
@@ -49,12 +50,6 @@ class Executable extends SectionSingleLine {
   /// scriptPath => bin/main.dart
   ///
   String get scriptPath => join('bin', '$script.dart');
-
-  @override
-  LineImpl get sectionHeading => _line;
-
-  @override
-  Document get document => sectionHeading.document;
 
   @override
   List<Line> get lines => [...comments.lines, _line];
