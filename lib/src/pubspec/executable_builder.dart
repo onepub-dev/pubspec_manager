@@ -4,7 +4,8 @@ part of 'internal_parts.dart';
 /// executable:
 ///   dcli: dcli_tool
 class ExecutableBuilder {
-  ExecutableBuilder({required this.name, this.script = ''});
+  ExecutableBuilder({required this.name, String? script})
+      : script = script ?? '';
 
   ExecutableBuilder.missing()
       : name = '',
