@@ -1,16 +1,18 @@
 part of 'internal_parts.dart';
 
-/// An Platform script that is attached to the [PubSpec].
-class Platform extends SectionSingleLine {
+/// A platform that the package supports.
+class PlatformSupport extends SectionSingleLine {
   /// re-hydrate an Platform from a line.
-  Platform._fromLine(this._line)
+  PlatformSupport._fromLine(this._line)
       : _platformEnum = PlatformEnum.values.byName(_line.key),
         super.fromLine(_line);
 
-  Platform._attach(PubSpec pubspec, Line lineBefore, PlatformEnum platform)
+  PlatformSupport._attach(
+      PubSpec pubspec, Line lineBefore, PlatformEnum platform)
       : _platformEnum = platform,
-        _line = LineImpl.forInsertion(pubspec.document, _buildLine(platform)),
-        super.attach(pubspec, lineBefore, platform.name, '');
+        _line = LineImpl.forInsertion(
+            pubspec.document, LineImpl.buildLine(1, platform.name, '')),
+        super.attach(pubspec, lineBefore, 1, platform.name, '');
 
   /// also the key in the pubspec.
   PlatformEnum _platformEnum;
@@ -28,10 +30,10 @@ class Platform extends SectionSingleLine {
   }
 
   @override
-  LineImpl get sectionHeading => _line;
+  LineImpl get headerLine => _line;
 
   @override
-  Document get document => sectionHeading.document;
+  Document get document => headerLine.document;
 
   @override
   List<Line> get lines => [...comments.lines, _line];
@@ -39,6 +41,4 @@ class Platform extends SectionSingleLine {
   /// The last line number used by this  section
   @override
   int get lastLineNo => lines.last.lineNo;
-
-  static String _buildLine(PlatformEnum platform) => '  ${platform.name}:';
 }

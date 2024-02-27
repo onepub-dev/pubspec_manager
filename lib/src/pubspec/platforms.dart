@@ -14,7 +14,7 @@ enum PlatformEnum {
 /// Used to hold a list of [DependencyBuilder]s from
 /// a single dependency section in the pubspec.yaml
 /// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Platforms with IterableMixin<Platform> {
+class Platforms with IterableMixin<PlatformSupport> {
   Platforms._missing(this._pubspec)
       : _section = SectionImpl.missing(_pubspec.document, key);
 
@@ -34,10 +34,10 @@ class Platforms with IterableMixin<Platform> {
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
 
-  final List<Platform> _platforms = <Platform>[];
+  final List<PlatformSupport> _platforms = <PlatformSupport>[];
 
   /// List of the dependencies
-  List<Platform> get list => List.unmodifiable(_platforms);
+  List<PlatformSupport> get list => List.unmodifiable(_platforms);
 
   /// the number of dependencies in this section
   @override
@@ -55,10 +55,10 @@ class Platforms with IterableMixin<Platform> {
   //   return lines;
   // }
 
-  /// returns the [Platform] with the given [platformEnum]
+  /// returns the [PlatformSupport] with the given [platformEnum]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
-  Platform? operator [](PlatformEnum platformEnum) {
+  PlatformSupport? operator [](PlatformEnum platformEnum) {
     for (final platform in _platforms) {
       if (platform.platformEnum == platformEnum) {
         return platform;
@@ -77,7 +77,7 @@ class Platforms with IterableMixin<Platform> {
   /// Add [platformEnum] to the PubSpec
   /// after the last dependency.
   Platforms append(PlatformEnum platformEnum) {
-    var line = _section.sectionHeading;
+    var line = _section.headerLine;
 
     if (_section.missing) {
       // create the section.
@@ -85,17 +85,17 @@ class Platforms with IterableMixin<Platform> {
       _section = SectionImpl.fromLine(line as LineImpl);
     } else {
       if (_platforms.isNotEmpty) {
-        line = _platforms.last.sectionHeading;
+        line = _platforms.last.headerLine;
       }
     }
-    final attached = Platform._attach(_pubspec, line, platformEnum);
+    final attached = PlatformSupport._attach(_pubspec, line, platformEnum);
 
     _platforms.add(attached);
 
     return this;
   }
 
-  void _appendAttached(Platform attached) {
+  void _appendAttached(PlatformSupport attached) {
     _platforms.add(attached);
   }
 
@@ -120,5 +120,5 @@ class Platforms with IterableMixin<Platform> {
   bool exists(PlatformEnum platformEnum) => this[platformEnum] != null;
 
   @override
-  Iterator<Platform> get iterator => IteratorImpl(_platforms);
+  Iterator<PlatformSupport> get iterator => IteratorImpl(_platforms);
 }
