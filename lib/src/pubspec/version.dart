@@ -8,15 +8,15 @@ class Version extends SectionImpl implements Section {
   /// extract a version for an attached line.
   ///
   factory Version._fromDocument(Document document) {
-    final section = document.getLineForKey(_key);
+    final section = document.getLineForKey(keyName);
 
-    return Version._fromLine(section.sectionHeading);
+    return Version._fromLine(section.headerLine);
   }
 
   Version.missing(Document document)
       : _missing = true,
-        super.missing(document, _key) {
-    sectionHeading = LineImpl.missing(document, LineType.key);
+        super.missing(document, keyName) {
+    headerLine = LineImpl.missing(document, LineType.key);
   }
 
   ///
@@ -28,7 +28,7 @@ class Version extends SectionImpl implements Section {
       return Version.missing(line.document);
     } else {
       return Version.missing(line.document)
-        ..sectionHeading = line
+        ..headerLine = line
         .._version = parseVersion(line, line.value)
         ..quoted = _isQuoted(line.value)
         ..missing = false;
@@ -36,7 +36,7 @@ class Version extends SectionImpl implements Section {
   }
 
   factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
-    final detached = LineDetached('$_key: ${versionBuilder._version}');
+    final detached = LineDetached('$keyName: ${versionBuilder._version}');
     final line = pubspec.document.append(detached);
 
     return Version._fromLine(line);
@@ -61,23 +61,25 @@ class Version extends SectionImpl implements Section {
   // ignore: avoid_setters_without_getters
   void setSemVersion(sm.Version value) {
     _version = value;
-    sectionHeading.value = value.toString();
+    headerLine.value = value.toString();
   }
 
-  String get asString {
+  String get value {
     if (quoted) {
-      return "'${toString()}'";
+      return "'$_version'";
     } else {
-      return toString();
+      return _version.toString();
+      ;
     }
   }
 
   @override
-  String toString() => _version.toString();
+  String toString() => value;
 
-  void set(String version) {
+  Version set(String version) {
+    /// check for a valid version.
     try {
-      sm.VersionConstraint.parse(version);
+      _version = sm.Version.parse(version);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
@@ -85,10 +87,13 @@ class Version extends SectionImpl implements Section {
 
     if (missing) {
       missing = false;
-      sectionHeading = document.append(LineDetached('$_key: $version'));
+      headerLine = document.append(LineDetached('$keyName: $version'));
     } else {
-      sectionHeading.value = _stripQuotes(version);
+      headerLine.value = _stripQuotes(version);
     }
+
+    // ignore: avoid_returning_this
+    return this;
   }
 
   // void set(String version) => this.version = version;
@@ -141,5 +146,5 @@ class Version extends SectionImpl implements Section {
     }
   }
 
-  static const String _key = 'version';
+  static const String keyName = 'version';
 }
