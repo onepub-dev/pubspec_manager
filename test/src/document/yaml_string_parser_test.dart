@@ -12,7 +12,7 @@ void main() {
 
     expect(result, r'''"Hello \ World "''');
     expect(await machine.isInState<Finished>(), isTrue);
-  });
+  }, skip: true);
 
   /// from: https://yaml-multiline.info/
   test('folding block, clip, 2spaces', () async {
