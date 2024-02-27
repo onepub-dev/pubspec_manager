@@ -1,3 +1,5 @@
+part of '../pubspec/internal_parts.dart';
+
 /// Each line read from the pubspec.yaml is assigned a
 /// [LineType]
 enum LineType {

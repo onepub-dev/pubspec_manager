@@ -1,5 +1,4 @@
 import '../pubspec/internal_parts.dart';
-import 'line.dart';
 
 class KeyValue {
   KeyValue(this.key, this.value);

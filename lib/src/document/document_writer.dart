@@ -1,9 +1,4 @@
-import 'dart:io' as io;
-
-import '../../pubspec_manager.dart';
-import 'document.dart';
-import 'line.dart';
-import 'section.dart';
+part of '../pubspec/internal_parts.dart';
 
 abstract class Writer {
   void init();

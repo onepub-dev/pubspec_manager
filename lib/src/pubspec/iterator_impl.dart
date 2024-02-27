@@ -1,3 +1,5 @@
+part of '../pubspec/internal_parts.dart';
+
 class IteratorImpl<T> implements Iterator<T> {
   IteratorImpl(this._items);
 

@@ -1,24 +1,25 @@
 library internal;
 
 import 'dart:collection';
-import 'dart:io';
+import 'dart:convert';
+import 'dart:io' as io;
 
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:strings/strings.dart';
 
-import '../document/document.dart';
-import '../document/document_writer.dart';
-import '../document/line.dart';
-import '../document/line_detached.dart';
-import '../document/line_section.dart';
-import '../document/line_type.dart';
-import '../document/multi_line.dart';
-import '../document/section.dart';
-import '../document/section_single_line.dart';
-import 'iterator_impl.dart';
+import '../document/key_value.dart';
 
+part '../document/document.dart';
+part '../document/document_writer.dart';
+part '../document/line.dart';
+part '../document/line_detached.dart';
+part '../document/line_section.dart';
+part '../document/line_type.dart';
+part '../document/multi_line.dart';
+part '../document/section.dart';
+part '../document/section_single_line.dart';
 part 'comments.dart';
 part 'dependencies.dart';
 part 'dependency.dart';
@@ -45,8 +46,9 @@ part 'executables.dart';
 part 'homepage.dart';
 part 'issue_tracker.dart';
 part 'issue_tracker_builder.dart';
+part 'iterator_impl.dart';
 part 'name.dart';
-part 'platform.dart';
+part 'platform_support.dart';
 part 'platforms.dart';
 part 'pub_spec.dart';
 part 'publish_to.dart';

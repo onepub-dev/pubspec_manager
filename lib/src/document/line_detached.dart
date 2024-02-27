@@ -1,6 +1,4 @@
-import 'document.dart';
-import 'line.dart';
-import 'line_type.dart';
+part of '../pubspec/internal_parts.dart';
 
 class LineDetached {
   LineDetached(this.text);

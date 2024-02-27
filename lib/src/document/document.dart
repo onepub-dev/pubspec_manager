@@ -1,20 +1,10 @@
-import 'dart:io';
-
-import 'package:strings/strings.dart';
-
-import '../pubspec/internal_parts.dart';
-import 'key_value.dart';
-import 'line.dart';
-import 'line_detached.dart';
-import 'line_section.dart';
-import 'line_type.dart';
-import 'section.dart';
+part of '../pubspec/internal_parts.dart';
 
 class Document {
   /// Load the pubspec.yaml from the file located at [pathTo]
   /// into a an ordered list of [Line]s.
   factory Document.loadFrom(String pathTo) {
-    final lines = File(pathTo).readAsLinesSync();
+    final lines = io.File(pathTo).readAsLinesSync();
     final doc = Document.loadFromLines(lines)..pathTo = pathTo;
     return doc;
   }

@@ -1,9 +1,4 @@
-import 'package:strings/strings.dart';
-
-import '../pubspec/internal_parts.dart';
-import 'document.dart';
-import 'key_value.dart';
-import 'line_type.dart';
+part of '../pubspec/internal_parts.dart';
 
 // ignore: one_member_abstracts
 abstract class Renderer {
@@ -263,9 +258,9 @@ class LineImpl implements Line, Renderer {
     switch (type) {
       case LineType.key:
         if (value.isBlank()) {
-          rendered = '$expand$key:';
+          rendered = '$_expand$key:';
         } else {
-          rendered = '$expand$key: $value';
+          rendered = '$_expand$key: $value';
         }
         return '$rendered${renderInlineComment(rendered.length)}';
       case LineType.blank:
@@ -291,11 +286,24 @@ class LineImpl implements Line, Renderer {
   String toString() => 'Line No: $lineNo Type: ${type.name} $_text';
 
   /// Returns a [indent] * 2 spaces
-  String get expand => spaces(indent * 2);
+  String get _expand => expandi(indent);
+
+  /// returns [indent] * 2 spaces.
+  static String expandi(int indent) => _spaces(indent * 2);
+
+  static String _spaces(int count) => ' ' * count;
 
   /// returns the number of spaces to correctly indent
   /// a child of this line.
-  String get childIndent => spaces((indent + 1) * 2);
+  String get childIndent => _spaces((indent + 1) * 2);
+
+  static String buildLine(int indent, String key, String? value) {
+    final sb = StringBuffer('''${expandi(indent)}$key:''');
+    if (Strings.isNotBlank(value)) {
+      sb.write(' $value');
+    }
+    return sb.toString();
+  }
 
   /// If there is whitespace before an inline comment
   /// we want to preserve that whitespace so that
@@ -319,5 +327,3 @@ class LineImpl implements Line, Renderer {
     return whitespace.toString();
   }
 }
-
-String spaces(int count) => ' ' * count;

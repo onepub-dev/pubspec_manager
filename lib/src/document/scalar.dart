@@ -1,5 +1,4 @@
-import 'document.dart';
-import 'line.dart';
+import '../pubspec/internal_parts.dart';
 import 'yaml/yaml_string_parser.dart';
 
 class Scalar {
