@@ -3,11 +3,11 @@ part of 'internal_parts.dart';
 class Homepage extends SectionSingleLine {
   /// build homepage from an imported document line
   factory Homepage._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(Homepage._key);
+    final lineSection = document.getLineForKey(Homepage.keyName);
     if (lineSection.missing) {
       return Homepage.missing(document);
     } else {
-      return Homepage._(lineSection.sectionHeading);
+      return Homepage._(lineSection.headerLine);
     }
   }
 
@@ -17,7 +17,7 @@ class Homepage extends SectionSingleLine {
 
   Homepage.missing(Document document)
       : _url = '',
-        super.missing(document, _key);
+        super.missing(document, 0, keyName);
 
   String _url;
 
@@ -30,5 +30,5 @@ class Homepage extends SectionSingleLine {
 
   String get url => _url;
 
-  static const String _key = 'homepage';
+  static const String keyName = 'homepage';
 }

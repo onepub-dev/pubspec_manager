@@ -64,7 +64,7 @@ class Dependencies with IterableMixin<Dependency> {
           _section.document.append(LineDetached('$name:')));
     }
 
-    Line lineBefore = _section.sectionHeading;
+    Line lineBefore = _section.headerLine;
     if (_dependencies.isNotEmpty) {
       lineBefore = _dependencies.last.section.lines.last;
     }
@@ -100,7 +100,7 @@ class Dependencies with IterableMixin<Dependency> {
     _dependencies.remove(dependency);
     final lines = dependency.section.lines;
     for (final line in lines) {
-      _section.remove(line);
+      _section._removeChild(line);
     }
   }
 

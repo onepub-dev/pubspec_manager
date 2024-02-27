@@ -2,11 +2,11 @@ part of 'internal_parts.dart';
 
 class IssueTracker extends SectionSingleLine {
   factory IssueTracker._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(IssueTracker._key);
+    final lineSection = document.getLineForKey(IssueTracker.keyName);
     if (lineSection.missing) {
       return IssueTracker.missing(document);
     } else {
-      return IssueTracker._(lineSection.sectionHeading);
+      return IssueTracker._(lineSection.headerLine);
     }
   }
 
@@ -16,7 +16,7 @@ class IssueTracker extends SectionSingleLine {
 
   IssueTracker.missing(Document document)
       : issueTracker = IssueTrackerBuilder.missing(),
-        super.missing(document, _key);
+        super.missing(document, 0, keyName);
 
   final IssueTrackerBuilder issueTracker;
 
@@ -29,5 +29,5 @@ class IssueTracker extends SectionSingleLine {
 
   String get url => issueTracker.url;
 
-  static const String _key = 'issue_tracker';
+  static const String keyName = 'issue_tracker';
 }

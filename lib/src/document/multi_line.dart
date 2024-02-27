@@ -1,12 +1,4 @@
-import 'dart:convert';
-
-import 'package:strings/strings.dart';
-
-import 'document.dart';
-import 'key_value.dart';
-import 'line_detached.dart';
-import 'line_type.dart';
-import 'section.dart';
+part of '../pubspec/internal_parts.dart';
 
 /// Used to hold a single line that can have a multi-line scalar
 /// value. Currently only supported for the desription field.
@@ -31,7 +23,7 @@ class MultiLine extends SectionImpl implements Section {
     if (line.missing) {
       return MultiLine.missing(document, key);
     }
-    return MultiLine.fromLine(line.sectionHeading);
+    return MultiLine.fromLine(line.headerLine);
   }
 
   // List<Line> get lines => [...comments.lines, line];
@@ -85,7 +77,7 @@ class MultiLine extends SectionImpl implements Section {
     }
 
     // remove existing child lines as we are replacing them.
-    clearChildren();
+    _clearChildren();
 
     final valueLines = LineSplitter.split(value);
     final detachedLines = <LineDetached>[];
@@ -103,17 +95,16 @@ class MultiLine extends SectionImpl implements Section {
       }
     }
     if (missing) {
-      super.sectionHeading = document.append(detachedLines[0]);
+      super.headerLine = document.append(detachedLines[0]);
       missing = false;
     } else {
-      super.sectionHeading.value =
-          KeyValue.fromText(detachedLines[0].text).value;
+      super.headerLine.value = KeyValue.fromText(detachedLines[0].text).value;
     }
 
     /// If the string is multi-line then append
     /// each additional line as a child.
     for (final detached in detachedLines.skip(1)) {
-      append(detached.attach(document, LineType.multiline));
+      _appendLine(detached.attach(document, LineType.multiline));
     }
   }
 

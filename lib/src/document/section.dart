@@ -1,23 +1,20 @@
-import '../pubspec/internal_parts.dart';
-import 'document.dart';
-import 'line.dart';
-import 'line_type.dart';
+part of '../pubspec/internal_parts.dart';
 
 class SectionImpl implements Section {
-  SectionImpl(this.sectionHeading, this._children) : missing = false {
-    _key = sectionHeading.key;
+  SectionImpl(this.headerLine, this._children) : missing = false {
+    key = headerLine.key;
     comments = Comments(this);
   }
 
-  SectionImpl.fromLine(this.sectionHeading) : missing = false {
-    _key = sectionHeading.key;
-    _children = sectionHeading.childrenOf(descendants: true);
+  SectionImpl.fromLine(this.headerLine) : missing = false {
+    key = headerLine.key;
+    _children = headerLine.childrenOf(descendants: true);
     comments = Comments(this);
   }
 
-  SectionImpl.missing(Document document, this._key)
+  SectionImpl.missing(Document document, this.key)
       : missing = true,
-        sectionHeading = LineImpl.missing(document, LineType.key),
+        headerLine = LineImpl.missing(document, LineType.key),
         _children = <Line>[] {
     comments = Comments.empty(this);
   }
@@ -29,20 +26,18 @@ class SectionImpl implements Section {
   /// Line that represents the first line of the section
   /// excluding comments.
   @override
-  LineImpl sectionHeading;
-
-  late final String _key;
+  LineImpl headerLine;
 
   @override
-  String get key => _key;
+  late final String key;
 
   @override
   bool missing;
 
   /// the list of child lines that are nested within this
   /// section.
-  /// Child lines are indented from the [sectionHeading]
-  /// Does not include the [sectionHeading] nor any comments
+  /// Child lines are indented from the [headerLine]
+  /// Does not include the [headerLine] nor any comments
   /// in the section prefix.
   late final List<Line> _children;
 
@@ -67,14 +62,14 @@ class SectionImpl implements Section {
 
   /// The [Document] that contains this section.
   @override
-  Document get document => sectionHeading.document;
+  Document get document => headerLine.document;
 
   /// returns the list of lines associated with this section
   /// including any comments immediately above the section.
   /// Comments may include blank lines and we return all
   /// lines upto the end of the prior segment.
   @override
-  List<Line> get lines => [...comments.lines, sectionHeading, ..._children];
+  List<Line> get lines => [...comments.lines, headerLine, ..._children];
 
   /// List of comments associated (prepended) with this section
   @override
@@ -85,20 +80,20 @@ class SectionImpl implements Section {
   int get lastLineNo => lines.last.lineNo;
 
   /// Remove the [line] from the list of existing children.
-  void remove(Line line) {
+  void _removeChild(Line line) {
     document.removeAll([line]);
     _children.remove(line);
   }
 
-  void clearChildren() {
+  void _clearChildren() {
     document.removeAll(_children);
     _children.clear();
   }
 
   /// Append a child line after all existing child lines
   /// of this [Section]
-  void append(LineImpl line) {
-    final lineBefore = _children.isEmpty ? sectionHeading : _children.last;
+  void _appendLine(LineImpl line) {
+    final lineBefore = _children.isEmpty ? headerLine : _children.last;
     _children.add(line);
     document.insertAfter(line, lineBefore);
   }
@@ -109,7 +104,7 @@ class SectionImpl implements Section {
 /// and all lines attached to the dependency
 /// Sections may be nested - e.g. The dependeny key is a
 /// section as are each dependency under it.
-/// A section is created by passing a [sectionHeading] which is
+/// A section is created by passing a [headerLine] which is
 /// expected to be the start of the section. We then identify
 /// associated lines that form that section.
 abstract class Section {
@@ -122,7 +117,7 @@ abstract class Section {
   /// When determining the start of a section we ignore
   /// any comments and blank lines even though they are considered
   /// as part of the section.
-  Line get sectionHeading;
+  Line get headerLine;
 
   /// The [Document] that contains this section.
   Document get document;

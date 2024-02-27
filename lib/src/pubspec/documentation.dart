@@ -6,7 +6,7 @@ class Documentation extends SectionSingleLine {
     if (lineSection.missing) {
       return Documentation.missing(document);
     } else {
-      return Documentation._(lineSection.sectionHeading);
+      return Documentation._(lineSection.headerLine);
     }
   }
 
@@ -16,7 +16,7 @@ class Documentation extends SectionSingleLine {
 
   Documentation.missing(Document document)
       : builder = DocumentationBuilder.missing(),
-        super.missing(document, _key);
+        super.missing(document, 0, _key);
 
   final DocumentationBuilder builder;
 

@@ -9,7 +9,7 @@ class Environment extends SectionImpl implements Section {
         super.missing(document, _key);
 
   factory Environment._fromDocument(Document document) {
-    final line = document.getLineForKey(Environment._key).sectionHeading;
+    final line = document.getLineForKey(Environment._key).headerLine;
 
     if (line.missing) {
       return Environment.missing(document);
@@ -85,11 +85,23 @@ class Environment extends SectionImpl implements Section {
   String get sdk => _sdk.version;
   String get flutter => _flutter.version;
 
+  Environment set({String? sdk, String? flutter}) {
+    if (sdk != null) {
+      this.sdk = sdk;
+    }
+
+    if (flutter != null) {
+      this.flutter = flutter;
+    }
+    // ignore: avoid_returning_this
+    return this;
+  }
+
   set sdk(String version) {
     _ensure();
     if (_sdk.missing) {
       final sdkLine = LineImpl.forInsertion(document, '  sdk: $version');
-      append(sdkLine);
+      _appendLine(sdkLine);
       _sdkLine = sdkLine;
       _sdk = VersionConstraint._fromLine(_sdkLine);
     } else {
@@ -103,7 +115,7 @@ class Environment extends SectionImpl implements Section {
     if (_flutter.missing) {
       final flutterLine =
           LineImpl.forInsertion(document, '  flutter: $version');
-      append(flutterLine);
+      _appendLine(flutterLine);
       _flutterLine = flutterLine;
       _flutter = VersionConstraint._fromLine(_flutterLine);
     } else {
@@ -116,7 +128,7 @@ class Environment extends SectionImpl implements Section {
   /// by creating it if it doesn't exist.
   void _ensure() {
     if (missing) {
-      sectionHeading = document.append(LineDetached('$_key:'));
+      headerLine = document.append(LineDetached('$_key:'));
     }
   }
 

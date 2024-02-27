@@ -3,20 +3,20 @@ part of 'internal_parts.dart';
 class Name extends SectionSingleLine {
   /// build name from an imported document line
   factory Name._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(Name._key);
+    final lineSection = document.getLineForKey(Name.keyName);
     if (lineSection.missing) {
       return Name.missing(document);
     } else {
-      return Name._(lineSection.sectionHeading);
+      return Name._(lineSection.headerLine);
     }
   }
 
   Name._fromString(Document document, String name)
-      : super.append(document, _key, name);
+      : super._appendLine(document, 0, keyName, name);
 
   Name._(super.line) : super.fromLine();
 
-  Name.missing(Document document) : super.missing(document, _key);
+  Name.missing(Document document) : super.missing(document, 0, keyName);
 
-  static const String _key = 'name';
+  static const String keyName = 'name';
 }

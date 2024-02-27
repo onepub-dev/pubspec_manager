@@ -3,11 +3,11 @@ part of 'internal_parts.dart';
 class Repository extends SectionSingleLine {
   /// build Repository from an imported document line
   factory Repository._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(Repository._key);
+    final lineSection = document.getLineForKey(Repository.keyName);
     if (lineSection.missing) {
       return Repository.missing(document);
     } else {
-      return Repository._(lineSection.sectionHeading);
+      return Repository._(lineSection.headerLine);
     }
   }
 
@@ -17,7 +17,7 @@ class Repository extends SectionSingleLine {
 
   Repository.missing(Document document)
       : _url = '',
-        super.missing(document, _key);
+        super.missing(document, 0, keyName);
 
   String _url;
 
@@ -30,5 +30,5 @@ class Repository extends SectionSingleLine {
 
   String get url => _url;
 
-  static const String _key = 'repository';
+  static const String keyName = 'repository';
 }

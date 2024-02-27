@@ -3,32 +3,25 @@ part of 'internal_parts.dart';
 class PublishTo extends SectionSingleLine {
   /// build PublishTo from an imported document line
   factory PublishTo._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(PublishTo._key);
+    final lineSection = document.getLineForKey(PublishTo.keyName);
     if (lineSection.missing) {
       return PublishTo.missing(document);
     } else {
-      return PublishTo._(lineSection.sectionHeading);
+      return PublishTo._(lineSection.headerLine);
     }
   }
 
-  PublishTo._(super.line)
-      : _url = line.value,
-        super.fromLine();
+  PublishTo._(super.line) : super.fromLine();
 
-  PublishTo.missing(Document document)
-      : _url = '',
-        super.missing(document, _key);
+  PublishTo.missing(Document document) : super.missing(document, 0, keyName);
 
-  String _url;
+  String get url => super.value;
 
   PublishTo set(String url) {
-    _url = url;
     super.value = url;
     // ignore: avoid_returning_this
     return this;
   }
 
-  String get url => _url;
-
-  static const String _key = 'publish_to';
+  static const String keyName = 'publish_to';
 }

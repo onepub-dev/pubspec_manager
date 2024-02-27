@@ -1,10 +1,5 @@
 // ignore_for_file: avoid_setters_without_getters
-
-import 'document.dart';
-import 'key_value.dart';
-import 'line.dart';
-import 'line_type.dart';
-import 'section.dart';
+part of '../pubspec/internal_parts.dart';
 
 /// Used to hold a single line that cannot have
 /// children, but may have comments.
@@ -17,73 +12,72 @@ class LineSection extends SectionImpl implements Section, Line {
   LineSection.missing(super.document, super.key) : super.missing();
 
   @override
-  String get text => sectionHeading.text;
+  String get text => headerLine.text;
 
   @override
-  LineType get type => sectionHeading.type;
+  LineType get type => headerLine.type;
 
   @override
-  String get value => sectionHeading.value;
+  String get value => headerLine.value;
 
   List<Line> childrenOf({LineType? type, bool descendants = false}) =>
-      sectionHeading.childrenOf(type: type, descendants: descendants);
+      headerLine.childrenOf(type: type, descendants: descendants);
 
   set document(Document _document) {
-    sectionHeading.document = _document;
+    headerLine.document = _document;
   }
 
-  Line findKeyChild(String key) => sectionHeading.findKeyChild(key);
+  Line findKeyChild(String key) => headerLine.findKeyChild(key);
 
-  Line? findOneOf(List<String> keys) => sectionHeading.findOneOf(keys);
+  Line? findOneOf(List<String> keys) => headerLine.findOneOf(keys);
 
-  Line findRequiredKeyChild(String key) =>
-      sectionHeading.findRequiredKeyChild(key);
+  Line findRequiredKeyChild(String key) => headerLine.findRequiredKeyChild(key);
 
-  KeyValue get keyValue => sectionHeading.keyValue;
+  KeyValue get keyValue => headerLine.keyValue;
 
   @override
-  String render() => sectionHeading.render();
+  String render() => headerLine.render();
 
   String renderInlineComment(int contentLength) =>
-      sectionHeading.renderInlineComment(contentLength);
+      headerLine.renderInlineComment(contentLength);
 
   set commentOffset(int? _commentOffset) {
-    sectionHeading.commentOffset = _commentOffset;
+    headerLine.commentOffset = _commentOffset;
   }
 
   set indent(int _indent) {
-    sectionHeading.indent = _indent;
+    headerLine.indent = _indent;
   }
 
   set inlineComment(String? _inlineComment) {
-    sectionHeading.inlineComment = _inlineComment;
+    headerLine.inlineComment = _inlineComment;
   }
 
   set lineNo(int _lineNo) {
-    sectionHeading.lineNo = _lineNo;
+    headerLine.lineNo = _lineNo;
   }
 
   set type(LineType _type) {
-    sectionHeading.type = _type;
+    headerLine.type = _type;
   }
 
   set value(String value) {
-    sectionHeading.value = value;
+    headerLine.value = value;
   }
 
-  String get childIndent => sectionHeading.childIndent;
+  String get childIndent => headerLine.childIndent;
 
-  String get expand => sectionHeading.expand;
-
-  @override
-  int? get commentOffset => sectionHeading.commentOffset;
+  String get expand => headerLine._expand;
 
   @override
-  int get indent => sectionHeading.indent;
+  int? get commentOffset => headerLine.commentOffset;
 
   @override
-  String? get inlineComment => sectionHeading.inlineComment;
+  int get indent => headerLine.indent;
 
   @override
-  int get lineNo => sectionHeading.lineNo;
+  String? get inlineComment => headerLine.inlineComment;
+
+  @override
+  int get lineNo => headerLine.lineNo;
 }

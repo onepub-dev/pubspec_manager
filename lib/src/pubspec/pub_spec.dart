@@ -96,8 +96,8 @@ class PubSpec {
       {String? directory,
       String filename = 'pubspec.yaml',
       bool search = true}) {
-    final loadedFrom =
-        _findPubSpecFile(directory ?? Directory.current.path, filename, search);
+    final loadedFrom = _findPubSpecFile(
+        directory ?? io.Directory.current.path, filename, search);
 
     final document = Document.loadFrom(loadedFrom);
 
@@ -180,7 +180,7 @@ class PubSpec {
   }
 
   Executables _initExecutables() {
-    final line = document.findTopLevelKey(Executables.key);
+    final line = document.findTopLevelKey(Executables.keyName);
     if (line.missing) {
       return Executables._missing(this);
     }
@@ -208,7 +208,7 @@ class PubSpec {
       if (child.type != LineType.key) {
         continue;
       }
-      platforms._appendAttached(Platform._fromLine(child));
+      platforms._appendAttached(PlatformSupport._fromLine(child));
     }
     return platforms;
   }
@@ -256,7 +256,7 @@ class PubSpec {
       ..render(dependencies._section)
       ..render(devDependencies._section)
       ..render(dependencyOverrides._section)
-      ..render(executables._section)
+      ..render(executables)
       ..render(platforms._section)
       ..render(funding)
       ..render(falseSecrets)
@@ -291,7 +291,7 @@ class PubSpec {
     var path = join(directory, filename);
     var parent = directory;
     var found = true;
-    while (!File(path).existsSync()) {
+    while (!io.File(path).existsSync()) {
       if (!search) {
         throw NotFoundException(path);
       }

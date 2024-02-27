@@ -12,7 +12,7 @@ class Description extends MultiLine {
     if (line.missing) {
       return Description.missing(document);
     }
-    return Description.fromLine(line.sectionHeading);
+    return Description.fromLine(line.headerLine);
   }
 
   static const String _key = 'description';
