@@ -62,9 +62,10 @@ bad pubspec
               equals(tempFile),
             )));
       });
+
       /// skipping this test as I'm not actually sure what constitues
       /// a bad pubspec and wether its better to no try and enforce it
-      /// given that for the most part we don't care if they 
+      /// given that for the most part we don't care if they
       /// have crap in the pubspec.
     }, skip: true);
 
@@ -72,7 +73,7 @@ bad pubspec
       final pubspec = PubSpec.loadFromString(goodContent);
 
       expect(pubspec.name.value, equals('pubspec3'));
-      expect(pubspec.version.asString, equals('0.0.1'));
+      expect(pubspec.version.value, equals('0.0.1'));
       expect(pubspec.description.value,
           equals('A simple command-line application created by dcli'));
 
@@ -152,7 +153,7 @@ dev_dependencies:
       ..environment.flutter = '3.3.3'
       ..environment.sdk = '3.2.5'
       ..homepage.set('https:/.hi')
-      ..publishTo.set('https://pubslish to')
+      ..publishTo.value = 'https://pubslish to'
       ..repository.set('https;//repository')
       ..issueTracker.set('https://issues')
       ..documentation.set('https://doco')
@@ -161,7 +162,7 @@ dev_dependencies:
           DependencyPubHostedBuilder(name: 'lint_hard', version: '1.0.0'))
       ..dependencyOverrides
           .append(DependencyPathBuilder(name: 'lint_hard', path: '..'))
-      ..executables.append(ExecutableBuilder(name: 'test'))
+      ..executables.append(name: 'test').comments.append('The main exec')
       ..platforms.append(PlatformEnum.android)
       ..platforms.appendAll([PlatformEnum.ios, PlatformEnum.linux]);
   });
