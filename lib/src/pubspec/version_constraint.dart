@@ -72,16 +72,16 @@ class VersionConstraint extends LineSection {
 
   set version(String version) {
     quoted = _isQuoted(version);
-    sectionHeading.value = _stripQuotes(version);
+    headerLine.value = _stripQuotes(version);
 
-    if (Strings.isEmpty(sectionHeading.value)) {
+    if (Strings.isEmpty(headerLine.value)) {
       _versionConstraint = sm.VersionConstraint.empty;
       _missingValue = true;
       return;
     }
 
     try {
-      _versionConstraint = sm.VersionConstraint.parse(sectionHeading.value);
+      _versionConstraint = sm.VersionConstraint.parse(headerLine.value);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
@@ -145,5 +145,5 @@ class VersionConstraint extends LineSection {
   }
 
   @override
-  List<Line> get lines => [sectionHeading];
+  List<Line> get lines => [headerLine];
 }
