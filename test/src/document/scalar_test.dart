@@ -16,8 +16,10 @@
 //     Leading whitespace on lines are ignored.""";
 
 // const result = r"""
-// Several lines of text, containing 'single quotes'. Escapes (like \n) don't do anything.
-// Newlines can be added by leaving a blank line. Leading whitespace on lines are ignored.""";
+// Several lines of text, containing 'single quotes'. 
+//Escapes (like \n) don't do anything.
+// Newlines can be added by leaving a blank line. 
+//Leading whitespace on lines are ignored.""";
 
 // void main() {
 //   group('plain flow', () {

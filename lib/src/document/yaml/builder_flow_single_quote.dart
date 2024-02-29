@@ -35,7 +35,8 @@
 //               sideEffect: (e) async => parser.append(e)))
 //         // a final newline is not retained and since we emmited a space
 //         // when we saw the newline we need to remove it.
-//         ..on<OnFinish, Finished>(sideEffect: (e) async => parser.removeLast()))
+//         ..on<OnFinish, Finished>(sideEffect: 
+//(e) async => parser.removeLast()))
 
 //       // could be the end of the string or a pair of single
 //       // quotes which is an escaped quote

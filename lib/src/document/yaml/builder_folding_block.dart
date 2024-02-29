@@ -25,7 +25,8 @@
 //           ..on<OnEscapeChar, FlowDoubleQuoted>(
 //               sideEffect: (e) async => parser.append(e))
 //           ..on<OnSimpleChar, FlowDoubleQuoted>(
-//               sideEffect: (e) async => parser.onEscapeChar(e, parser.append))))
+//               sideEffect: (e) async => 
+//parser.onEscapeChar(e, parser.append))))
 
 //       /// costate
 //       ..state<Trim>((b) => b

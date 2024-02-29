@@ -111,7 +111,8 @@
 //     /// Folding Block
 //     ..coregion<FoldingBlock>((b) => foldingBlockBuilder(this, b))
 //     ..onTransition((fromState, event, toState) => print(
-//         '''Transition: $event : ${fromState!.stateType} -> ${toState!.stateType} : ^$_result^''')));
+//         '''Transition: $event : ${fromState!.stateType} 
+//-> ${toState!.stateType} : ^$_result^''')));
 
 //   ///
 //   /// We have seen an escape character so decided
@@ -145,7 +146,8 @@
 
 //   void removeLast() {
 //     // remove the last character
-//     _result = StringBuffer(_result.toString().substring(0, _result.length - 1));
+//     _result = StringBuffer(_result.toString()
+//.substring(0, _result.length - 1));
 //   }
 
 //   void append(OnChar e) {
