@@ -1,3 +1,6 @@
+# 1.0.0-beta.1
+- relased first beta.
+
 # 1.0.0-alpha.17
 - changed publishTo.set to value - not certain this is consistent. executables.append no directly takes a name rather than requiring a builder.
 - renamed Platform to PlatformSupport to avoid a conflict with the dart core Platform class.
