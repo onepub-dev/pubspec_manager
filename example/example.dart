@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:pubspec_manager/pubspec_manager.dart';
 
 void main() {
   create();
 
   updateVersion();
+
+  replaceDependency();
 }
 
 void create() {
@@ -62,7 +65,24 @@ void create() {
 }
 
 void updateVersion() {
-  final pubspec = PubSpec.load();
+  var pubspec = PubSpec.load();
   pubspec.version.set('1.2.1');
+  pubspec.save();
+
+  /// Or load from a specific file and save to a different file
+  /// change the projects name and add a comment above the name.
+  pubspec = PubSpec.loadFromPath(join('/', 'some', 'path', 'pubspec.yaml'));
+  pubspec.name
+    ..set('new_name')
+    ..comments.append('This is the new name of the project');
+  pubspec.saveTo(join('/', 'some', 'other', 'path', 'pubspec.yaml'));
+}
+
+/// Replace the money dependency with the money2 dependency.
+void replaceDependency() {
+  final pubspec = PubSpec.load();
+  pubspec.dependencies
+    ..remove('money')
+    ..append(DependencyPubHostedBuilder(name: 'money2'));
   pubspec.save();
 }
