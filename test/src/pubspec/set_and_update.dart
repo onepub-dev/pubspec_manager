@@ -14,7 +14,8 @@ Future<void> create(
     {required SetAction set,
     required GetAction get,
     required String key,
-    required String value}) async {
+    required String value,
+    bool nameOnly = false}) async {
   // create the pubspec in memroy and
   // then add a new key/value
   final pubspec = PubSpec(name: 'test');
@@ -24,7 +25,7 @@ Future<void> create(
   /// the value exists
   await withTempFile((tempFile) async {
     pubspec.saveTo(tempFile);
-    _hasExpectedLines(tempFile, key, value);
+    _hasExpectedLines(tempFile, key, value, nameOnly: nameOnly);
 
     final reloaded = PubSpec.loadFromPath(tempFile);
     expect(get(reloaded), equals(value));
@@ -39,7 +40,8 @@ Future<void> update(
     required GetAction get,
     required String key,
     required String value,
-    required String newValue}) async {
+    required String newValue,
+    bool nameOnly = false}) async {
   final sample = '''
 name: test
 $key: $value''';
@@ -58,7 +60,7 @@ $key: $value''';
   /// make certain the update value was saved.
   await withTempFile((tempFile) async {
     pubspec.saveTo(tempFile);
-    _hasExpectedLines(tempFile, key, newValue);
+    _hasExpectedLines(tempFile, key, newValue, nameOnly: nameOnly);
 
     /// reload the pubspec and see the value is visible
     var reloaded = PubSpec.loadFromPath(tempFile);
@@ -100,9 +102,15 @@ description: |
   });
 }
 
-void _hasExpectedLines(String tempFile, String key, String newValue) {
+void _hasExpectedLines(String tempFile, String key, String newValue,
+    {required bool nameOnly}) {
   final lines = File(tempFile).readAsLinesSync();
-  expect(lines.length, equals(2));
-  expect(lines[0], equals('name: test'));
-  expect(lines[1], equals('$key: $newValue'));
+  expect(lines.length, equals(nameOnly ? 1 : 2));
+
+  if (nameOnly) {
+    expect(lines[0], equals('name: $newValue'));
+  } else {
+    expect(lines[0], equals('name: test'));
+    expect(lines[1], equals('$key: $newValue'));
+  }
 }

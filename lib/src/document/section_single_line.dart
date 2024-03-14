@@ -17,7 +17,10 @@ class SectionSingleLine extends SectionImpl implements Section {
   SectionSingleLine._appendLine(
       Document document, this._indent, String key, String value)
       : super.missing(document, key) {
-    document.append(LineDetached(LineImpl.buildLine(_indent, key, value)));
+    final insertedLine =
+        document.append(LineDetached(LineImpl.buildLine(_indent, key, value)));
+    missing = false;
+    headerLine = insertedLine;
   }
 
   SectionSingleLine.missing(super.document, this._indent, super.key)

@@ -18,5 +18,13 @@ class Name extends SectionSingleLine {
 
   Name.missing(Document document) : super.missing(document, 0, keyName);
 
+  // ignore: avoid_renaming_method_parameters
+  Name set(String name) {
+    super.value = name;
+
+    // ignore: avoid_returning_this
+    return this;
+  }
+
   static const String keyName = 'name';
 }
