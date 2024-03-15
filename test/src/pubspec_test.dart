@@ -85,7 +85,7 @@ bad pubspec
       final pubspec = PubSpec.loadFromString(goodContent)
         ..save(directory: Directory.systemTemp.path);
 
-      print(File(pubspec.loadedFrom).readAsStringSync());
+      expect(File(pubspec.loadedFrom).existsSync(), isTrue);
     });
 
     test('name only', () async {

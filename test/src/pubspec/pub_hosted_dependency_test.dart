@@ -1,7 +1,7 @@
 import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
-import '../pub_spec_test.dart';
+import '../pubspec_test.dart';
 
 void main() {
   test('pub hosted dependency ...', () async {
