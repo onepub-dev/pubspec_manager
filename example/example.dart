@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:pubspec_manager/pubspec_manager.dart';
 
@@ -9,15 +7,25 @@ void main() {
   updateVersion();
 
   replaceDependency();
+
+  explicitPath();
 }
 
 void create() {
-  final pubspec = PubSpec(
+  // create a pubspec in memory
+  PubSpec(
     name: 'new eric',
     version: '1.0.0-alpha.2',
     description: 'An example',
     environment: EnvironmentBuilder(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0'),
   )
+    // modify name, version, description and environment to show how it's
+    // done but it makes no sense to do it here as the above ctor already
+    // set them.
+    ..name.set('erica')
+    ..version.set('1.0.1')
+    ..description.set('A change of description') // desc
+    ..environment.set(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0')
     ..homepage
         .set('https://onepub.dev/home')
         .comments
@@ -58,20 +66,26 @@ void create() {
       path: '../up/dcli',
       comments: const ['Override dcli with a local version'],
     ))
-    // ..environment.
-    ..save(filename: 'example.yaml');
 
-  print(File(pubspec.loadedFrom).readAsStringSync());
+    /// persist the file to disk in the current directory
+    /// as pubspec.yaml
+    ..save();
 }
 
+/// load the the pubspec.yaml from local dart project directory,
+/// update the version and save it back.
+///
 void updateVersion() {
-  var pubspec = PubSpec.load();
+  final pubspec = PubSpec.load();
   pubspec.version.set('1.2.1');
   pubspec.save();
+}
 
-  /// Or load from a specific file and save to a different file
-  /// change the projects name and add a comment above the name.
-  pubspec = PubSpec.loadFromPath(join('/', 'some', 'path', 'pubspec.yaml'));
+/// Or load from a specific file and save to a different file
+/// change the projects name and add a comment above the name.
+void explicitPath() {
+  final pubspec =
+      PubSpec.loadFromPath(join('/', 'some', 'path', 'pubspec.yaml'));
   pubspec.name
     ..set('new_name')
     ..comments.append('This is the new name of the project');

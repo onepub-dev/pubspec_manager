@@ -1,11 +1,18 @@
 part of 'internal_parts.dart';
 
-/// a hosted dependency which takes the form:
-/// dependencies:
+/// A dependency hosted on an alternate dart repository (such as onepub.dev).
+///
+/// The yaml form of the dependency is:
+///
+/// ``` yaml
 ///   dcli:
 ///     hosted: https://onepub.dev
 ///     version: ^2.3.1
+/// ```
+///
 /// If no version is specified then 'any' is assumed.
+///
+/// See: for dependencies hosted on pub.dev use [DependencyPubHosted]
 class DependencyAltHosted implements Dependency, DependencyVersioned {
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
@@ -44,14 +51,10 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
       _versionLine = LineImpl.missing(pubspec.document, LineType.key);
     }
     section = SectionImpl.fromLine(_line);
-
-    // // ignore: prefer_foreach
-    // for (final comment in dependency.comments) {
-    //   _section.comments.append(comment);
-    // }
   }
   static const key = 'hosted';
 
+  @visibleForTesting
   @override
   late Section section;
 
@@ -81,6 +84,8 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     _hostedUrlLine.value = _hostedUrl;
   }
 
+  /// The version constraint of the dependency.
+  /// If no version is provided then `any` is used.
   @override
   String get version => _version ?? 'any';
 
@@ -89,18 +94,6 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     _version = version;
     _versionLine.value = version;
   }
-
-  // @override
-  // List<Line> get lines => [
-  //       ...comments.lines,
-  //       _line,
-  //       _hostedUrlLine,
-  //       if (!_versionLine.missing) _versionLine
-  //     ];
-
-  /// The last line number used by this  section_versionLine
-  // @override
-  // int get lastLineNo => lines.last.lineNo;
 
   @override
   Dependency append(DependencyBuilder dependency) {

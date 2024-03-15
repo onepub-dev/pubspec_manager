@@ -24,7 +24,7 @@ class VersionConstraintBuilder {
           : VersionConstraintBuilder.missing();
 
   /// Used to indicate that that a version key doesn't exist.
-  /// This is different from [Version.empty()] which indicates
+  /// This is different from [VersionConstraintBuilder.empty()] which indicates
   /// that a version key was provided but the value was empty.
   VersionConstraintBuilder.missing()
       : missing = true,

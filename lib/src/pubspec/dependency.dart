@@ -1,6 +1,7 @@
 part of 'internal_parts.dart';
 
 /// Base class for each of the [Dependency] types.
+/// This is an abstract class that should be used directly
 abstract class Dependency {
   /// Loads a dependency located at [line].
   factory Dependency._loadFrom(Dependencies dependencies, LineImpl line) {
@@ -46,12 +47,13 @@ abstract class Dependency {
         depTypeLine, 'The child dependency does not appear to be valid.');
   }
 
-  /// the name of the dependency package
+  /// The name of the dependency package
   String get name;
 
+  @visibleForTesting
   Section get section;
 
-  Dependency append(DependencyBuilder pubHostedDependency);
+  Dependency append(DependencyBuilder dependency);
 }
 
 /// Some dependency define a package version number

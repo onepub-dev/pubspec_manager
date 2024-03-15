@@ -5,6 +5,12 @@ part of 'internal_parts.dart';
 /// Used to hold the comments that prefix a section.
 /// A comment section is all comments/blank lines that are above
 /// a section that are not owned by a (prior) section.
+///
+/// ```yaml
+/// name: test
+/// # A comment which will be associated the version section.
+/// version: 1.0.0
+/// ```
 class Comments {
   Comments(this._section) {
     _lines = _commentsAsLine();
@@ -31,7 +37,7 @@ class Comments {
 
     for (; lineNo > 0; lineNo--) {
       final line = lines[lineNo];
-      final type = line.type;
+      final type = line.lineType;
       if (type == LineType.comment || type == LineType.blank) {
         if (!document.isAttachedToSection(line)) {
           prefix.insert(0, line);
