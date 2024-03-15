@@ -27,7 +27,7 @@ Pubspec: ${document!.pathTo}
     if (line != null) {
       error.write('''
 Line No.: ${line!.lineNo} 
-Line Type: ${line!.type.name}
+Line Type: ${line!.lineType.name}
 Section Indent: ${line!.indent} 
 Line Content: ${Strings.orElse(line!.text, "<empty>")}
 ''');
@@ -70,6 +70,10 @@ class PlatformNotFound extends PubSpecException {
 
 class OutOfBoundsException extends PubSpecException {
   OutOfBoundsException(super.line, super.message);
+}
+
+class DuplicateKeyException extends PubSpecException {
+  DuplicateKeyException(super.line, super.message);
 }
 
 // /// Don't use this exception directly (its abstract).

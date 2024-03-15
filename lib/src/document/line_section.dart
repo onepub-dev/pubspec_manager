@@ -15,7 +15,7 @@ class LineSection extends SectionImpl implements Section, Line {
   String get text => headerLine.text;
 
   @override
-  LineType get type => headerLine.type;
+  LineType get lineType => headerLine.lineType;
 
   @override
   String get value => headerLine.value;
@@ -57,8 +57,8 @@ class LineSection extends SectionImpl implements Section, Line {
     headerLine.lineNo = _lineNo;
   }
 
-  set type(LineType _type) {
-    headerLine.type = _type;
+  set lineType(LineType _type) {
+    headerLine.lineType = _type;
   }
 
   set value(String value) {

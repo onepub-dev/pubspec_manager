@@ -67,6 +67,8 @@ class PubSpec {
     falseSecrets = document.findSectionForKey('falseSecrets');
     screenshots = document.findSectionForKey('screenshots');
     topics = document.findSectionForKey('topics');
+
+    _validate();
   }
 
   /// Loads the pubspec.yaml file from the given [directory] or
@@ -171,7 +173,7 @@ class PubSpec {
     final dependencies = Dependencies._fromLine(this, line);
 
     for (final child in line.childrenOf()) {
-      if (child.type != LineType.key) {
+      if (child.lineType != LineType.key) {
         continue;
       }
       dependencies._appendAttached(Dependency._loadFrom(dependencies, child));
@@ -188,7 +190,7 @@ class PubSpec {
     final executables = Executables._fromLine(this, line);
 
     for (final child in line.childrenOf()) {
-      if (child.type != LineType.key) {
+      if (child.lineType != LineType.key) {
         continue;
       }
       executables._appendAttached(Executable._fromLine(child));
@@ -205,7 +207,7 @@ class PubSpec {
     final platforms = Platforms._fromLine(this, line);
 
     for (final child in line.childrenOf()) {
-      if (child.type != LineType.key) {
+      if (child.lineType != LineType.key) {
         continue;
       }
       platforms._appendAttached(PlatformSupport._fromLine(child));
@@ -281,6 +283,34 @@ class PubSpec {
     final writer = StringWriter();
     write(writer);
     return writer.content;
+  }
+
+  void _validate() {
+    final keys = <String>{};
+    for (final dep in dependencies) {
+      if (keys.contains(dep.name)) {
+        throw DuplicateKeyException(dep.section.headerLine,
+            'Found a duplicate of dependency ${dep.name} ');
+      }
+      keys.add(dep.name);
+    }
+    keys.clear();
+
+    for (final dep in devDependencies) {
+      if (keys.contains(dep.name)) {
+        throw DuplicateKeyException(dep.section.headerLine,
+            'Found a duplicate of dev_dependency ${dep.name} ');
+      }
+      keys.add(dep.name);
+    }
+    keys.clear();
+    for (final exec in executables) {
+      if (keys.contains(exec.name)) {
+        throw DuplicateKeyException(
+            exec.headerLine, 'Found a duplicate of executable ${exec.name} ');
+      }
+      keys.add(exec.name);
+    }
   }
 
   /// search up the directory tree (starting from [directory]to find

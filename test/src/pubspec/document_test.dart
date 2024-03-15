@@ -59,7 +59,7 @@ void checkLine(List<Line> lines,
   final line = lines[lineNo - 1];
   expect(line.indent, equals(indent));
   expect(line.lineNo, equals(lineNo));
-  expect(line.type, equals(lineType));
+  expect(line.lineType, equals(lineType));
 
   if (inline != null) {
     expect(line.inlineComment, equals(inline));
