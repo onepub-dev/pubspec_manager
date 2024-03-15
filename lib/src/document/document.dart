@@ -14,8 +14,23 @@ class Document {
   Document.loadFromLines(List<String> contentLines) {
     var lineNo = 1;
     pathTo = '<Loaded from lines>';
+
+    final topKeys = <String>{};
+
     for (final line in contentLines) {
-      lines.add(LineImpl(this, line, lineNo++));
+      final lineImpl = LineImpl(this, line, lineNo++);
+      lines.add(lineImpl);
+
+      /// check for duplicate top level keys.
+      if (lineImpl.lineType == LineType.key && lineImpl.indent == 0) {
+        // final keyIndent = _KeyIndent(lineImpl.key);
+        if (topKeys.contains(lineImpl.key)) {
+          throw DuplicateKeyException(
+              lineImpl, "The key' ${lineImpl.key}' occurs more than once");
+        }
+
+        topKeys.add(lineImpl.key);
+      }
     }
   }
 
@@ -45,7 +60,7 @@ class Document {
   /// Only lines of type [LineType.key] are considered.
   LineSection getLineForKey(String key) {
     for (final line in lines) {
-      if (line.type == LineType.key) {
+      if (line.lineType == LineType.key) {
         if (line.key == key) {
           return LineSection.fromLine(line);
         }
@@ -58,7 +73,7 @@ class Document {
   /// If the [key] doesn't exist then returns null.
   Section findSectionForKey(String key) {
     for (final line in lines) {
-      if (line.type == LineType.key) {
+      if (line.lineType == LineType.key) {
         final keyValue = KeyValue.fromLine(line);
         if (keyValue.key == key) {
           return SectionImpl.fromLine(line);
@@ -99,7 +114,7 @@ class Document {
       if (child.indent != 0) {
         continue;
       }
-      if (child.type != LineType.key) {
+      if (child.lineType != LineType.key) {
         continue;
       }
 
@@ -128,7 +143,7 @@ class Document {
         }
 
         /// filter out children that don't match the key [type]
-        if (type != null && line.type != type) {
+        if (type != null && line.lineType != type) {
           continue;
         }
 
