@@ -12,7 +12,9 @@ void main() {
           key: Name.keyName,
           value: 'new_name',
           nameOnly: true);
+    });
 
+    test('update', () async {
       await update(
           set: (pubspec, value) => pubspec.name.set(value),
           get: (pubspec) => pubspec.name.value,

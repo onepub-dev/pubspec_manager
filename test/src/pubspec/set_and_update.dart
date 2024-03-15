@@ -42,19 +42,22 @@ Future<void> update(
     required String value,
     required String newValue,
     bool nameOnly = false}) async {
-  final sample = '''
+  final sample = nameOnly
+      ? '''
+name: $value'''
+      : '''
 name: test
 $key: $value''';
 
   /// Create the pubspec in memory and add
   /// a update an existing key
   final pubspec = PubSpec.loadFromString(sample);
-  expect(pubspec.document.lines.length, equals(2));
+  expect(pubspec.document.lines.length, equals(nameOnly ? 1 : 2));
   expect(get(pubspec), equals(value));
   set(pubspec, newValue);
 
   expect(get(pubspec), equals(newValue));
-  expect(pubspec.document.lines.length, equals(2));
+  expect(pubspec.document.lines.length, equals(nameOnly ? 1 : 2));
 
   /// load the resulting pubspec from disk
   /// make certain the update value was saved.
@@ -73,7 +76,12 @@ $key: $value''';
     expect(get(reloaded), equals(value));
 
     await _checkMingled(
-        set: set, get: get, key: key, value: value, newValue: newValue);
+        set: set,
+        get: get,
+        key: key,
+        value: value,
+        newValue: newValue,
+        nameOnly: nameOnly);
   });
 }
 
@@ -82,9 +90,16 @@ Future<void> _checkMingled(
     required GetAction get,
     required String key,
     required String value,
-    required String newValue}) async {
+    required String newValue,
+    required bool nameOnly}) async {
   /// Check that update works when we are not the last line in the file
-  final sampleLonger = '''
+  final sampleLonger = nameOnly
+      ? '''
+name: $value
+description: |
+  a sample app
+  '''
+      : '''
 name: test
 $key: $value
 description: |
