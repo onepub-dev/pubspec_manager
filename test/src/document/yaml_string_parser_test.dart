@@ -1,7 +1,13 @@
 // import 'package:pubspec_manager/src/document/yaml/state.dart';
 // import 'package:pubspec_manager/src/document/yaml/yaml_string_parser.dart';
-// import 'package:test/test.dart';
+import 'package:test/test.dart';
 
+void main() {
+  test('no op', () {
+// just stop the test driver complaining.
+    expect(true, isTrue);
+  });
+}
 // void main() {
 //   test('yaml scalar', () async {
 //     final parser = await YamlStringParser.build();
