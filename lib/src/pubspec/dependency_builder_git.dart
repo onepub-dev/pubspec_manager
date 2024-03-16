@@ -2,8 +2,8 @@ part of 'internal_parts.dart';
 
 /// Git style dependency.
 @immutable
-class DependencyGitBuilder implements DependencyBuilder {
-  DependencyGitBuilder({
+class DependencyBuilderGit implements DependencyBuilder {
+  DependencyBuilderGit({
     required this.name,
     this.url,
     this.ref,
@@ -18,6 +18,8 @@ class DependencyGitBuilder implements DependencyBuilder {
   final String? path;
   late final List<String> _comments;
 
+  /// List of comments to be prepended to the
+  /// dependency.
   List<String> get comments => _comments;
 
   @override

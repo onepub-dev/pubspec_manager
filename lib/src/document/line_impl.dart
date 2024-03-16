@@ -6,7 +6,7 @@ class LineImpl implements Line, Renderer {
   /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
-  LineImpl(this.document, this._text, this.lineNo, [LineType? lineType])
+  LineImpl(this._document, this._text, this.lineNo, [LineType? lineType])
       : missing = false {
     final trimmed = _text.trimLeft();
 
@@ -57,7 +57,7 @@ class LineImpl implements Line, Renderer {
   }
 
   LineImpl.copy(LineImpl line)
-      : document = line.document,
+      : _document = line._document,
         _text = line._text,
         lineNo = line.lineNo,
         indent = line.indent,
@@ -67,7 +67,7 @@ class LineImpl implements Line, Renderer {
         inlineComment = line.inlineComment,
         commentOffset = line.commentOffset;
 
-  LineImpl.missing(this.document, this.lineType)
+  LineImpl.missing(this._document, this.lineType)
       : lineNo = -1,
         _text = '',
         indent = 0,
@@ -82,7 +82,7 @@ class LineImpl implements Line, Renderer {
   }
 
   @override
-  late final Document document;
+  late final Document _document;
 
   /// The text content of the line.
   String _text;
@@ -176,7 +176,7 @@ class LineImpl implements Line, Renderer {
 
   /// Find the child of the current line that has the given [key]
   /// Return null if the [key] can't be found.
-  LineImpl findKeyChild(String key) => document.findKeyChild(this, key);
+  LineImpl findKeyChild(String key) => _document.findKeyChild(this, key);
 
   /// Find the child of the current line that has the given [key],
   /// Throw a [PubSpecException] if the key can't be found.
@@ -200,7 +200,7 @@ class LineImpl implements Line, Renderer {
   /// If [descendants] is true then all descendants are returned
   /// not just the immediate children.
   List<LineImpl> childrenOf({LineType? type, bool descendants = false}) =>
-      document.childrenOf(this, type: type, descendants: descendants);
+      _document.childrenOf(this, type: type, descendants: descendants);
 
   /// Search for a child that has key that matches one of the
   /// passed [keys].

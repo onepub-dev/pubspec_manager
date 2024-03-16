@@ -20,7 +20,7 @@ dependencies:
     expect(one is DependencyAltHosted, isTrue);
     final hosted = one as DependencyAltHosted;
     expect(hosted.name, equals('dcli'));
-    expect(hosted.version, equals('1.1.1'));
+    expect(hosted.versionConstraint, equals('1.1.1'));
     expect(hosted.hostedUrl, equals('https://onepub.dev'));
 
     // final two = pubspec.dependencies.elementAt(1);

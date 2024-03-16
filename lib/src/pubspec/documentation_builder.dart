@@ -6,9 +6,6 @@ class DocumentationBuilder implements SingleLine {
 
   String url;
 
-  // DocumentationAttached attach(Pubspec pubspec, int lineNo) =>
-  //     DocumentationAttached.attach(pubspec, lineNo, this);
-
   @override
   String get value => url;
 }

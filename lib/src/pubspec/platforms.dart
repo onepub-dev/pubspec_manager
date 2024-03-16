@@ -25,7 +25,7 @@ class Platforms with IterableMixin<PlatformSupport> {
 
   static const String key = 'platforms';
 
-  Section _section;
+  SectionImpl _section;
 
   /// The name of the dependency section such as
   /// dev_dpendencies
@@ -81,8 +81,8 @@ class Platforms with IterableMixin<PlatformSupport> {
 
     if (_section.missing) {
       // create the section.
-      line = _section.document.append(LineDetached('$key:'));
-      _section = SectionImpl.fromLine(line as LineImpl);
+      line = _section._document.append(LineDetached('$key:'));
+      _section = SectionImpl.fromLine(line);
     } else {
       if (_platforms.isNotEmpty) {
         line = _platforms.last.headerLine;

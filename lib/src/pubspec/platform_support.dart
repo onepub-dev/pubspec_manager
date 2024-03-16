@@ -33,10 +33,10 @@ class PlatformSupport extends SectionSingleLine {
   LineImpl get headerLine => _line;
 
   @override
-  Document get document => headerLine.document;
+  Document get _document => headerLine._document;
 
   @override
-  List<Line> get lines => [...comments.lines, _line];
+  List<Line> get lines => [...comments._lines, _line];
 
   /// The last line number used by this  section
   @override

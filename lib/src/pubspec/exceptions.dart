@@ -4,7 +4,7 @@ part of 'internal_parts.dart';
 /// on this exception.
 class PubSpecException implements Exception {
   PubSpecException(this.line, this.message) {
-    document = line?.document;
+    document = line?._document;
   }
   PubSpecException.forDocument(this.document, this.message);
 

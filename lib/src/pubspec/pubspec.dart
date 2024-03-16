@@ -19,8 +19,8 @@ class PubSpec {
     this.name = Name._fromString(document, name);
     this.version = VersionBuilder.parse(version)._append(this);
     this.description = description == null
-        ? Description.missing(document)
-        : Description.fromString(document, description);
+        ? Description._missing(document)
+        : Description._fromString(document, description);
 
     this.environment = environment._attach(this, document.lastLine!);
     homepage = Homepage.missing(document);
@@ -287,18 +287,18 @@ class PubSpec {
 
   void _validate() {
     final keys = <String>{};
-    for (final dep in dependencies) {
+    for (final dep in dependencies.list) {
       if (keys.contains(dep.name)) {
-        throw DuplicateKeyException(dep.section.headerLine,
+        throw DuplicateKeyException(dep._section.headerLine,
             'Found a duplicate of dependency ${dep.name} ');
       }
       keys.add(dep.name);
     }
     keys.clear();
 
-    for (final dep in devDependencies) {
+    for (final dep in devDependencies.list) {
       if (keys.contains(dep.name)) {
-        throw DuplicateKeyException(dep.section.headerLine,
+        throw DuplicateKeyException(dep._section.headerLine,
             'Found a duplicate of dev_dependency ${dep.name} ');
       }
       keys.add(dep.name);

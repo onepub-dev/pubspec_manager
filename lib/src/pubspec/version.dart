@@ -25,9 +25,9 @@ class Version extends SectionImpl implements Section {
   factory Version._fromLine(LineImpl line) {
     final missing = line.missing;
     if (missing) {
-      return Version.missing(line.document);
+      return Version.missing(line._document);
     } else {
-      return Version.missing(line.document)
+      return Version.missing(line._document)
         ..headerLine = line
         .._version = parseVersion(line, line.value)
         ..quoted = _isQuoted(line.value)
@@ -86,7 +86,7 @@ class Version extends SectionImpl implements Section {
 
     if (missing) {
       missing = false;
-      headerLine = document.append(LineDetached('$keyName: $version'));
+      headerLine = _document.append(LineDetached('$keyName: $version'));
     } else {
       headerLine.value = _stripQuotes(version);
     }
@@ -139,7 +139,7 @@ class Version extends SectionImpl implements Section {
     try {
       return sm.Version.parse(_stripQuotes(value));
     } on VersionException catch (e) {
-      e.document = line.document;
+      e.document = line._document;
       // ignore: use_rethrow_when_possible
       throw e;
     }

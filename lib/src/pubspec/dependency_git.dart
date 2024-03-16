@@ -1,12 +1,12 @@
 part of 'internal_parts.dart';
 
-/// Git style dependency.
-class DependencyGit implements Dependency {
+/// A dependency that is hosted in a git repository
+class DependencyGit with DependencyMixin implements Dependency {
   /// Load the git dependency from the [Document]  starting
   /// from [line].
   DependencyGit._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        section = SectionImpl.fromLine(line) {
+        _section = SectionImpl.fromLine(line) {
     _name = _line.key;
     final details = GitDetails.fromLine(_line);
 
@@ -18,25 +18,19 @@ class DependencyGit implements Dependency {
 
   /// Create a Git dependency and insert it into the document
   DependencyGit._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyGitBuilder dependency) {
+      PubSpec pubspec, Line lineBefore, DependencyBuilderGit dependency) {
     _name = dependency.name;
     _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
 
     _details = GitDetails(dependency);
-    _details._attach(section, _line);
+    _details._attach(_section, _line);
 
-    section = SectionImpl.fromLine(_line);
-
-    // // ignore: prefer_foreach
-    // for (final comment in dependency.comments) {
-    //   comments.append(comment);
-    // }
+    _section = SectionImpl.fromLine(_line);
   }
-  static const key = 'git';
 
   @override
-  late final Section section;
+  late final SectionImpl _section;
 
   late final String _name;
 
@@ -55,21 +49,19 @@ class DependencyGit implements Dependency {
     _line.key = name;
   }
 
-  // @override
-  // List<Line> get lines =>
-  //     [..._section.comments.lines, _line, ..._details.lines];
-
   @override
-  Dependency append(DependencyBuilder dependency) {
-    _dependencies.append(dependency);
+  Dependency add(DependencyBuilder dependency) {
+    _dependencies.add(dependency);
     return this;
   }
+
+  static const _key = 'git';
 }
 
 /// Holds the details of a git dependency.
 class GitDetails {
   // GitDetails({this.url, this.ref, this.path});
-  GitDetails(DependencyGitBuilder dependency)
+  GitDetails(DependencyBuilderGit dependency)
       : url = dependency.url,
         ref = dependency.ref,
         path = dependency.path;
@@ -99,7 +91,7 @@ class GitDetails {
         if (pathLine != null) pathLine!
       ];
 
-  void _attach(Section section, LineImpl lineBefore) {
+  void _attach(SectionImpl section, LineImpl lineBefore) {
     if (_attachLine(section, lineBefore,
         key: 'url', value: url, inserted: (line) => urlLine = line)) {
       lineBefore = urlLine!;
@@ -114,14 +106,15 @@ class GitDetails {
     }
   }
 
-  bool _attachLine(Section section, Line lineBefore,
+  bool _attachLine(SectionImpl section, Line lineBefore,
       {required String key,
       required String? value,
       required void Function(LineImpl) inserted}) {
     var attached = false;
     if (value != null) {
-      final _line = LineImpl.forInsertion(section.document, '    $key: $value');
-      section.document.insertAfter(_line, lineBefore);
+      final _line =
+          LineImpl.forInsertion(section._document, '    $key: $value');
+      section._document.insertAfter(_line, lineBefore);
       inserted(_line);
       attached = true;
     }

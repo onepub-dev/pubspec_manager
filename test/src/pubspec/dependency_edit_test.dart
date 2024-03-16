@@ -21,22 +21,25 @@ void main() {
     const version = '1.5.1';
     final pubspec = PubSpec.loadFromString(content);
     final devDependencies = pubspec.devDependencies
-      ..append(DependencyPubHostedBuilder(name: 'test', version: version));
+      ..add(
+          DependencyBuilderPubHosted(name: 'test', versionConstraint: version));
     expect(devDependencies.exists('test'), isTrue);
     final testDep = devDependencies['test'];
     expect(testDep != null, isTrue);
-    expect(testDep!.section.headerLine.lineNo, equals(13));
+    expect(testDep!.lineNo, equals(13));
     expect(testDep, isA<DependencyVersioned>());
-    expect((testDep as DependencyVersioned).version, equals(version));
+    expect((testDep as DependencyVersioned).versionConstraint, equals(version));
 
     final dependencies = pubspec.dependencies
-      ..append(DependencyPubHostedBuilder(name: 'dcli_core', version: version));
+      ..add(DependencyBuilderPubHosted(
+          name: 'dcli_core', versionConstraint: version));
     expect(dependencies.exists('dcli_core'), isTrue);
     final dcliCore = dependencies['dcli_core'];
     expect(dcliCore != null, isTrue);
-    expect(dcliCore!.section.headerLine.lineNo, equals(10));
+    expect(dcliCore!.lineNo, equals(10));
     expect(dcliCore, isA<DependencyVersioned>());
-    expect((dcliCore as DependencyVersioned).version, equals(version));
+    expect(
+        (dcliCore as DependencyVersioned).versionConstraint, equals(version));
     expect(pubspec.document.lines.length, equals(15));
   });
 

@@ -6,63 +6,58 @@ part of 'internal_parts.dart';
 /// to the dependant package.
 /// A path dependency takes the form of:
 /// dependencies:
-///   dcli:
-///     path: ../dcli
-class DependencySdk implements Dependency {
+///   flutter:
+///     sdk: flutter
+class DependencySdk with DependencyMixin implements Dependency {
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencySdk._fromLine(this._dependencies, this._line)
-      : section = SectionImpl.fromLine(_line) {
-    _name = _line.key;
-    _pathLine = _line.findRequiredKeyChild(key);
-    path = _pathLine.value;
+      : _section = SectionImpl.fromLine(_line) {
+    name = _line.key;
+    final sdkLine = _line.findRequiredKeyChild(_key);
+    sdk = sdkLine.value;
   }
 
   /// Creates an Sdk Dependency inserting it into the document after
   /// [lineBefore]
   DependencySdk._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencySdkBuilder dependency) {
-    _name = dependency.name;
-    path = dependency.path;
+      PubSpec pubspec, Line lineBefore, DependencyBuilderSdk dependency) {
+    name = dependency.name;
+    sdk = dependency.path;
 
-    _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
+    _line = LineImpl.forInsertion(pubspec.document, '  $name:');
     pubspec.document.insertAfter(_line, lineBefore);
 
-    _pathLine = LineImpl.forInsertion(
-        pubspec.document, '${_line.childIndent}$key: $path');
-    pubspec.document.insertAfter(_pathLine, _line);
+    final sdkLine = LineImpl.forInsertion(
+        pubspec.document, '${_line.childIndent}$_key: $sdk');
+    pubspec.document.insertAfter(sdkLine, _line);
 
-    section = SectionImpl.fromLine(_line);
-
-    // // ignore: prefer_foreach
-    // for (final comment in dependency.comments) {
-    //   comments.append(comment);
-    // }
+    _section = SectionImpl.fromLine(_line);
   }
-  static const key = 'sdk';
 
   @override
-  late final Section section;
-  late final String _name;
-  late final String path;
+  late final SectionImpl _section;
+  @override
+  late final String name;
+
+  /// The sdk that provides this dependency
+  /// e.g. flutter
+  late final String sdk;
 
   /// The parent dependency key
   late final Dependencies _dependencies;
 
   /// Line that contained the dependency declaration
   late final LineImpl _line;
-  late final LineImpl _pathLine;
 
   @override
-  String get name => _name;
-
-  /// Allows cascading calls to append
-  @override
-  Dependency append(DependencyBuilder dependency) {
-    _dependencies.append(dependency);
+  Dependency add(DependencyBuilder dependency) {
+    _dependencies.add(dependency);
     return this;
   }
 
   @override
-  String toString() => section.lines.join('\n');
+  String toString() => _section.lines.join('\n');
+
+  static const _key = 'sdk';
 }

@@ -15,7 +15,7 @@ class Executables extends SectionImpl
       : _pubspec = pubspec,
         super.missing(pubspec.document, keyName);
 
-  Executables._fromLine(PubSpec pubspec, super.line)
+  Executables._fromLine(PubSpec pubspec, super.headerLine)
       : _pubspec = pubspec,
         super.fromLine();
 
@@ -63,7 +63,7 @@ class Executables extends SectionImpl
 
     if (missing) {
       // create the section.
-      lineBefore = document.append(LineDetached('$key:'));
+      lineBefore = _document.append(LineDetached('$key:'));
     } else {
       if (_executables.isNotEmpty) {
         lineBefore = _executables.last.headerLine;
@@ -81,7 +81,7 @@ class Executables extends SectionImpl
   /// by creating it if it doesn't exist.
   void _ensure() {
     if (missing) {
-      headerLine = document.append(LineDetached('$key:'));
+      headerLine = _document.append(LineDetached('$key:'));
     }
   }
 

@@ -6,7 +6,7 @@ abstract class Renderer {
 }
 
 abstract class Line {
-  Document get document;
+  Document get _document;
 
   String get text;
 

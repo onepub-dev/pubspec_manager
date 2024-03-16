@@ -13,10 +13,12 @@ part of 'internal_parts.dart';
 /// If no version is specified then 'any' is assumed.
 ///
 /// See: for dependencies hosted on pub.dev use [DependencyPubHosted]
-class DependencyAltHosted implements Dependency, DependencyVersioned {
+class DependencyAltHosted
+    with DependencyMixin
+    implements Dependency, DependencyVersioned {
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
-      : section = SectionImpl.fromLine(_line) {
+      : _section = SectionImpl.fromLine(_line) {
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -24,7 +26,7 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
 
     _versionLine = _line.findKeyChild('version');
     if (!_versionLine.missing) {
-      _version = _versionLine.value;
+      _versionConstraint = _versionLine.value;
     }
   }
 
@@ -34,7 +36,7 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
       Line lineBefore, DependencyAltHostedBuilder dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
-    _version = dependency.version;
+    _versionConstraint = dependency.versionConstraint;
 
     _line = LineImpl.forInsertion(pubspec.document, '  $_name: ');
 
@@ -43,27 +45,25 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
         LineImpl.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
     lineBefore = pubspec.document.insertAfter(_hostedUrlLine, lineBefore);
 
-    if (_version != null) {
-      _versionLine =
-          LineImpl.forInsertion(pubspec.document, '    version: $_version');
+    if (_versionConstraint != null) {
+      _versionLine = LineImpl.forInsertion(
+          pubspec.document, '    version: $_versionConstraint');
       lineBefore = pubspec.document.insertAfter(_versionLine, lineBefore);
     } else {
       _versionLine = LineImpl.missing(pubspec.document, LineType.key);
     }
-    section = SectionImpl.fromLine(_line);
+    _section = SectionImpl.fromLine(_line);
   }
-  static const key = 'hosted';
 
-  @visibleForTesting
   @override
-  late Section section;
+  late SectionImpl _section;
 
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
 
   late String _name;
   late String _hostedUrl;
-  late String? _version;
+  late String? _versionConstraint;
 
   late final LineImpl _line;
   late final LineImpl _hostedUrlLine;
@@ -77,6 +77,8 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
     _line.value = name;
   }
 
+  /// The url where this package is hosted.
+  /// e.g. https://onepub.dev/packages/money
   String get hostedUrl => _hostedUrl;
 
   set hostedUrl(String hostedUrl) {
@@ -86,18 +88,22 @@ class DependencyAltHosted implements Dependency, DependencyVersioned {
 
   /// The version constraint of the dependency.
   /// If no version is provided then `any` is used.
+  ///
+  ///  e.g. ^1.0.0
   @override
-  String get version => _version ?? 'any';
+  String get versionConstraint => _versionConstraint ?? 'any';
 
   @override
-  set version(String version) {
-    _version = version;
+  set versionConstraint(String version) {
+    _versionConstraint = version;
     _versionLine.value = version;
   }
 
   @override
-  Dependency append(DependencyBuilder dependency) {
-    _dependencies.append(dependency);
+  Dependency add(DependencyBuilder dependency) {
+    _dependencies.add(dependency);
     return this;
   }
+
+  static const _key = 'hosted';
 }

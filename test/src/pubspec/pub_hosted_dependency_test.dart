@@ -12,13 +12,13 @@ void main() {
     expect(one is DependencyPubHosted, isTrue);
     var pubHosted = one as DependencyPubHosted;
     expect(one.name, equals('dcli'));
-    expect(pubHosted.version, equals('2.3.0'));
+    expect(pubHosted.versionConstraint, equals('2.3.0'));
 
     final two = pubspec.dependencies.list.elementAt(1);
     expect(two is DependencyPubHosted, isTrue);
     pubHosted = two as DependencyPubHosted;
     expect(two.name, equals('dcli_core'));
-    expect(pubHosted.version, equals('2.3.1'));
+    expect(pubHosted.versionConstraint, equals('2.3.1'));
 
     final three = pubspec.dependencies.list.elementAt(2);
     expect(three is DependencySdk, isTrue);

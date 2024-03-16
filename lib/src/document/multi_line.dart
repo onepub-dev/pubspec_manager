@@ -15,7 +15,7 @@ part of '../pubspec/internal_parts.dart';
 /// depth of the parent.
 /// Scalars may include blank lines.
 class MultiLine extends SectionImpl implements Section {
-  MultiLine.fromLine(super.sectionHeading) : super.fromLine();
+  MultiLine.fromLine(super.headerLine) : super.fromLine();
   MultiLine.missing(super.document, super.key) : super.missing();
 
   factory MultiLine.fromDocument(Document document, String key) {
@@ -95,7 +95,7 @@ class MultiLine extends SectionImpl implements Section {
       }
     }
     if (missing) {
-      super.headerLine = document.append(detachedLines[0]);
+      super.headerLine = _document.append(detachedLines[0]);
       missing = false;
     } else {
       super.headerLine.value = KeyValue.fromText(detachedLines[0].text).value;
@@ -104,7 +104,7 @@ class MultiLine extends SectionImpl implements Section {
     /// If the string is multi-line then append
     /// each additional line as a child.
     for (final detached in detachedLines.skip(1)) {
-      _appendLine(detached.attach(document, LineType.multiline));
+      _appendLine(detached.attach(_document, LineType.multiline));
     }
   }
 

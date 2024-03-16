@@ -35,25 +35,25 @@ void main() {
           .comments
           .append('This is the doco')
       ..dependencies
-          .append(DependencyAltHostedBuilder(
+          .add(DependencyAltHostedBuilder(
             name: 'dcli',
-            hosted: 'https://onepub.dev',
+            hostedUrl: 'https://onepub.dev',
             comments: const ['DCLI to do file system stuff', 'Hello world'],
           ))
-          .append(
-              DependencyPubHostedBuilder(name: 'dcli_core', version: '1.0.0'))
+          .add(DependencyBuilderPubHosted(
+              name: 'dcli_core', versionConstraint: '1.0.0'))
       ..devDependencies
-          .append(
-            DependencyPubHostedBuilder(
+          .add(
+            DependencyBuilderPubHosted(
                 comments: const ['hi there', 'ho there'],
                 name: 'test',
-                version: '1.0.0'),
+                versionConstraint: '1.0.0'),
           )
-          .append(DependencyPubHostedBuilder(
+          .add(DependencyBuilderPubHosted(
             name: 'test_it',
-            version: '1.0.0',
+            versionConstraint: '1.0.0',
           ))
-      ..dependencyOverrides.append(DependencyPathBuilder(
+      ..dependencyOverrides.add(DependencyBuilderPath(
         name: 'dcli',
         path: '../../some/path',
         comments: const ['For local dev'],
@@ -65,7 +65,8 @@ void main() {
       ..executables
           .append(name: 'myapp')
           .append(name: 'installer', script: 'install')
-          .comments.append('')
+          .comments
+          .append('')
       ..save(filename: 'example.yaml');
   });
 }

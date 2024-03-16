@@ -3,15 +3,15 @@ part of '../pubspec/internal_parts.dart';
 /// A section which is a single line with no children
 /// but which can have comments.
 class SectionSingleLine extends SectionImpl implements Section {
-  SectionSingleLine.fromLine(super.sectionHeading)
-      : _indent = sectionHeading.indent,
+  SectionSingleLine.fromLine(super.headerLine)
+      : _indent = headerLine.indent,
         super.fromLine();
 
   SectionSingleLine.attach(
       PubSpec pubspec, Line lineBefore, this._indent, String key, String value)
       : super.fromLine(LineImpl.forInsertion(
             pubspec.document, LineImpl.buildLine(_indent, key, value))) {
-    document.insertAfter(headerLine, lineBefore);
+    _document.insertAfter(headerLine, lineBefore);
   }
 
   SectionSingleLine._appendLine(
@@ -33,7 +33,7 @@ class SectionSingleLine extends SectionImpl implements Section {
   set value(String value) {
     if (missing) {
       final detached = LineDetached(LineImpl.buildLine(_indent, key, value));
-      headerLine = document.append(detached);
+      headerLine = _document.append(detached);
       missing = false;
     } else {
       headerLine.value = value;

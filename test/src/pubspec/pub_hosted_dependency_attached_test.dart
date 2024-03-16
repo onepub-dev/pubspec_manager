@@ -3,7 +3,6 @@ import 'package:test/test.dart';
 
 import '../util/with_temp_file.dart';
 
-
 const content = '''
 name: one
 description: fred
@@ -21,7 +20,7 @@ void main() {
 
       pubspec.dependencies
         ..remove('money')
-        ..append(DependencyPubHostedBuilder(name: 'money2'));
+        ..add(DependencyBuilderPubHosted(name: 'money2'));
       expect(pubspec.dependencies.exists('money'), isFalse);
       expect(pubspec.dependencies.exists('money2'), isTrue);
       pubspec.saveTo(pubspecFile);

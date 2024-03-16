@@ -5,7 +5,7 @@ part of '../pubspec/internal_parts.dart';
 /// children, but may have comments.
 class LineSection extends SectionImpl implements Section, Line {
   /// Build a [LineSection] from an attached line.
-  LineSection.fromLine(super.sectionHeading) : super.fromLine();
+  LineSection.fromLine(super.headerLine) : super.fromLine();
 
   // LineSection.fromLine(super.document, this.key, super.text, super.loneNo);
 
@@ -22,10 +22,6 @@ class LineSection extends SectionImpl implements Section, Line {
 
   List<Line> childrenOf({LineType? type, bool descendants = false}) =>
       headerLine.childrenOf(type: type, descendants: descendants);
-
-  set document(Document _document) {
-    headerLine.document = _document;
-  }
 
   Line findKeyChild(String key) => headerLine.findKeyChild(key);
 

@@ -82,7 +82,7 @@ void create() {
     ..dependencies
         .append(DependencyAltHostedBuilder(
           name: 'dcli',
-          hosted: 'https://onepub.dev',
+          hostedUrl: 'https://onepub.dev',
           comments: const ['DCLI to do file system stuff', 'Hello world'],
         ))
         .append(DependencyPubHostedBuilder(name: 'dcli_core', version: '1.0.0'))

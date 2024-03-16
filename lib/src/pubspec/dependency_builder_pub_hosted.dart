@@ -6,20 +6,27 @@ part of 'internal_parts.dart';
 ///   dcli: ^3.0.1
 ///
 @immutable
-class DependencyPubHostedBuilder implements DependencyBuilder {
-  /// If you don't pass in a [version] then the version will
+class DependencyBuilderPubHosted implements DependencyBuilder {
+  /// If you don't pass in a [versionConstraint] then the version will
   /// be left empty when you save
-  DependencyPubHostedBuilder({
+  /// The [name] of the dependency to add.
+  /// The [versionConstraint] such as
+  DependencyBuilderPubHosted({
     required this.name,
-    this.version,
+    this.versionConstraint,
     List<String>? comments,
   }) : _comments = comments ?? <String>[];
 
   @override
   late final String name;
-  late final String? version;
+
+  /// The version constraint for the dependency
+  /// e.g. ^1.0.0
+  late final String? versionConstraint;
   late final List<String> _comments;
 
+  /// List of comments to be prepended to the
+  /// dependency.
   List<String> get comments => _comments;
 
   @override

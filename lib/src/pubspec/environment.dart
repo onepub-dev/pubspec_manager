@@ -25,11 +25,11 @@ class Environment extends SectionImpl implements Section {
     _flutterLine = line.findKeyChild('flutter');
 
     _sdk = _sdkLine.missing
-        ? VersionConstraint._missing(document, sdkKey)
+        ? VersionConstraint._missing(_document, sdkKey)
         : VersionConstraint._fromLine(_sdkLine);
 
     _flutter = _flutterLine.missing
-        ? VersionConstraint._missing(document, sdkKey)
+        ? VersionConstraint._missing(_document, sdkKey)
         : VersionConstraint._fromLine(_flutterLine);
   }
 
@@ -100,7 +100,7 @@ class Environment extends SectionImpl implements Section {
   set sdk(String version) {
     _ensure();
     if (_sdk.missing) {
-      final sdkLine = LineImpl.forInsertion(document, '  sdk: $version');
+      final sdkLine = LineImpl.forInsertion(_document, '  sdk: $version');
       _appendLine(sdkLine);
       _sdkLine = sdkLine;
       _sdk = VersionConstraint._fromLine(_sdkLine);
@@ -114,7 +114,7 @@ class Environment extends SectionImpl implements Section {
     _ensure();
     if (_flutter.missing) {
       final flutterLine =
-          LineImpl.forInsertion(document, '  flutter: $version');
+          LineImpl.forInsertion(_document, '  flutter: $version');
       _appendLine(flutterLine);
       _flutterLine = flutterLine;
       _flutter = VersionConstraint._fromLine(_flutterLine);
@@ -128,7 +128,7 @@ class Environment extends SectionImpl implements Section {
   /// by creating it if it doesn't exist.
   void _ensure() {
     if (missing) {
-      headerLine = document.append(LineDetached('$_key:'));
+      headerLine = _document.append(LineDetached('$_key:'));
     }
   }
 

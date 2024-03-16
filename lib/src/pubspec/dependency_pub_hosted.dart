@@ -4,10 +4,12 @@ part of 'internal_parts.dart';
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
-class DependencyPubHosted implements Dependency, DependencyVersioned {
+class DependencyPubHosted
+    with DependencyMixin
+    implements Dependency, DependencyVersioned {
   DependencyPubHosted._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        section = SectionImpl.fromLine(line) {
+        _section = SectionImpl.fromLine(line) {
     // the line is of the form '<name>: <version>'
     _name = line.key;
     _version = line.value;
@@ -18,18 +20,18 @@ class DependencyPubHosted implements Dependency, DependencyVersioned {
     this._dependencies,
     PubSpec pubspec,
     Line lineBefore,
-    DependencyPubHostedBuilder dependency,
+    DependencyBuilderPubHosted dependency,
   ) {
     _name = dependency.name;
-    _version = dependency.version;
+    _version = dependency.versionConstraint;
     final line = LineImpl.forInsertion(pubspec.document, '  $_name: $_version');
     _line = pubspec.document.insertAfter(line, lineBefore);
 
-    section = SectionImpl.fromLine(_line);
+    _section = SectionImpl.fromLine(_line);
   }
 
   @override
-  late Section section;
+  late SectionImpl _section;
 
   late String _name;
   late String? _version;
@@ -48,10 +50,10 @@ class DependencyPubHosted implements Dependency, DependencyVersioned {
   }
 
   @override
-  String get version => _version ?? 'any';
+  String get versionConstraint => _version ?? 'any';
 
   @override
-  set version(String version) {
+  set versionConstraint(String version) {
     _version = version;
     _line.value = version;
   }
@@ -60,8 +62,8 @@ class DependencyPubHosted implements Dependency, DependencyVersioned {
   // List<Line> get lines => [...comments.lines, _line];
 
   @override
-  Dependency append(DependencyBuilder dependency) {
-    _dependencies.append(dependency);
+  Dependency add(DependencyBuilder dependency) {
+    _dependencies.add(dependency);
     return this;
   }
 }

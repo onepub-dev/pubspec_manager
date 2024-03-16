@@ -4,7 +4,7 @@ part of 'internal_parts.dart';
 /// to the pubspec.
 /// If no version is specified then 'any' is assumed.
 ///
-/// Use this method with [Dependencies.append] to add a dependencies.
+/// Use this method with [Dependencies.add] to add a dependencies.
 /// ```dart
 /// pubspec.devDependencies.append(
 ///     DependencyAltHostedBuilder(name: 'fred',

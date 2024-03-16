@@ -157,11 +157,11 @@ dev_dependencies:
       ..repository.set('https;//repository')
       ..issueTracker.set('https://issues')
       ..documentation.set('https://doco')
-      ..dependencies.append(DependencyPathBuilder(name: 'dcli', path: '..'))
-      ..devDependencies.append(
-          DependencyPubHostedBuilder(name: 'lint_hard', version: '1.0.0'))
+      ..dependencies.add(DependencyBuilderPath(name: 'dcli', path: '..'))
+      ..devDependencies.add(DependencyBuilderPubHosted(
+          name: 'lint_hard', versionConstraint: '1.0.0'))
       ..dependencyOverrides
-          .append(DependencyPathBuilder(name: 'lint_hard', path: '..'))
+          .add(DependencyBuilderPath(name: 'lint_hard', path: '..'))
       ..executables.append(name: 'test').comments.append('The main exec')
       ..platforms.append(PlatformEnum.android)
       ..platforms.appendAll([PlatformEnum.ios, PlatformEnum.linux]);

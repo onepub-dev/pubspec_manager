@@ -8,11 +8,11 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class DependencyPath implements Dependency {
+class DependencyPath with DependencyMixin implements Dependency {
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencyPath._fromLine(this._dependencies, this._line)
-      : section = SectionImpl.fromLine(_line) {
+      : _section = SectionImpl.fromLine(_line) {
     _name = _line.key;
     _pathLine = _line.findRequiredKeyChild('path');
     path = _pathLine.value;
@@ -21,7 +21,7 @@ class DependencyPath implements Dependency {
   /// Creates a  Path Dependency inserting it into the document after
   /// [lineBefore]
   DependencyPath._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyPathBuilder dependency) {
+      PubSpec pubspec, Line lineBefore, DependencyBuilderPath dependency) {
     _name = dependency.name;
     path = dependency.path;
 
@@ -32,17 +32,17 @@ class DependencyPath implements Dependency {
         pubspec.document, '${_line.childIndent}path: $path');
     pubspec.document.insertAfter(_pathLine, _line);
 
-    section = SectionImpl.fromLine(_line);
+    _section = SectionImpl.fromLine(_line);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {
     //   comments.append(comment);
     // }
   }
-  static const key = 'path';
+  static const _key = 'path';
 
   @override
-  late final Section section;
+  late final SectionImpl _section;
   late final String _name;
   late final String path;
 
@@ -58,11 +58,11 @@ class DependencyPath implements Dependency {
 
   /// Allows cascading calls to append
   @override
-  Dependency append(DependencyBuilder dependency) {
-    _dependencies.append(dependency);
+  Dependency add(DependencyBuilder dependency) {
+    _dependencies.add(dependency);
     return this;
   }
 
   @override
-  String toString() => section.lines.join('\n');
+  String toString() => _section.lines.join('\n');
 }

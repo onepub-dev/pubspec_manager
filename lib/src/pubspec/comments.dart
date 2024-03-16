@@ -3,7 +3,7 @@
 part of 'internal_parts.dart';
 
 /// Used to hold the comments that prefix a section.
-/// A comment section is all comments/blank lines that are above
+/// A comment section is all the comments/blank lines that are above
 /// a section that are not owned by a (prior) section.
 ///
 /// ```yaml
@@ -11,11 +11,16 @@ part of 'internal_parts.dart';
 /// # A comment which will be associated the version section.
 /// version: 1.0.0
 /// ```
+/// Each section has a comments object associated with it.
+///
+/// ```dart
+/// pubspec.name.comments.append('Another comment');
+/// ```
 class Comments {
-  Comments(this._section) {
+  Comments._(this._section) {
     _lines = _commentsAsLine();
   }
-  Comments.empty(this._section) : _lines = <Line>[];
+  Comments._empty(this._section) : _lines = <Line>[];
 
   /// The section these comments are attached to.
   final SectionImpl _section;
@@ -24,7 +29,7 @@ class Comments {
   /// This will include any blank lines upto the end of the prior
   /// section.
   List<Line> _commentsAsLine() {
-    final document = _section.document;
+    final document = _section._document;
 
     final prefix = <Line>[];
 
@@ -61,17 +66,20 @@ class Comments {
   /// All of the lines that make up this comment.
   late final List<Line> _lines;
 
-  List<Line> get lines => _lines;
-
-  /// the number of comment lines prepended to this section
+  /// The number of comment lines prepended to this section
   int get length => _lines.length;
+
+  /// Unmodifiable List of comments. To modify the comment list
+  /// use [append], [removeAt] and [removeAll].
+  List<String> get comments =>
+      List.unmodifiable(_lines.map((line) => line.value));
 
   /// Add [comment] to the PubSpec
   /// after the last line in this comment section.
   /// DO NOT prefix [comment] with a '#' as this
   /// method adds the '#'.
   Comments append(String comment) {
-    final document = _section.headerLine.document;
+    final document = _section.headerLine._document;
     final commentLine = LineImpl.forInsertion(
         document, '${LineImpl.expandi(_section.headerLine.indent)}# $comment');
     _lines.add(commentLine);
@@ -79,11 +87,11 @@ class Comments {
     return this;
   }
 
-  /// removes the comment a offset [index] in the list
-  /// of comments for this section. [index] is zero based.
+  /// Removes the comment a offset [index] in the list
+  /// of comments for this [Section]. [index] is zero based.
   /// If no comment exists at [index] then a [RangeError] is thrown.
   void removeAt(int index) {
-    final document = _section.document;
+    final document = _section._document;
     if (index < 0) {
       throw OutOfBoundsException(
           _section.headerLine, 'Index must be >= 0 found $index}');
@@ -97,8 +105,10 @@ class Comments {
     document.removeAll([line]);
   }
 
+  /// Remove all comments associated with this
+  /// [Section].
   void removeAll() {
-    _section.document.removeAll(_lines);
+    _section._document.removeAll(_lines);
     _lines.removeRange(0, _lines.length);
   }
 }

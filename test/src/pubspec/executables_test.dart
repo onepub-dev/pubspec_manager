@@ -20,7 +20,7 @@ void main() {
       pubspec.executables.append(name: 'full');
       expect(pubspec.executables['full'], isNotNull);
       expect(pubspec.executables['full']!.name, equals('full'));
-      expect(pubspec.executables['full']!.headerLine.text, '  full:');
+      expect((pubspec.executables['full']!).headerLine.text, '  full:');
 
       expect(pubspec.executables['dcli']!.scriptPath,
           equals(join('bin', 'dcli.dart')));
