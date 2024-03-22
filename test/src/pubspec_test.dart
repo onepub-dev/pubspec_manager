@@ -153,7 +153,7 @@ dev_dependencies:
       ..environment.flutter = '3.3.3'
       ..environment.sdk = '3.2.5'
       ..homepage.set('https:/.hi')
-      ..publishTo.value = 'https://pubslish to'
+      ..publishTo.set('https://pubslish to')
       ..repository.set('https;//repository')
       ..issueTracker.set('https://issues')
       ..documentation.set('https://doco')
