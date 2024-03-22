@@ -71,7 +71,7 @@ class Platforms {
       _section = SectionImpl.fromLine(line);
     } else {
       if (_platforms.isNotEmpty) {
-        line = _platforms.last.headerLine;
+        line = _platforms.last._section.headerLine;
       }
     }
     final attached = PlatformSupport._attach(_pubspec, line, platformEnum);
