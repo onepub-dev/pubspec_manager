@@ -25,6 +25,7 @@ void create() {
     ..name.set('erica')
     ..version.set('1.0.1')
     ..description.set('A change of description') // desc
+    ..documentation.set('https://docs.onepub.dev')
     ..environment.set(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0')
     ..homepage
         .set('https://onepub.dev/home')

@@ -1,6 +1,5 @@
 library internal;
 
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io' as io;
 
@@ -40,7 +39,6 @@ part 'dependency_pub_hosted.dart';
 part 'dependency_sdk.dart';
 part 'description.dart';
 part 'documentation.dart';
-part 'documentation_builder.dart';
 part 'environment.dart';
 part 'environment_builder.dart';
 part 'exceptions.dart';
@@ -49,8 +47,6 @@ part 'executable_builder.dart';
 part 'executables.dart';
 part 'homepage.dart';
 part 'issue_tracker.dart';
-part 'issue_tracker_builder.dart';
-part 'iterator_impl.dart';
 part 'name.dart';
 part 'platform_support.dart';
 part 'platforms.dart';

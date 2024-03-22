@@ -138,7 +138,7 @@ class VersionConstraint extends LineSection {
     try {
       return VersionConstraintBuilder.parseConstraint(_stripQuotes(value));
     } on VersionException catch (e) {
-      e.document = line._document;
+      e.document = (line as LineImpl)._document;
       // ignore: use_rethrow_when_possible
       throw e;
     }

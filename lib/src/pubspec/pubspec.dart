@@ -13,7 +13,7 @@ class PubSpec {
       String? version,
       String? description,
       EnvironmentBuilder? environment}) {
-    environment ??= EnvironmentBuilder.missing();
+    environment ??= EnvironmentBuilder._missing();
     document = Document.loadFromString('');
 
     this.name = Name._fromString(document, name);
@@ -23,11 +23,11 @@ class PubSpec {
         : Description._fromString(document, description);
 
     this.environment = environment._attach(this, document.lastLine!);
-    homepage = Homepage.missing(document);
+    homepage = Homepage._missing(document);
     publishTo = PublishTo.missing(document);
     repository = Repository.missing(document);
-    issueTracker = IssueTracker.missing(document);
-    documentation = Documentation.missing(document);
+    issueTracker = IssueTracker._missing(document);
+    documentation = Documentation._missing(document);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
@@ -39,7 +39,7 @@ class PubSpec {
     topics = SectionImpl.missing(document, 'topics');
   }
 
-  /// Loads the content of a pubspec.yaml from the string [content].
+  /// Loads the content of a pubspec.yaml from [content].
   factory PubSpec.loadFromString(String content) {
     final document = Document.loadFromString(content);
 
@@ -124,28 +124,46 @@ class PubSpec {
   /// [Document] that holds the lines read from the pubspec.yaml
   late Document document;
 
-  /// attibutes of the pubspec.yaml follow.
+  // attibutes of the pubspec.yaml follow.
 
+  /// Name of the package.
   late Name name;
+  /// version of the package.
   late Version version;
+  /// package description.
   late Description description;
+  /// The dart and/or flutter sdk version constraints.
   late Environment environment;
 
+  /// url to the homepage of the package.
   late final Homepage homepage;
+  /// the url of the repository where this package is to 
+  /// be published or 'none' if the package should never
+  /// be published.
   late final PublishTo publishTo;
+  /// Url of the source code repository for the package.
   late final Repository repository;
+  /// Url of the issue tracker for the package.
   late final IssueTracker issueTracker;
+  /// Url of the documentation for the package.
   late final Documentation documentation;
+  /// List of dependencies for the package.
   late final Dependencies dependencies;
+  /// List of the dev dependencies for the package.
   late final Dependencies devDependencies;
+
 
   /// During the development process, you might need to temporarily override
   /// a dependency.
   /// It is now recommended that you place overrides in a separate file
   /// pubpsec_overrides.yaml
   late final Dependencies dependencyOverrides;
+  /// List o fthe platforms supported by this package.
   late final Platforms platforms;
+  /// List of the executables that will be added to the path
+  /// when this package is globally activated ('dart pub global activate')
   late final Executables executables;
+  /// The u
   late final Section funding;
   late final Section falseSecrets;
   late final Section screenshots;
@@ -199,7 +217,7 @@ class PubSpec {
   }
 
   Platforms _initPlatforms() {
-    final line = document.findTopLevelKey(Platforms.key);
+    final line = document.findTopLevelKey(Platforms.keyName);
     if (line.missing) {
       return Platforms._missing(this);
     }
@@ -304,10 +322,10 @@ class PubSpec {
       keys.add(dep.name);
     }
     keys.clear();
-    for (final exec in executables) {
+    for (final exec in executables.list) {
       if (keys.contains(exec.name)) {
-        throw DuplicateKeyException(
-            exec.headerLine, 'Found a duplicate of executable ${exec.name} ');
+        throw DuplicateKeyException(exec._section.headerLine,
+            'Found a duplicate of executable ${exec.name} ');
       }
       keys.add(exec.name);
     }

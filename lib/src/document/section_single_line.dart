@@ -11,10 +11,10 @@ class SectionSingleLine extends SectionImpl implements Section {
       PubSpec pubspec, Line lineBefore, this._indent, String key, String value)
       : super.fromLine(LineImpl.forInsertion(
             pubspec.document, LineImpl.buildLine(_indent, key, value))) {
-    _document.insertAfter(headerLine, lineBefore);
+    document.insertAfter(headerLine, lineBefore);
   }
 
-  SectionSingleLine._appendLine(
+  SectionSingleLine.appendLine(
       Document document, this._indent, String key, String value)
       : super.missing(document, key) {
     final insertedLine =
@@ -33,7 +33,7 @@ class SectionSingleLine extends SectionImpl implements Section {
   set value(String value) {
     if (missing) {
       final detached = LineDetached(LineImpl.buildLine(_indent, key, value));
-      headerLine = _document.append(detached);
+      headerLine = document.append(detached);
       missing = false;
     } else {
       headerLine.value = value;

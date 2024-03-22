@@ -86,7 +86,7 @@ class Version extends SectionImpl implements Section {
 
     if (missing) {
       missing = false;
-      headerLine = _document.append(LineDetached('$keyName: $version'));
+      headerLine = document.append(LineDetached('$keyName: $version'));
     } else {
       headerLine.value = _stripQuotes(version);
     }
@@ -135,7 +135,7 @@ class Version extends SectionImpl implements Section {
     return value;
   }
 
-  static sm.Version parseVersion(Line line, String value) {
+  static sm.Version parseVersion(LineImpl line, String value) {
     try {
       return sm.Version.parse(_stripQuotes(value));
     } on VersionException catch (e) {

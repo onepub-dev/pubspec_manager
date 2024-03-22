@@ -105,5 +105,5 @@ class DependencyAltHosted
     return this;
   }
 
-  static const _key = 'hosted';
+  static const keyName = 'hosted';
 }

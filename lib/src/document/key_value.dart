@@ -3,7 +3,7 @@ import '../pubspec/internal_parts.dart';
 class KeyValue {
   KeyValue(this.key, this.value);
 
-  factory KeyValue.fromLine(Line line) {
+  factory KeyValue.fromLine(LineImpl line) {
     var content = line.text;
     if (line.inlineComment != null) {
       content = content.substring(0, line.commentOffset);

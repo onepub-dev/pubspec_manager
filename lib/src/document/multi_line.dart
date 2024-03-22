@@ -1,6 +1,6 @@
 part of '../pubspec/internal_parts.dart';
 
-/// Used to hold a single line that can have a multi-line scalar
+/// Used to hold a key that can have a multi-line scalar
 /// value. Currently only supported for the desription field.
 ///
 /// We support three forms of scalar.
@@ -77,7 +77,7 @@ class MultiLine extends SectionImpl implements Section {
     }
 
     // remove existing child lines as we are replacing them.
-    _clearChildren();
+    clearChildren();
 
     final valueLines = LineSplitter.split(value);
     final detachedLines = <LineDetached>[];
@@ -95,16 +95,16 @@ class MultiLine extends SectionImpl implements Section {
       }
     }
     if (missing) {
-      super.headerLine = _document.append(detachedLines[0]);
+      headerLine = document.append(detachedLines[0]);
       missing = false;
     } else {
-      super.headerLine.value = KeyValue.fromText(detachedLines[0].text).value;
+      headerLine.value = KeyValue.fromText(detachedLines[0].text).value;
     }
 
     /// If the string is multi-line then append
     /// each additional line as a child.
     for (final detached in detachedLines.skip(1)) {
-      _appendLine(detached.attach(_document, LineType.multiline));
+      appendLine(detached.attach(document, LineType.multiline));
     }
   }
 

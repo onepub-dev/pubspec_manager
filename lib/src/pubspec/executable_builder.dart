@@ -7,11 +7,11 @@ class ExecutableBuilder {
   ExecutableBuilder({required this.name, String? script})
       : script = script ?? '';
 
-  ExecutableBuilder.missing()
-      : name = '',
-        script = '';
-
+  /// name of the executable
   String name;
+  /// The project relative path to the dart script.
+  /// Not required if the [name] is the name of a script
+  /// in the projects bin directory.
   String script;
 
   Executable _attach(PubSpec pubspec, Line lineBefore) =>

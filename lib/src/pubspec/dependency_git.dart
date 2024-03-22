@@ -8,7 +8,7 @@ class DependencyGit with DependencyMixin implements Dependency {
       : _line = line,
         _section = SectionImpl.fromLine(line) {
     _name = _line.key;
-    final details = GitDetails.fromLine(_line);
+    final details = _GitDetails.fromLine(_line);
 
     if (Strings.isNotBlank(_line.value) && details.refLine != null) {
       throw PubSpecException(_line,
@@ -23,7 +23,7 @@ class DependencyGit with DependencyMixin implements Dependency {
     _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
 
-    _details = GitDetails(dependency);
+    _details = _GitDetails(dependency);
     _details._attach(_section, _line);
 
     _section = SectionImpl.fromLine(_line);
@@ -37,7 +37,7 @@ class DependencyGit with DependencyMixin implements Dependency {
   /// The parent dependency key
   late final Dependencies _dependencies;
 
-  late final GitDetails _details;
+  late final _GitDetails _details;
 
   late final LineImpl _line;
 
@@ -55,20 +55,20 @@ class DependencyGit with DependencyMixin implements Dependency {
     return this;
   }
 
-  static const _key = 'git';
+  static const keyName = 'git';
 }
 
 /// Holds the details of a git dependency.
-class GitDetails {
+class _GitDetails {
   // GitDetails({this.url, this.ref, this.path});
-  GitDetails(DependencyBuilderGit dependency)
+  _GitDetails(DependencyBuilderGit dependency)
       : url = dependency.url,
         ref = dependency.ref,
         path = dependency.path;
 
   /// Load the git details associated with the git dependency
   /// at [line]
-  GitDetails.fromLine(LineImpl line)
+  _GitDetails.fromLine(LineImpl line)
       : urlLine = line.findKeyChild('url'),
         refLine = line.findKeyChild('ref'),
         pathLine = line.findKeyChild('path') {
@@ -112,9 +112,8 @@ class GitDetails {
       required void Function(LineImpl) inserted}) {
     var attached = false;
     if (value != null) {
-      final _line =
-          LineImpl.forInsertion(section._document, '    $key: $value');
-      section._document.insertAfter(_line, lineBefore);
+      final _line = LineImpl.forInsertion(section.document, '    $key: $value');
+      section.document.insertAfter(_line, lineBefore);
       inserted(_line);
       attached = true;
     }

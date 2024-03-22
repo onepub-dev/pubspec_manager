@@ -57,7 +57,7 @@ class Dependencies {
     // if we don't have a dependencies section then create it.
     if (_section.missing) {
       _section = SectionImpl.fromLine(
-          _section._document.append(LineDetached('$name:')));
+          _section.document.append(LineDetached('$name:')));
     }
 
     Line lineBefore = _section.headerLine;

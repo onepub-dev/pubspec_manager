@@ -81,7 +81,6 @@ class LineImpl implements Line, Renderer {
     return line;
   }
 
-  @override
   late final Document _document;
 
   /// The text content of the line.
@@ -205,7 +204,7 @@ class LineImpl implements Line, Renderer {
   /// Search for a child that has key that matches one of the
   /// passed [keys].
   /// Returns null if a child with one of the keys is not foun.d
-  Line? findOneOf(List<String> keys) {
+  LineImpl? findOneOf(List<String> keys) {
     final children = childrenOf(type: LineType.key);
 
     LineImpl? found;

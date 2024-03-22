@@ -6,9 +6,8 @@ part of '../pubspec/internal_parts.dart';
 /// Sections may be nested - e.g. The dependency key is a
 /// section as are each dependency under it.
 abstract class Section {
-  String get key;
-
-  /// An missing section doesn't appear in the pubspec.yaml
+  /// Indicates that this section does not
+  /// exist in the pubspec.
   bool get missing;
 
   /// returns the list of lines associated with this section
@@ -18,8 +17,5 @@ abstract class Section {
   List<Line> get lines;
 
   /// List of comments associated (prepended) with this section
-  late final Comments comments;
-
-  /// The last line number used by this  section
-  int get lastLineNo;
+  Comments get comments;
 }

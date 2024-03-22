@@ -14,7 +14,7 @@ class DependencySdk with DependencyMixin implements Dependency {
   DependencySdk._fromLine(this._dependencies, this._line)
       : _section = SectionImpl.fromLine(_line) {
     name = _line.key;
-    final sdkLine = _line.findRequiredKeyChild(_key);
+    final sdkLine = _line.findRequiredKeyChild(keyName);
     sdk = sdkLine.value;
   }
 
@@ -29,7 +29,7 @@ class DependencySdk with DependencyMixin implements Dependency {
     pubspec.document.insertAfter(_line, lineBefore);
 
     final sdkLine = LineImpl.forInsertion(
-        pubspec.document, '${_line.childIndent}$_key: $sdk');
+        pubspec.document, '${_line.childIndent}$keyName: $sdk');
     pubspec.document.insertAfter(sdkLine, _line);
 
     _section = SectionImpl.fromLine(_line);
@@ -59,5 +59,5 @@ class DependencySdk with DependencyMixin implements Dependency {
   @override
   String toString() => _section.lines.join('\n');
 
-  static const _key = 'sdk';
+  static const keyName = 'sdk';
 }

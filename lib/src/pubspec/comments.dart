@@ -29,11 +29,11 @@ class Comments {
   /// This will include any blank lines upto the end of the prior
   /// section.
   List<Line> _commentsAsLine() {
-    final document = _section._document;
+    final document = _section.document;
 
     final prefix = <Line>[];
 
-    final lines = document.lines;
+    final lines = document._lines;
 
     // search upwards for comments starting from the prior line
     var lineNo = _section.headerLine.lineNo - 2;
@@ -91,7 +91,7 @@ class Comments {
   /// of comments for this [Section]. [index] is zero based.
   /// If no comment exists at [index] then a [RangeError] is thrown.
   void removeAt(int index) {
-    final document = _section._document;
+    final document = _section.document;
     if (index < 0) {
       throw OutOfBoundsException(
           _section.headerLine, 'Index must be >= 0 found $index}');
@@ -108,7 +108,7 @@ class Comments {
   /// Remove all comments associated with this
   /// [Section].
   void removeAll() {
-    _section._document.removeAll(_lines);
+    _section.document.removeAll(_lines);
     _lines.removeRange(0, _lines.length);
   }
 }

@@ -11,7 +11,7 @@ class PubSpecException implements Exception {
   PubSpecException.global(this.message);
 
   String message;
-  Line? line;
+  LineImpl? line;
   Document? document;
 
   @override
@@ -58,6 +58,13 @@ class DependencyNotFound extends PubSpecException {
 /// and that executable doesn't exist.
 class ExecutableNotFound extends PubSpecException {
   ExecutableNotFound(Document super.document, super.message)
+      : super.forDocument();
+}
+
+/// Thrown when you try to access an funding link by name
+/// and that funding link doesn't exist.
+class FundingLinkNotFound extends PubSpecException {
+  FundingLinkNotFound(Document super.document, super.message)
       : super.forDocument();
 }
 

@@ -1,26 +1,29 @@
-part of 'internal_parts.dart';
+import 'package:path/path.dart';
+import 'package:strings/strings.dart';
 
-/// A package executable that will be added to the user's PATh
+import '../../pubspec_manager.dart';
+import 'internal_parts.dart';
+
+/// A package FundingLink that will be added to the user's PATh
 /// when the globally activate the package.
-class Executable implements Section {
-  /// re-hydrate an executable from a line.
-  Executable._fromLine(this._line)
+class FundingLink implements Section {
+  /// re-hydrate an FundingLink from a line.
+  FundingLink._fromLine(this._line)
       : _name = _line.key,
         _script = _line.value,
         _section = SectionSingleLine.fromLine(_line);
 
-  Executable._attach(
-      PubSpec pubspec, Line lineBefore, ExecutableBuilder executable)
-      : _name = executable.name,
-        _script = executable.script,
-        _line = LineImpl.forInsertion(pubspec.document, _buildLine(executable)),
+  FundingLink._attach(
+      PubSpec pubspec, Line lineBefore, String url)
+      : _url = url,
+        _line =
+            LineImpl.forInsertion(pubspec.document, _buildLine(FundingLink)),
         _section = SectionSingleLine.attach(
-            pubspec, lineBefore, 1, executable.name, executable.script);
+            pubspec, lineBefore, 1, url);
 
   final SectionSingleLine _section;
 
-  String _name;
-  String _script;
+  String _url;
 
   late final LineImpl _line;
 
@@ -47,7 +50,7 @@ class Executable implements Section {
   /// returns the project relative path to the script.
   ///
   /// e.g.
-  /// executables:
+  /// FundingLinks:
   ///   dcli_install: main
   ///
   /// scriptPath => bin/main.dart
@@ -57,10 +60,10 @@ class Executable implements Section {
   @override
   List<Line> get lines => [...comments._lines, _line];
 
-  static String _buildLine(ExecutableBuilder executable) {
-    final prefix = '  ${executable.name}:';
+  static String _buildLine(FundingLinkBuilder FundingLink) {
+    final prefix = '  ${FundingLink.name}:';
 
-    final script = executable.script;
+    final script = FundingLink.script;
     if (Strings.isNotBlank(script)) {
       return '$prefix $script';
     } else {

@@ -1,5 +1,15 @@
 part of '../pubspec/internal_parts.dart';
 
+/// A line based representation of the underlying
+/// pubpsec.yaml. The [Document] holds a [Line] for
+/// each line in the pubspec.yaml.
+/// Any changes via the pubspec_manager api result
+/// in changes to the list of [_lines].
+/// You can use the [Document] to access settings
+/// that are outside of the pubspec specification.
+/// 
+/// Changes made directly to the [Document] are not
+/// reflected in the higher level APIs.
 class Document {
   /// Load the pubspec.yaml from the file located at [pathTo]
   /// into a an ordered list of [Line]s.
@@ -19,7 +29,7 @@ class Document {
 
     for (final line in contentLines) {
       final lineImpl = LineImpl(this, line, lineNo++);
-      lines.add(lineImpl);
+      _lines.add(lineImpl);
 
       /// check for duplicate top level keys.
       if (lineImpl.lineType == LineType.key && lineImpl.indent == 0) {
@@ -49,17 +59,20 @@ class Document {
   }
 
   /// The set of lines that hold the pubspec.yaml
-  List<LineImpl> lines = <LineImpl>[];
+  final List<LineImpl> _lines = <LineImpl>[];
+
+  List<Line> get lines => _lines;
 
   /// The path to the file that the pubspec.yaml was loaded from.
   late String pathTo;
 
-  Line? get lastLine => lines.isEmpty ? null : lines.last;
+  /// The last line in the document.
+  Line? get lastLine => _lines.isEmpty ? null : _lines.last;
 
   /// Return the line that has the given [key].
   /// Only lines of type [LineType.key] are considered.
   LineSection getLineForKey(String key) {
-    for (final line in lines) {
+    for (final line in _lines) {
       if (line.lineType == LineType.key) {
         if (line.key == key) {
           return LineSection.fromLine(line);
@@ -72,7 +85,7 @@ class Document {
   /// Finds a section for the given [key].
   /// If the [key] doesn't exist then returns null.
   Section findSectionForKey(String key) {
-    for (final line in lines) {
+    for (final line in _lines) {
       if (line.lineType == LineType.key) {
         final keyValue = KeyValue.fromLine(line);
         if (keyValue.key == key) {
@@ -110,7 +123,7 @@ class Document {
   /// Finds the first root key with the name [key]
   /// returns Line.missing if [key] was not found.
   LineImpl findTopLevelKey(String key) {
-    for (final child in lines) {
+    for (final child in _lines) {
       if (child.indent != 0) {
         continue;
       }
@@ -133,7 +146,7 @@ class Document {
   List<LineImpl> childrenOf(Line parent,
       {LineType? type, bool descendants = false}) {
     final children = <LineImpl>[];
-    for (final line in lines) {
+    for (final line in _lines) {
       /// wait until we see a line that is after the parent.
       if (line.lineNo > parent.lineNo) {
         /// If the ident decreases then we have passed all
@@ -162,8 +175,8 @@ class Document {
   /// The lines [Line.lineNo] will be updated to reflect
   /// the actual line number in the document.
   LineImpl append(LineDetached line) {
-    final attached = line.attach(this)..lineNo = lines.length + 1;
-    lines.add(attached);
+    final attached = line.attach(this)..lineNo = _lines.length + 1;
+    _lines.add(attached);
     _validate();
     return attached;
   }
@@ -175,17 +188,17 @@ class Document {
   /// Returns the inserted line.
   LineImpl insertAfter(LineImpl line, Line lineBefore) {
     line.lineNo = lineBefore.lineNo + 1;
-    assert(lines.isNotEmpty,
+    assert(_lines.isNotEmpty,
         "We should never be able to get here as lineBefore wouldn't exist");
 
     if (lineBefore.lineNo == lastLine!.lineNo) {
-      lines.add(line);
+      _lines.add(line);
     } else {
-      lines.insert(lineBefore.lineNo, line);
+      _lines.insert(lineBefore.lineNo, line);
     }
 
-    for (var i = line.lineNo; i < lines.length; i++) {
-      final _line = lines.elementAt(i);
+    for (var i = line.lineNo; i < _lines.length; i++) {
+      final _line = _lines.elementAt(i);
       _line.lineNo++;
     }
     _validate();
@@ -195,21 +208,21 @@ class Document {
   /// Inserts a line before the passed [lineAfter]
   void insertBefore(LineImpl line, Line lineAfter) {
     line.lineNo = lineAfter.lineNo - 1;
-    lines.insert(line.lineNo, line);
+    _lines.insert(line.lineNo, line);
 
-    for (var i = line.lineNo; i < lines.length; i++) {
-      final _line = lines.elementAt(i);
+    for (var i = line.lineNo; i < _lines.length; i++) {
+      final _line = _lines.elementAt(i);
       _line.lineNo++;
     }
     _validate();
   }
 
-  /// Removes all of the given [lines] from the
+  /// Removes all of the given [_lines] from the
   /// document then renumbers the remaining lines
   void removeAll(List<Line> toBeRemoved) {
     // ignore: prefer_foreach
     for (final line in toBeRemoved) {
-      lines.remove(line);
+      _lines.remove(line);
     }
     _reindex();
     _validate();
@@ -217,14 +230,14 @@ class Document {
 
   void _reindex() {
     var lineNo = 1;
-    for (final line in lines) {
+    for (final line in _lines) {
       line.lineNo = lineNo++;
     }
   }
 
   void _validate() {
     var expectedLineNo = 1;
-    for (final line in lines) {
+    for (final line in _lines) {
       if (line.lineNo != expectedLineNo) {
         throw PubSpecException(line, '''
 Oops you found a bug. Expected $expectedLineNo found: ${line.lineNo}

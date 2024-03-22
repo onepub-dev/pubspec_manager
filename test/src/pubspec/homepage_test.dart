@@ -24,7 +24,7 @@ void main() {
     test('comments', () {
       final pubspec = PubSpec(name: 'test');
       pubspec.homepage
-        ..value = 'http://x'
+        ..set('http://x')
         ..comments.append('line 2')
         ..comments.append('line 3');
     });

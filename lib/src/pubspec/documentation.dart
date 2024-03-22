@@ -1,33 +1,54 @@
 part of 'internal_parts.dart';
 
-class Documentation extends SectionSingleLine {
+/// Holds the url for the 'documentation' key.
+class Documentation implements Section {
   factory Documentation._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(Documentation._key);
+    final lineSection = document.getLineForKey(Documentation.keyName);
     if (lineSection.missing) {
-      return Documentation.missing(document);
+      return Documentation._missing(document);
     } else {
       return Documentation._(lineSection.headerLine);
     }
   }
 
-  Documentation._(super.line)
-      : builder = DocumentationBuilder(line.value),
-        super.fromLine();
+  Documentation._(LineImpl line)
+      : _url = line.value,
+        _section = SectionSingleLine.fromLine(line);
 
-  Documentation.missing(Document document)
-      : builder = DocumentationBuilder.missing(),
-        super.missing(document, 0, _key);
+  Documentation._missing(Document document)
+      : _url = '',
+        _section = SectionSingleLine.missing(document, 0, keyName);
 
-  final DocumentationBuilder builder;
-
-  // ignore: avoid_renaming_method_parameters
+  /// Modifies the package's documentation url
   Documentation set(String url) {
-    builder.url = url;
-    super.value = url;
+    _url = url;
+    _section.value = url;
 
     // ignore: avoid_returning_this
     return this;
   }
 
-  static const String _key = 'documentation';
+  /// Returns the url to the package's documetation.
+  String get value => _url;
+
+  SectionSingleLine _section;
+
+  /// Url to the location of the packages documentation
+  String _url;
+
+  /// List of comments associated (prepended) with this section
+  @override
+  Comments get comments => _section.comments;
+
+  /// returns the list of lines associated with this section
+  /// including any comments immediately above the section.
+  /// Comments may include blank lines and we return all
+  /// lines upto the end of the prior segment.
+  @override
+  List<Line> get lines => _section.lines;
+
+  @override
+  bool get missing => _section.missing;
+
+  static const String keyName = 'documentation';
 }

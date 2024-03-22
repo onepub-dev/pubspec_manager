@@ -11,19 +11,18 @@ enum PlatformEnum {
   windows,
 }
 
-/// Used to hold a list of [DependencyBuilder]s from
-/// a single dependency section in the pubspec.yaml
-/// e.g. the list of deps for the 'dependencies' key in pubspec.yaml
-class Platforms with IterableMixin<PlatformSupport> {
+/// Holds a list of supported platforms listed under the
+/// 'platforms' keyword.
+class Platforms {
   Platforms._missing(this._pubspec)
-      : _section = SectionImpl.missing(_pubspec.document, key);
+      : _section = SectionImpl.missing(_pubspec.document, keyName);
 
   Platforms._fromLine(this._pubspec, LineImpl line)
       : _section = SectionImpl.fromLine(line) {
     name = line.key;
   }
 
-  static const String key = 'platforms';
+  static const String keyName = 'platforms';
 
   SectionImpl _section;
 
@@ -36,24 +35,12 @@ class Platforms with IterableMixin<PlatformSupport> {
 
   final List<PlatformSupport> _platforms = <PlatformSupport>[];
 
-  /// List of the dependencies
+  /// List of the platform's that this package supports.
+  /// to modiify the list use [add], [addAll], [remove] and [removeAll]
   List<PlatformSupport> get list => List.unmodifiable(_platforms);
 
-  /// the number of dependencies in this section
-  @override
+  /// the number of platforms listed
   int get length => _platforms.length;
-
-  // @override
-  // List<Line> get lines {
-  //   final lines = <Line>[];
-  //   if (missing) {
-  //     return lines;
-  //   }
-  //   for (final Platform in _Platforms) {
-  //     lines.addAll(Platform.lines);
-  //   }
-  //   return lines;
-  // }
 
   /// returns the [PlatformSupport] with the given [platformEnum]
   /// if it exists in this section.
@@ -67,21 +54,20 @@ class Platforms with IterableMixin<PlatformSupport> {
     return null;
   }
 
-  Platforms appendAll(List<PlatformEnum> platforms) {
+  Platforms addAll(List<PlatformEnum> platforms) {
     for (final platform in platforms) {
-      append(platform);
+      add(platform);
     }
     return this;
   }
 
-  /// Add [platformEnum] to the PubSpec
-  /// after the last dependency.
-  Platforms append(PlatformEnum platformEnum) {
+  /// Add [platformEnum] as a supported platform.
+  Platforms add(PlatformEnum platformEnum) {
     var line = _section.headerLine;
 
     if (_section.missing) {
       // create the section.
-      line = _section._document.append(LineDetached('$key:'));
+      line = _section.document.append(LineDetached('$keyName:'));
       _section = SectionImpl.fromLine(line);
     } else {
       if (_platforms.isNotEmpty) {
@@ -110,15 +96,21 @@ class Platforms with IterableMixin<PlatformSupport> {
           _pubspec.document, '$name not found in the ${this.name} section');
     }
 
+    _remove(platform);
+  }
+
+  void _remove(PlatformSupport platform) {
     _platforms.remove(platform);
     final lines = platform.lines;
     _pubspec.document.removeAll(lines);
   }
 
-  /// returns true if the list of dependencies contains a dependency
-  /// with the given name.
-  bool exists(PlatformEnum platformEnum) => this[platformEnum] != null;
+  void removeAll() {
+    for (final platform in list.reversed) {
+      _remove(platform);
+    }
+  }
 
-  @override
-  Iterator<PlatformSupport> get iterator => IteratorImpl(_platforms);
+  /// returns true if the list of platforms contains [platformEnum].
+  bool exists(PlatformEnum platformEnum) => this[platformEnum] != null;
 }

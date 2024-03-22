@@ -1,48 +1,35 @@
 part of 'internal_parts.dart';
 
-/// Used to hold a list of [Executable]s from
+/// Used to hold the list of [Executable]s under 'executables' key.
 /// To add additinal executables use:
 ///
 /// ```dart
 /// final pubspec = PubSpecl.load();
-/// pubspec.executables.append(ExecutableBuilder(name: 'test'));
+/// pubspec.executables.add(name: 'test');
 /// pubspec.save();
 /// ```
-class Executables extends SectionImpl
-    with IterableMixin<Executable>
-    implements Section {
+class Executables implements Section {
   Executables._missing(PubSpec pubspec)
       : _pubspec = pubspec,
-        super.missing(pubspec.document, keyName);
+        _section = SectionImpl.missing(pubspec.document, keyName);
 
-  Executables._fromLine(PubSpec pubspec, super.headerLine)
+  Executables._fromLine(PubSpec pubspec, LineImpl headerLine)
       : _pubspec = pubspec,
-        super.fromLine();
+        _section = SectionImpl.fromLine(headerLine);
 
   final PubSpec _pubspec;
 
+  final SectionImpl _section;
+
   final List<Executable> _executables = <Executable>[];
 
-  /// List of the dependencies
+  /// List of the executables
   List<Executable> get list => List.unmodifiable(_executables);
 
-  /// the number of dependencies in this section
-  @override
+  /// the number of executables in this section
   int get length => _executables.length;
 
-  // @override
-  // List<Line> get lines {
-  //   final lines = <Line>[];
-  //   if (missing) {
-  //     return lines;
-  //   }
-  //   for (final executable in _executables) {
-  //     lines.addAll(executable.lines);
-  //   }
-  //   return lines;
-  // }
-
-  /// returns the [ExecutableBuilder] with the given [name]
+  /// returns the [Executable] with the given [name]
   /// if it exists in this section.
   /// Returns null if it doesn't exist.
   Executable? operator [](String name) {
@@ -54,19 +41,19 @@ class Executables extends SectionImpl
     return null;
   }
 
-  /// Add an executable to the PubSpec
-  /// after the last executable or at the end of the file.
-  Executables append({required String name, String? script}) {
+  /// Add an executable to the PubSpec.
+  ///
+  Executables add({required String name, String? script}) {
     _ensure();
     final executable = ExecutableBuilder(name: name, script: script);
-    var lineBefore = headerLine;
+    var lineBefore = _section.headerLine;
 
     if (missing) {
       // create the section.
-      lineBefore = _document.append(LineDetached('$key:'));
+      lineBefore = _section.document.append(LineDetached('$keyName:'));
     } else {
       if (_executables.isNotEmpty) {
-        lineBefore = _executables.last.headerLine;
+        lineBefore = _executables.last._section.headerLine;
       }
     }
     final attached = executable._attach(_pubspec, lineBefore);
@@ -81,7 +68,7 @@ class Executables extends SectionImpl
   /// by creating it if it doesn't exist.
   void _ensure() {
     if (missing) {
-      headerLine = _document.append(LineDetached('$key:'));
+      _section.headerLine = _section.document.append(LineDetached('$keyName:'));
     }
   }
 
@@ -100,17 +87,34 @@ class Executables extends SectionImpl
           _pubspec.document, '$name not found in the $name section');
     }
 
+    _remove(executable);
+  }
+
+  void _remove(Executable executable) {
     _executables.remove(executable);
     final lines = executable.lines;
     _pubspec.document.removeAll(lines);
   }
 
-  /// returns true if the list of dependencies contains a dependency
+  /// Remove all executables from the list.
+  void removeAll() {
+    for (final executable in list.reversed) {
+      _remove(executable);
+    }
+  }
+
+  /// returns true if the list of executables contains an executable
   /// with the given name.
   bool exists(String name) => this[name] != null;
 
-  @override
-  Iterator<Executable> get iterator => IteratorImpl(_executables);
-
   static const String keyName = 'executables';
+
+  @override
+  Comments get comments => _section.comments;
+
+  @override
+  List<Line> get lines => _section.lines;
+
+  @override
+  bool get missing => _section.missing;
 }

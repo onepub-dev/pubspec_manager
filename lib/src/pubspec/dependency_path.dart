@@ -39,7 +39,7 @@ class DependencyPath with DependencyMixin implements Dependency {
     //   comments.append(comment);
     // }
   }
-  static const _key = 'path';
+  static const keyName = 'path';
 
   @override
   late final SectionImpl _section;

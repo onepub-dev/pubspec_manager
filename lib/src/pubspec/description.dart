@@ -6,20 +6,47 @@ part of 'internal_parts.dart';
 /// ```dart
 /// pubspec.description.set('This is my new package');
 /// ```
-class Description extends MultiLine {
-  Description._fromLine(super.line) : super.fromLine();
-  Description._missing(Document document) : super.missing(document, _key);
+class Description implements Section {
+  Description._fromLine(LineImpl line) : _multiLine = MultiLine.fromLine(line);
+  Description._missing(Document document)
+      : _multiLine = MultiLine.missing(document, keyName);
 
   Description._fromString(Document document, String description)
-      : super.fromLine(document.append(LineDetached('$_key: $description')));
+      : _multiLine = MultiLine.fromLine(
+            document.append(LineDetached('$keyName: $description')));
 
   factory Description._fromDocument(Document document) {
-    final line = document.getLineForKey(_key);
+    final line = document.getLineForKey(keyName);
     if (line.missing) {
       return Description._missing(document);
     }
     return Description._fromLine(line.headerLine);
   }
 
-  static const String _key = 'description';
+  /// the section that this entry is associated with.
+  MultiLine _multiLine;
+
+  @override
+  Comments get comments => _multiLine.comments;
+
+  @override
+  List<Line> get lines => _multiLine.lines;
+
+  @override
+  bool get missing => _multiLine.missing;
+
+  static const String keyName = 'description';
+
+  /// Replace the existing string.
+  /// [value] may contain newlines in which case
+  /// we will write out a multi-line yaml scalar string.
+  /// ```
+  /// description: |
+  ///   first line
+  ///   second line
+  /// ```
+  void set(String value) => _multiLine.set(value);
+
+  /// Returns the content of the description which could include newlines.
+  String get value => _multiLine.value;
 }

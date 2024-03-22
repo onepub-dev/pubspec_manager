@@ -31,7 +31,6 @@ class LineSection extends SectionImpl implements Section, Line {
 
   KeyValue get keyValue => headerLine.keyValue;
 
-  @override
   String render() => headerLine.render();
 
   String renderInlineComment(int contentLength) =>

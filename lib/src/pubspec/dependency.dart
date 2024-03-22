@@ -17,10 +17,10 @@ abstract class Dependency {
     /// from each of the dependency types to discover
     /// which type of dependeny we have.
     final depTypeLine = line.findOneOf([
-      DependencyAltHosted._key,
-      DependencyPath._key,
-      DependencyGit._key,
-      DependencySdk._key
+      DependencyAltHosted.keyName,
+      DependencyPath.keyName,
+      DependencyGit.keyName,
+      DependencySdk.keyName
     ]);
 
     // none of the children had one of the expected keys.
@@ -33,13 +33,13 @@ abstract class Dependency {
 
     /// We know the type of dependency so lets load the details.
     switch (depTypeLine.key) {
-      case DependencyAltHosted._key:
+      case DependencyAltHosted.keyName:
         return DependencyAltHosted._fromLine(dependencies, line);
-      case DependencyPath._key:
+      case DependencyPath.keyName:
         return DependencyPath._fromLine(dependencies, line);
-      case DependencyGit._key:
+      case DependencyGit.keyName:
         return DependencyGit._fromLine(dependencies, line);
-      case DependencySdk._key:
+      case DependencySdk.keyName:
         return DependencySdk._fromLine(dependencies, line);
     }
 

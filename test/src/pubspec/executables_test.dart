@@ -17,10 +17,10 @@ void main() {
   group('executables ...', () {
     test('update', () {
       final pubspec = PubSpec.loadFromString(_testPubspec);
-      pubspec.executables.append(name: 'full');
+      pubspec.executables.add(name: 'full');
       expect(pubspec.executables['full'], isNotNull);
       expect(pubspec.executables['full']!.name, equals('full'));
-      expect((pubspec.executables['full']!).headerLine.text, '  full:');
+      expect((pubspec.executables['full']!).lines[0].text, '  full:');
 
       expect(pubspec.executables['dcli']!.scriptPath,
           equals(join('bin', 'dcli.dart')));
@@ -40,7 +40,7 @@ void main() {
       final pubspec = PubSpec.loadFromString(_testPubspec);
 
       final found = <String>{};
-      for (final executable in pubspec.executables) {
+      for (final executable in pubspec.executables.list) {
         found.add(executable.name);
       }
       expect(found.length, equals(2));

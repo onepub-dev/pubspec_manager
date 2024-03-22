@@ -54,7 +54,7 @@ class FileWriter implements Writer {
 class DocumentWriter {
   DocumentWriter(this.document);
   Document document;
-  Map<int, Line> lines = <int, Line>{};
+  final lines = <int, LineImpl>{};
 
   void writeDoc() {}
 
@@ -63,14 +63,15 @@ class DocumentWriter {
       return;
     }
     for (final line in section.lines) {
-      if (line.missing) {
+      final lineImpl = line as LineImpl;
+      if (lineImpl.missing) {
         continue;
       }
-      if (lines.containsKey(line.lineNo)) {
-        throw PubSpecException(
-            line, 'Oops you found a bug. Duplicate line no ${line.lineNo}');
+      if (lines.containsKey(lineImpl.lineNo)) {
+        throw PubSpecException(lineImpl,
+            'Oops you found a bug. Duplicate line no ${line.lineNo}');
       }
-      lines.putIfAbsent(line.lineNo, () => line);
+      lines.putIfAbsent(line.lineNo, () => lineImpl);
     }
   }
 
@@ -88,13 +89,13 @@ class DocumentWriter {
   /// Any lines which are independent of known keys will not have
   /// been rendered so now we render them verbatum.
   void renderMissing() {
-    final missing = <int, Line>{};
-    for (var lineNo = 1; lineNo <= document.lines.length; lineNo++) {
+    final missing = <int, LineImpl>{};
+    for (var lineNo = 1; lineNo <= document._lines.length; lineNo++) {
       if (lines.containsKey(lineNo)) {
         continue;
       }
 
-      final line = document.lines.elementAt(lineNo - 1);
+      final line = document._lines.elementAt(lineNo - 1);
       missing.putIfAbsent(lineNo, () => line);
     }
     lines.addAll(missing);

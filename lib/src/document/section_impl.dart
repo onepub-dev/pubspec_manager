@@ -32,11 +32,10 @@ class SectionImpl implements Section {
   /// as part of the section.
   LineImpl headerLine;
 
-  /// The [Document] that contains this section.
-
-  @override
   late final String key;
 
+  /// If there is no section with this key in the document
+  /// then it is marked as missing.
   @override
   bool missing;
 
@@ -67,7 +66,7 @@ class SectionImpl implements Section {
   // }
 
   /// The [Document] that contains this section.
-  Document get _document => headerLine._document;
+  Document get document => headerLine._document;
 
   /// returns the list of lines associated with this section
   /// including any comments immediately above the section.
@@ -81,25 +80,24 @@ class SectionImpl implements Section {
   late final Comments comments;
 
   /// The last line number used by this  section
-  @override
   int get lastLineNo => lines.last.lineNo;
 
   /// Remove the [line] from the list of existing children.
   void _removeChild(Line line) {
-    _document.removeAll([line]);
+    document.removeAll([line]);
     _children.remove(line);
   }
 
-  void _clearChildren() {
-    _document.removeAll(_children);
+  void clearChildren() {
+    document.removeAll(_children);
     _children.clear();
   }
 
   /// Append a child line after all existing child lines
   /// of this [Section]
-  void _appendLine(LineImpl line) {
+  void appendLine(LineImpl line) {
     final lineBefore = _children.isEmpty ? headerLine : _children.last;
     _children.add(line);
-    _document.insertAfter(line, lineBefore);
+    document.insertAfter(line, lineBefore);
   }
 }

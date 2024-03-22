@@ -8,7 +8,7 @@ class VersionBuilder {
     required sm.Version version,
     List<String>? comments,
   })  : missing = false,
-        key = _key,
+        key = keyName,
         _version = version,
         _comments = comments ?? <String>[];
 
@@ -21,7 +21,7 @@ class VersionBuilder {
   /// that a version key was provided but the value was empty.
   VersionBuilder.missing()
       : missing = true,
-        key = _key,
+        key = keyName,
         _version = sm.Version.none;
 
   /// A version for which no value was supplied yet
@@ -32,7 +32,7 @@ class VersionBuilder {
   /// of the original document is maintained.
   VersionBuilder.empty()
       : missing = false,
-        key = _key,
+        key = keyName,
         _version = sm.Version.none;
 
   late final bool missing;
@@ -97,5 +97,5 @@ class VersionBuilder {
 
   Version attach(PubSpec pubspec) => _append(pubspec);
 
-  static const String _key = 'version';
+  static const String keyName = 'version';
 }

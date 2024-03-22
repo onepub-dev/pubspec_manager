@@ -43,7 +43,7 @@ environment:
   sdk: 1.1.1
 ''');
 
-      pubspec.name.value = 'test2';
+      pubspec.name.set('test2');
       expect(pubspec.name.value, equals('test2'));
       expect(pubspec.document.lines[0].text, equals('name: test2'));
     });
@@ -162,8 +162,8 @@ dev_dependencies:
           name: 'lint_hard', versionConstraint: '1.0.0'))
       ..dependencyOverrides
           .add(DependencyBuilderPath(name: 'lint_hard', path: '..'))
-      ..executables.append(name: 'test').comments.append('The main exec')
-      ..platforms.append(PlatformEnum.android)
-      ..platforms.appendAll([PlatformEnum.ios, PlatformEnum.linux]);
+      ..executables.add(name: 'test').comments.append('The main exec')
+      ..platforms.add(PlatformEnum.android)
+      ..platforms.addAll([PlatformEnum.ios, PlatformEnum.linux]);
   });
 }

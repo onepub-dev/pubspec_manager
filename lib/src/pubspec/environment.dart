@@ -2,17 +2,22 @@ part of 'internal_parts.dart';
 
 /// Holds the details of the environment section.
 /// i.e. flutter and sdk versions.
-class Environment extends SectionImpl implements Section {
-  Environment.missing(Document document)
-      : _sdk = VersionConstraint._missing(document, sdkKey),
-        _flutter = VersionConstraint._missing(document, flutterKey),
-        super.missing(document, _key);
+/// To set/update the environment use:
+///
+/// ```dart
+/// pubspec.environment.set(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0')
+/// ```
+class Environment implements Section {
+  Environment._missing(Document document)
+      : _sdk = VersionConstraint._missing(document, _sdkKey),
+        _flutter = VersionConstraint._missing(document, _flutterKey),
+        _section = SectionImpl.missing(document, keyName);
 
   factory Environment._fromDocument(Document document) {
-    final line = document.getLineForKey(Environment._key).headerLine;
+    final line = document.getLineForKey(Environment.keyName).headerLine;
 
     if (line.missing) {
-      return Environment.missing(document);
+      return Environment._missing(document);
     }
 
     return Environment._fromLine(line);
@@ -20,16 +25,16 @@ class Environment extends SectionImpl implements Section {
 
   /// Load the existing environment [Section] starting from the
   /// given attached [line].
-  Environment._fromLine(LineImpl line) : super.fromLine(line) {
+  Environment._fromLine(LineImpl line) : _section = SectionImpl.fromLine(line) {
     _sdkLine = line.findKeyChild('sdk');
     _flutterLine = line.findKeyChild('flutter');
 
     _sdk = _sdkLine.missing
-        ? VersionConstraint._missing(_document, sdkKey)
+        ? VersionConstraint._missing(_section.document, _sdkKey)
         : VersionConstraint._fromLine(_sdkLine);
 
     _flutter = _flutterLine.missing
-        ? VersionConstraint._missing(_document, sdkKey)
+        ? VersionConstraint._missing(_section.document, _sdkKey)
         : VersionConstraint._fromLine(_flutterLine);
   }
 
@@ -46,12 +51,12 @@ class Environment extends SectionImpl implements Section {
     if (builder._sdk != null) {
       lineBefore = pubspec.document.insertAfter(
           sdkLine = LineImpl.forInsertion(
-              pubspec.document, '  $sdkKey: ${builder._sdk}'),
+              pubspec.document, '  $_sdkKey: ${builder._sdk}'),
           line);
       sdk = VersionConstraint._fromLine(sdkLine);
     } else {
       sdkLine = LineImpl.missing(document, LineType.key);
-      sdk = VersionConstraint._missing(document, sdkKey);
+      sdk = VersionConstraint._missing(document, _sdkKey);
     }
 
     LineImpl flutterLine;
@@ -59,12 +64,12 @@ class Environment extends SectionImpl implements Section {
     if (builder._flutter != null) {
       pubspec.document.insertAfter(
           flutterLine = LineImpl.forInsertion(
-              pubspec.document, '  $flutterKey: ${builder._flutter}'),
+              pubspec.document, '  $_flutterKey: ${builder._flutter}'),
           lineBefore);
       flutter = VersionConstraint._fromLine(flutterLine);
     } else {
       flutterLine = LineImpl.missing(document, LineType.key);
-      flutter = VersionConstraint._missing(document, flutterKey);
+      flutter = VersionConstraint._missing(document, _flutterKey);
     }
 
     final environment = Environment._fromLine(line)
@@ -73,18 +78,20 @@ class Environment extends SectionImpl implements Section {
     return environment;
   }
 
-  static const sdkKey = 'sdk';
-  static const flutterKey = 'flutter';
-
+  SectionImpl _section;
   late VersionConstraint _sdk;
   late VersionConstraint _flutter;
 
   late LineImpl _sdkLine;
   late LineImpl _flutterLine;
 
+  /// Get the version constraint for the dart sdk.
   String get sdk => _sdk.version;
+
+  /// Get the version constraint for the flutter sdk.
   String get flutter => _flutter.version;
 
+  /// Set the sdk and flutter version constraints
   Environment set({String? sdk, String? flutter}) {
     if (sdk != null) {
       this.sdk = sdk;
@@ -97,30 +104,39 @@ class Environment extends SectionImpl implements Section {
     return this;
   }
 
-  set sdk(String version) {
+  /// Set the [versionConstraint] for the dart sdk.
+  /// ```dart
+  /// pubspec.environment.sdk = '>=3.0.0 <4.0.0'
+  /// ```
+  set sdk(String versionConstraint) {
     _ensure();
     if (_sdk.missing) {
-      final sdkLine = LineImpl.forInsertion(_document, '  sdk: $version');
-      _appendLine(sdkLine);
+      final sdkLine =
+          LineImpl.forInsertion(_section.document, '  sdk: $versionConstraint');
+      _section.appendLine(sdkLine);
       _sdkLine = sdkLine;
       _sdk = VersionConstraint._fromLine(_sdkLine);
     } else {
-      _sdk.version = version;
-      _sdkLine.value = version;
+      _sdk.version = versionConstraint;
+      _sdkLine.value = versionConstraint;
     }
   }
 
-  set flutter(String version) {
+  /// Set the [versionConstraint] for the flutter sdk.
+  /// ```dart
+  /// pubspec.environment.flutter = '>=3.0.0'
+  /// ```
+  set flutter(String versionConstraint) {
     _ensure();
     if (_flutter.missing) {
-      final flutterLine =
-          LineImpl.forInsertion(_document, '  flutter: $version');
-      _appendLine(flutterLine);
+      final flutterLine = LineImpl.forInsertion(
+          _section.document, '  flutter: $versionConstraint');
+      _section.appendLine(flutterLine);
       _flutterLine = flutterLine;
       _flutter = VersionConstraint._fromLine(_flutterLine);
     } else {
-      _flutter.version = version;
-      _flutterLine.value = version;
+      _flutter.version = versionConstraint;
+      _flutterLine.value = versionConstraint;
     }
   }
 
@@ -128,7 +144,7 @@ class Environment extends SectionImpl implements Section {
   /// by creating it if it doesn't exist.
   void _ensure() {
     if (missing) {
-      headerLine = _document.append(LineDetached('$_key:'));
+      _section.headerLine = _section.document.append(LineDetached('$keyName:'));
     }
   }
 
@@ -137,7 +153,7 @@ class Environment extends SectionImpl implements Section {
     if (missing) {
       return '';
     }
-    final sb = StringBuffer()..writeln('$key:');
+    final sb = StringBuffer()..writeln('$keyName:');
     if (!_sdkLine.missing) {
       sb.writeln(_sdkLine);
     }
@@ -156,5 +172,17 @@ class Environment extends SectionImpl implements Section {
   //       if (!_flutterLine.missing) _flutterLine
   //     ];
 
-  static const String _key = 'environment';
+  static const _sdkKey = 'sdk';
+  static const _flutterKey = 'flutter';
+
+  static const String keyName = 'environment';
+
+  @override
+  Comments get comments => _section.comments;
+
+  @override
+  List<Line> get lines => _section.lines;
+
+  @override
+  bool get missing => _section.missing;
 }

@@ -1,33 +1,47 @@
 part of 'internal_parts.dart';
 
-class IssueTracker extends SectionSingleLine {
+/// Describes the url of the package's issue tracker.
+class IssueTracker implements Section {
   factory IssueTracker._fromDocument(Document document) {
     final lineSection = document.getLineForKey(IssueTracker.keyName);
     if (lineSection.missing) {
-      return IssueTracker.missing(document);
+      return IssueTracker._missing(document);
     } else {
       return IssueTracker._(lineSection.headerLine);
     }
   }
 
-  IssueTracker._(super.line)
-      : issueTracker = IssueTrackerBuilder(line.value),
-        super.fromLine();
+  IssueTracker._(LineImpl line)
+      : _url = line.value,
+        _section = SectionSingleLine.fromLine(line);
 
-  IssueTracker.missing(Document document)
-      : issueTracker = IssueTrackerBuilder.missing(),
-        super.missing(document, 0, keyName);
+  IssueTracker._missing(Document document)
+      : _url = '',
+        _section = SectionSingleLine.missing(document, 0, keyName);
 
-  final IssueTrackerBuilder issueTracker;
+  SectionSingleLine _section;
 
+  String _url;
+
+  /// Set the url of the package's issue tracker.
   IssueTracker set(String url) {
-    issueTracker.url = url;
-    super.value = url;
+    _url = url;
+    _section.value = url;
     // ignore: avoid_returning_this
     return this;
   }
 
-  String get url => issueTracker.url;
+  /// The url to the package's issue tracker.
+  String get value => _url;
 
   static const String keyName = 'issue_tracker';
+
+  @override
+  Comments get comments => _section.comments;
+
+  @override
+  List<Line> get lines => _section.lines;
+
+  @override
+  bool get missing => _section.missing;
 }

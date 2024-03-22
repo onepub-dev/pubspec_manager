@@ -59,12 +59,12 @@ void main() {
         comments: const ['For local dev'],
       ))
       ..platforms
-          .append(PlatformEnum.ios)
-          .append(PlatformEnum.android)
-          .append(PlatformEnum.web)
+          .add(PlatformEnum.ios)
+          .add(PlatformEnum.android)
+          .add(PlatformEnum.web)
       ..executables
-          .append(name: 'myapp')
-          .append(name: 'installer', script: 'install')
+          .add(name: 'myapp')
+          .add(name: 'installer', script: 'install')
           .comments
           .append('')
       ..save(filename: 'example.yaml');
