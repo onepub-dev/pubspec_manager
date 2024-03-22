@@ -33,10 +33,10 @@ class PubSpec {
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
     platforms = Platforms._missing(this);
     executables = Executables._missing(this);
-    funding = SectionImpl.missing(document, 'funding');
-    falseSecrets = SectionImpl.missing(document, 'false_secrets');
-    screenshots = SectionImpl.missing(document, 'screenshots');
-    topics = SectionImpl.missing(document, 'topics');
+    // funding = SectionImpl.missing(document, 'funding');
+    // falseSecrets = SectionImpl.missing(document, 'false_secrets');
+    // screenshots = SectionImpl.missing(document, 'screenshots');
+    // topics = SectionImpl.missing(document, 'topics');
   }
 
   /// Loads the content of a pubspec.yaml from [content].
@@ -63,10 +63,10 @@ class PubSpec {
     platforms = _initPlatforms();
 
     executables = _initExecutables();
-    funding = document.findSectionForKey('funding');
-    falseSecrets = document.findSectionForKey('falseSecrets');
-    screenshots = document.findSectionForKey('screenshots');
-    topics = document.findSectionForKey('topics');
+    // funding = document.findSectionForKey('funding');
+    // falseSecrets = document.findSectionForKey('falseSecrets');
+    // screenshots = document.findSectionForKey('screenshots');
+    // topics = document.findSectionForKey('topics');
 
     _validate();
   }
@@ -128,46 +128,57 @@ class PubSpec {
 
   /// Name of the package.
   late Name name;
+
   /// version of the package.
   late Version version;
+
   /// package description.
   late Description description;
+
   /// The dart and/or flutter sdk version constraints.
   late Environment environment;
 
   /// url to the homepage of the package.
   late final Homepage homepage;
-  /// the url of the repository where this package is to 
+
+  /// the url of the repository where this package is to
   /// be published or 'none' if the package should never
   /// be published.
   late final PublishTo publishTo;
+
   /// Url of the source code repository for the package.
   late final Repository repository;
+
   /// Url of the issue tracker for the package.
   late final IssueTracker issueTracker;
+
   /// Url of the documentation for the package.
   late final Documentation documentation;
+
   /// List of dependencies for the package.
   late final Dependencies dependencies;
+
   /// List of the dev dependencies for the package.
   late final Dependencies devDependencies;
-
 
   /// During the development process, you might need to temporarily override
   /// a dependency.
   /// It is now recommended that you place overrides in a separate file
   /// pubpsec_overrides.yaml
   late final Dependencies dependencyOverrides;
+
   /// List o fthe platforms supported by this package.
   late final Platforms platforms;
+
   /// List of the executables that will be added to the path
   /// when this package is globally activated ('dart pub global activate')
   late final Executables executables;
-  /// The u
-  late final Section funding;
-  late final Section falseSecrets;
-  late final Section screenshots;
-  late final Section topics;
+
+  /// TODO: implement these lists.
+  // late final Section funding;
+  // late final Section falseSecrets;
+  // late final Section screenshots;
+  // late final Section topics;
 
   /// Returns the path that the pubspec was loaded from.
   ///
@@ -278,10 +289,10 @@ class PubSpec {
       ..render(dependencyOverrides._section)
       ..render(executables)
       ..render(platforms._section)
-      ..render(funding)
-      ..render(falseSecrets)
-      ..render(screenshots)
-      ..render(topics)
+      // ..render(funding)
+      // ..render(falseSecrets)
+      // ..render(screenshots)
+      // ..render(topics)
       ..renderMissing()
       ..write(writer);
   }
