@@ -12,8 +12,8 @@ part of 'internal_parts.dart';
 ///       versionConstraint: '^1.0.0'));
 /// ```
 @immutable
-class DependencyAltHostedBuilder implements DependencyBuilder {
-  DependencyAltHostedBuilder({
+class DependencyBuilderAltHosted implements DependencyBuilder {
+  DependencyBuilderAltHosted({
     required this.name,
     required this.hostedUrl,
     this.versionConstraint,

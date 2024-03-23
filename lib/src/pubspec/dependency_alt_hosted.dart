@@ -33,7 +33,7 @@ class DependencyAltHosted
   /// Creates an  [DependencyAltHosted] inserting it into the document after
   /// [lineBefore]
   DependencyAltHosted._insertAfter(this._dependencies, PubSpec pubspec,
-      Line lineBefore, DependencyAltHostedBuilder dependency) {
+      Line lineBefore, DependencyBuilderAltHosted dependency) {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
     _versionConstraint = dependency.versionConstraint;

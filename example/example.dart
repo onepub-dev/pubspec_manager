@@ -45,7 +45,7 @@ void create() {
         .comments
         .append('This is the doco')
     ..dependencies
-        .add(DependencyAltHostedBuilder(
+        .add(DependencyBuilderAltHosted(
           name: 'dcli',
           hostedUrl: 'https://onepub.dev',
           comments: const ['DCLI to do file system stuff', 'Hello world'],

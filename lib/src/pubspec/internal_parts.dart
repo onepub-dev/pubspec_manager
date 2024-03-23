@@ -26,7 +26,7 @@ part 'comments.dart';
 part 'dependencies.dart';
 part 'dependency.dart';
 part 'dependency_alt_hosted.dart';
-part 'dependency_alt_hosted_builder.dart';
+part 'dependency_builder_alt_hosted.dart';
 part 'dependency_builder.dart';
 part 'dependency_builder_git.dart';
 part 'dependency_builder_path.dart';
