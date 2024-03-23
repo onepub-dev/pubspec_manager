@@ -89,7 +89,7 @@ class VersionBuilder {
 
   Version _append(PubSpec pubspec) {
     if (missing) {
-      return Version.missing(pubspec.document);
+      return Version._missing(pubspec.document);
     } else {
       return Version._append(pubspec, this);
     }

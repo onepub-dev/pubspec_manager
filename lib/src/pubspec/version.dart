@@ -3,35 +3,31 @@
 part of 'internal_parts.dart';
 
 /// Holds package version as declared in the pubspec.yaml
-class Version extends SectionImpl implements Section {
+class Version implements Section {
   ///
-  /// extract a version for an attached line.
-  ///
+  /// extract the version from the underlying document.
   factory Version._fromDocument(Document document) {
     final section = document.getLineForKey(keyName);
 
     return Version._fromLine(section.headerLine);
   }
 
-  Version.missing(Document document)
-      : _missing = true,
-        super.missing(document, keyName) {
-    headerLine = LineImpl.missing(document, LineType.key);
+  /// Define a missing version.
+  Version._missing(Document document)
+      : _section = SectionImpl.missing(document, keyName) {
+    // headerLine = LineImpl.missing(document, LineType.key);
   }
 
   ///
   /// extract a version for an attached line.
   ///
   factory Version._fromLine(LineImpl line) {
-    final missing = line.missing;
-    if (missing) {
-      return Version.missing(line._document);
+    if (line.missing) {
+      return Version._missing(line._document);
     } else {
-      return Version.missing(line._document)
-        ..headerLine = line
+      return Version._missing(line._document)
         .._version = parseVersion(line, line.value)
-        ..quoted = _isQuoted(line.value)
-        ..missing = false;
+        ..quoted = _isQuoted(line.value);
     }
   }
 
@@ -42,13 +38,13 @@ class Version extends SectionImpl implements Section {
     return Version._fromLine(line);
   }
 
+  SectionImpl _section;
+
   /// There was a version key but no value
-  bool get isEmpty => !_missing && _version.isEmpty;
+  bool get isEmpty => !_section.missing && _version.isEmpty;
 
   /// There was no version in the pubspec.
-  bool get isMissing => _missing;
-
-  late final bool _missing;
+  bool get isMissing => _section.missing;
 
   bool quoted = false;
 
@@ -56,12 +52,12 @@ class Version extends SectionImpl implements Section {
 
   /// If a version has not been specified we return [sm.Version.none]
   sm.Version getSemVersion() =>
-      _version.isEmpty || _missing ? sm.Version.none : _version;
+      _version.isEmpty || _section.missing ? sm.Version.none : _version;
 
   // ignore: avoid_setters_without_getters
   void setSemVersion(sm.Version value) {
     _version = value;
-    headerLine.value = value.toString();
+    _section.headerLine.value = value.toString();
   }
 
   String get value {
@@ -85,10 +81,12 @@ class Version extends SectionImpl implements Section {
     quoted = _isQuoted(version);
 
     if (missing) {
-      missing = false;
-      headerLine = document.append(LineDetached('$keyName: $version'));
+      _section
+        ..missing = false
+        ..headerLine =
+            _section.document.append(LineDetached('$keyName: $version'));
     } else {
-      headerLine.value = _stripQuotes(version);
+      _section.headerLine.value = _stripQuotes(version);
     }
 
     // ignore: avoid_returning_this
@@ -146,4 +144,13 @@ class Version extends SectionImpl implements Section {
   }
 
   static const String keyName = 'version';
+
+  @override
+  Comments get comments => _section.comments;
+
+  @override
+  List<Line> get lines => _section.lines;
+
+  @override
+  bool get missing => _section.missing;
 }
