@@ -1,4 +1,8 @@
+# 0.9.1
+- corrected the name of DependencyAltHostedBuilder as it should be DependencyBuilderAltHosted.
+
 # 0.9.0
+- released with a few, low use,  missing keys. a good release is better than perfection with no release.
 
 # 1.0.0-beta.1
 - relased first beta.
