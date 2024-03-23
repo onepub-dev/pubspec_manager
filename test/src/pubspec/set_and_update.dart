@@ -16,7 +16,7 @@ Future<void> create(
     required String key,
     required String value,
     bool nameOnly = false}) async {
-  // create the pubspec in memroy and
+  // create the pubspec in memory and
   // then add a new key/value
   final pubspec = PubSpec(name: 'test');
   set(pubspec, value);

@@ -27,7 +27,7 @@ class SectionImpl implements Section {
   //
 
   /// Returns the line that marks the start of a section.
-  /// When determining the start of a section we ignore
+  /// When determining the [headerLine] of a section we ignore
   /// any comments and blank lines even though they are considered
   /// as part of the section.
   LineImpl headerLine;

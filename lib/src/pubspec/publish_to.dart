@@ -9,7 +9,7 @@ class PublishTo implements Section {
   factory PublishTo._fromDocument(Document document) {
     final lineSection = document.getLineForKey(PublishTo.keyName);
     if (lineSection.missing) {
-      return PublishTo.missing(document);
+      return PublishTo._missing(document);
     } else {
       return PublishTo._(lineSection.headerLine);
     }
@@ -17,7 +17,7 @@ class PublishTo implements Section {
 
   PublishTo._(LineImpl line) : _section = SectionSingleLine.fromLine(line);
 
-  PublishTo.missing(Document document)
+  PublishTo._missing(Document document)
       : _section = SectionSingleLine.missing(document, 0, keyName);
 
   SectionSingleLine _section;

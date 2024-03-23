@@ -54,6 +54,5 @@ part 'publish_to.dart';
 part 'pubspec.dart';
 part 'repository.dart';
 part 'version.dart';
-part 'version_builder.dart';
 part 'version_constraint.dart';
 part 'version_constraint_builder.dart';

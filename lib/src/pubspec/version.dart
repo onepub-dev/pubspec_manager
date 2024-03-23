@@ -6,65 +6,51 @@ part of 'internal_parts.dart';
 class Version implements Section {
   ///
   /// extract the version from the underlying document.
-  factory Version._fromDocument(Document document) {
-    final section = document.getLineForKey(keyName);
 
-    return Version._fromLine(section.headerLine);
+  factory Version._fromDocument(Document document) {
+    final lineSection = document.getLineForKey(Version.keyName);
+    if (lineSection.missing) {
+      return Version._missing(document);
+    } else {
+      return Version._(lineSection.headerLine);
+    }
   }
 
   /// Define a missing version.
   Version._missing(Document document)
-      : _section = SectionImpl.missing(document, keyName) {
-    // headerLine = LineImpl.missing(document, LineType.key);
-  }
+      : _section = SectionImpl.missing(document, keyName);
 
-  ///
-  /// extract a version for an attached line.
-  ///
-  factory Version._fromLine(LineImpl line) {
-    if (line.missing) {
-      return Version._missing(line._document);
-    } else {
-      return Version._missing(line._document)
-        .._version = parseVersion(line, line.value)
-        ..quoted = _isQuoted(line.value);
-    }
-  }
-
-  factory Version._append(PubSpec pubspec, VersionBuilder versionBuilder) {
-    final detached = LineDetached('$keyName: ${versionBuilder._version}');
-    final line = pubspec.document.append(detached);
-
-    return Version._fromLine(line);
+  Version._(LineImpl line) : _section = SectionSingleLine.fromLine(line) {
+    _semVersion = parseSemVersion(_section.headerLine.value);
   }
 
   SectionImpl _section;
 
   /// There was a version key but no value
-  bool get isEmpty => !_section.missing && _version.isEmpty;
+  bool get isEmpty => !_section.missing && _semVersion.isEmpty;
 
   /// There was no version in the pubspec.
   bool get isMissing => _section.missing;
 
   bool quoted = false;
 
-  late sm.Version _version;
+  sm.Version _semVersion = sm.Version.none;
 
   /// If a version has not been specified we return [sm.Version.none]
-  sm.Version getSemVersion() =>
-      _version.isEmpty || _section.missing ? sm.Version.none : _version;
+  sm.Version get semVersion =>
+      _semVersion.isEmpty || _section.missing ? sm.Version.none : _semVersion;
 
   // ignore: avoid_setters_without_getters
   void setSemVersion(sm.Version value) {
-    _version = value;
+    _semVersion = value;
     _section.headerLine.value = value.toString();
   }
 
   String get value {
     if (quoted) {
-      return "'$_version'";
+      return "'$semVersion'";
     } else {
-      return _version.toString();
+      return semVersion.toString();
     }
   }
 
@@ -74,7 +60,7 @@ class Version implements Section {
   Version set(String version) {
     /// check for a valid version.
     try {
-      _version = sm.Version.parse(version);
+      _semVersion = sm.Version.parse(version);
     } on FormatException catch (e) {
       throw VersionException('The passed version is invalid: ${e.message}');
     }
@@ -100,12 +86,12 @@ class Version implements Section {
 
   @override
   bool operator ==(Object other) =>
-      other is VersionBuilder &&
+      other is Version &&
       other.runtimeType == runtimeType &&
-      other._version == _version;
+      other._semVersion == _semVersion;
 
   @override
-  int get hashCode => _version.hashCode;
+  int get hashCode => _semVersion.hashCode;
 
   // strips any quotes that surround the value
   static String _stripQuotes(String value) {
@@ -133,15 +119,8 @@ class Version implements Section {
     return value;
   }
 
-  static sm.Version parseVersion(LineImpl line, String value) {
-    try {
-      return sm.Version.parse(_stripQuotes(value));
-    } on VersionException catch (e) {
-      e.document = line._document;
-      // ignore: use_rethrow_when_possible
-      throw e;
-    }
-  }
+  static sm.Version parseSemVersion(String value) =>
+      sm.Version.parse(_stripQuotes(value));
 
   static const String keyName = 'version';
 

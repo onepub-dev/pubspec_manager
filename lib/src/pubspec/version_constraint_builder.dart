@@ -61,7 +61,7 @@ class VersionConstraintBuilder {
 
   @override
   bool operator ==(Object other) =>
-      other is VersionBuilder &&
+      other is VersionConstraintBuilder &&
       other.runtimeType == runtimeType &&
       other._version == _version;
 

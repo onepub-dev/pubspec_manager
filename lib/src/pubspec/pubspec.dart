@@ -17,14 +17,17 @@ class PubSpec {
     document = Document.loadFromString('');
 
     this.name = Name._fromString(document, name);
-    this.version = VersionBuilder.parse(version)._append(this);
+    this.version = Version._missing(document);
+    if (version != null) {
+      this.version.set(version);
+    }
     this.description = description == null
         ? Description._missing(document)
         : Description._fromString(document, description);
 
     this.environment = environment._attach(this, document.lastLine!);
     homepage = Homepage._missing(document);
-    publishTo = PublishTo.missing(document);
+    publishTo = PublishTo._missing(document);
     repository = Repository.missing(document);
     issueTracker = IssueTracker._missing(document);
     documentation = Documentation._missing(document);
@@ -174,7 +177,7 @@ class PubSpec {
   /// when this package is globally activated ('dart pub global activate')
   late final Executables executables;
 
-  /// TODO: implement these lists.
+  // TODO(bsutton): implement these lists.
   // late final Section funding;
   // late final Section falseSecrets;
   // late final Section screenshots;

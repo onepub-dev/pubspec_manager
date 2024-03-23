@@ -1,6 +1,12 @@
 // import 'package:pubspec_manager/src/document/scalar.dart';
-// import 'package:test/test.dart';
+import 'package:test/test.dart';
 
+void main() {
+  test('no op', () {
+// just stop the test driver complaining.
+    expect(true, isTrue);
+  });
+}
 // const word = 'simple';
 // const sentence = 'a sentance goes here';
 
