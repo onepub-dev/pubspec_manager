@@ -1,3 +1,8 @@
+# 1.0.0
+- originally released as 0.9.0 as we are missing a few features, but the dart pub resolution
+keeps telling people to upgrade to the 1.x beta (which is actually older) so
+I need to change to 1.0.0 to keep things sane.
+No other changes have been made.
 # 0.9.1
 - corrected the name of DependencyAltHostedBuilder as it should be DependencyBuilderAltHosted.
 
