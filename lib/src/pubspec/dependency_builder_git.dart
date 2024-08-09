@@ -5,7 +5,7 @@ part of 'internal_parts.dart';
 class DependencyBuilderGit implements DependencyBuilder {
   DependencyBuilderGit({
     required this.name,
-    this.url,
+    required this.url,
     this.ref,
     this.path,
     List<String>? comments,
@@ -13,7 +13,7 @@ class DependencyBuilderGit implements DependencyBuilder {
 
   @override
   final String name;
-  final String? url;
+  final String url;
   final String? ref;
   final String? path;
   late final List<String> _comments;
@@ -21,6 +21,8 @@ class DependencyBuilderGit implements DependencyBuilder {
   /// List of comments to be prepended to the
   /// dependency.
   List<String> get comments => _comments;
+
+  bool get isSimple => ref == null && path == null;
 
   @override
   DependencyGit _attach(
