@@ -1,3 +1,8 @@
+# 1.0.1
+- Merge pull request #15 from Azramis/main
+- Add unit tests for git deps usage
+- Fixed Git dependencies usage
+
 # 1.0.0
 - originally released as 0.9.0 as we are missing a few features, but the dart pub resolution
 keeps telling people to upgrade to the 1.x beta (which is actually older) so
