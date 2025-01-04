@@ -80,24 +80,24 @@ void create() {
         .comments
         .append('This is the doco')
     ..dependencies
-        .append(DependencyAltHostedBuilder(
+        .add(DependencyAltHostedBuilder(
           name: 'dcli',
           hostedUrl: 'https://onepub.dev',
           comments: const ['DCLI to do file system stuff', 'Hello world'],
         ))
-        .append(DependencyPubHostedBuilder(name: 'dcli_core', version: '1.0.0'))
+        .add(DependencyPubHostedBuilder(name: 'dcli_core', version: '1.0.0'))
     ..devDependencies
-        .append(
+        .add(
           DependencyPubHostedBuilder(
               comments: const ['hi there', 'ho there'],
               name: 'test',
               version: '1.0.0'),
         )
-        .append(DependencyPubHostedBuilder(
+        .add(DependencyPubHostedBuilder(
           name: 'test_it',
           version: '1.0.0',
         ))
-    ..dependencyOverrides.append(DependencyPathBuilder(
+    ..dependencyOverrides.add(DependencyPathBuilder(
       name: 'dcli',
       path: '../up/dcli',
       comments: const ['Override dcli with a local version'],
