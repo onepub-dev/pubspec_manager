@@ -189,4 +189,22 @@ executables:
       expect(pubspec.toString(), equals(testContent));
     });
   });
+  test('#16', () {
+    const pubspecPath = 'test/artifacts/butterfly.pubspec.yaml';
+    print('pubspec Path $pubspecPath');
+    // ensureFlutter();
+
+    const name = 'my_package';
+    print('Add dependency $name');
+    final pubspec = PubSpec.loadFromPath(pubspecPath);
+    pubspec.dependencies.add(DependencyBuilderGit(
+      name: name,
+      url: 'git url, is real before',
+      path: 'packages/$name',
+      ref: 'develop',
+    ));
+    print(pubspec);
+    print('Write to pubspec.yaml file');
+    // pubspec.save();
+  });
 }
