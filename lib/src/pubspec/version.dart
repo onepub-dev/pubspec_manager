@@ -2,17 +2,19 @@
 
 part of 'internal_parts.dart';
 
-/// Holds package version as declared in the pubspec.yaml
+/// Holds package version (not a dependency package)
+/// as declared in the pubspec.yaml
 class Version implements Section {
   ///
   /// extract the version from the underlying document.
 
   factory Version._fromDocument(Document document) {
-    final lineSection = document.getLineForKey(Version.keyName);
-    if (lineSection.missing) {
+    final line = document.findTopLevelKey(Version.keyName);
+    //  final lineSection = document.getLineForKey(Version.keyName);
+    if (line.missing) {
       return Version._missing(document);
     } else {
-      return Version._(lineSection.headerLine);
+      return Version._(line);
     }
   }
 
