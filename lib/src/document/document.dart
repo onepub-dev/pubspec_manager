@@ -7,7 +7,7 @@ part of '../pubspec/internal_parts.dart';
 /// in changes to the list of [_lines].
 /// You can use the [Document] to access settings
 /// that are outside of the pubspec specification.
-/// 
+///
 /// Changes made directly to the [Document] are not
 /// reflected in the higher level APIs.
 class Document {
@@ -113,6 +113,9 @@ class Document {
   // null is returned.
   LineImpl findKeyChild(Line line, String key) {
     for (final child in childrenOf(line)) {
+      if (child.lineType == LineType.comment) {
+        continue;
+      }
       if (child.keyValue.key == key) {
         return child;
       }

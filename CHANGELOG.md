@@ -1,3 +1,8 @@
+# 1.0.2
+- Fixed a parsing bug. If there was no version for the pubspec we would grab the version from the first dependency. We now only look for a version at the top level.
+- Fixed #17 - a comment line that appeared after the name of a depencency
+  for a hosted package would cause the parser to fail.
+
 # 1.0.1
 - Merge pull request #15 from Azramis/main
 - Add unit tests for git deps usage

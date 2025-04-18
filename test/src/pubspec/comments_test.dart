@@ -113,4 +113,28 @@ void main() {
     expect(dcli.comments.length, equals(0));
     expect(document.lines.length, equals(12));
   });
+
+  test('Issue #17', () {
+    const pubspec = '''
+environment:
+  sdk: ">=3.1.2 <4.0.0"
+  flutter: ^3.22.3
+
+dependencies:
+  # A comment with leading whitespace works correctly here.
+  provider:
+    # But a comment with leading whitespace does not get parsed correctly here.
+    # path: ../provider
+    hosted:
+      url: https://pub.dartlang.org
+      version: ^6.1.4
+  pubspec_manager:
+# However, if there's no leading whitespace before the comment, it works fine.
+# path: ../pubspec_manager
+    hosted:
+      url: https://pub.dartlang.org
+      version: ^1.0.1
+      ''';
+    PubSpec.loadFromString(pubspec);
+  });
 }
