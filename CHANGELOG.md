@@ -1,3 +1,6 @@
+# 1.0.3
+- Widen `strings` dependency range to include `4.0.0` release (no breaking changes).
+
 # 1.0.2
 - Fixed a parsing bug. If there was no version for the pubspec we would grab the version from the first dependency. We now only look for a version at the top level.
 - Fixed #17 - a comment line that appeared after the name of a depencency
