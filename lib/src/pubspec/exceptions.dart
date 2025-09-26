@@ -3,16 +3,19 @@ part of 'internal_parts.dart';
 /// All exceptions throw from this package are based
 /// on this exception.
 class PubSpecException implements Exception {
+  String message;
+
+  LineImpl? line;
+
+  Document? document;
+
   PubSpecException(this.line, this.message) {
     document = line?._document;
   }
+
   PubSpecException.forDocument(this.document, this.message);
 
   PubSpecException.global(this.message);
-
-  String message;
-  LineImpl? line;
-  Document? document;
 
   @override
   String toString() {

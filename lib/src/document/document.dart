@@ -11,6 +11,15 @@ part of '../pubspec/internal_parts.dart';
 /// Changes made directly to the [Document] are not
 /// reflected in the higher level APIs.
 class Document {
+  /// The set of lines that hold the pubspec.yaml
+  final _lines = <LineImpl>[];
+
+  /// The path to the file that the pubspec.yaml was loaded from.
+  late String pathTo;
+
+  /// List of sections that exist in this document.
+  final sections = <Line, Section>{};
+
   /// Load the pubspec.yaml from the file located at [pathTo]
   /// into a an ordered list of [Line]s.
   factory Document.loadFrom(String pathTo) {
@@ -58,13 +67,7 @@ class Document {
     return doc;
   }
 
-  /// The set of lines that hold the pubspec.yaml
-  final List<LineImpl> _lines = <LineImpl>[];
-
   List<Line> get lines => _lines;
-
-  /// The path to the file that the pubspec.yaml was loaded from.
-  late String pathTo;
 
   /// The last line in the document.
   Line? get lastLine => _lines.isEmpty ? null : _lines.last;
@@ -201,8 +204,8 @@ class Document {
     }
 
     for (var i = line.lineNo; i < _lines.length; i++) {
-      final _line = _lines.elementAt(i);
-      _line.lineNo++;
+      final line0 = _lines.elementAt(i);
+      line0.lineNo++;
     }
     _validate();
     return line;
@@ -214,8 +217,8 @@ class Document {
     _lines.insert(line.lineNo, line);
 
     for (var i = line.lineNo; i < _lines.length; i++) {
-      final _line = _lines.elementAt(i);
-      _line.lineNo++;
+      final line0 = _lines.elementAt(i);
+      line0.lineNo++;
     }
     _validate();
   }
@@ -223,7 +226,6 @@ class Document {
   /// Removes all of the given [_lines] from the
   /// document then renumbers the remaining lines
   void removeAll(List<Line> toBeRemoved) {
-    // ignore: prefer_foreach
     for (final line in toBeRemoved) {
       _lines.remove(line);
     }
@@ -268,9 +270,6 @@ $line ''');
   void registerComment(LineImpl line, SectionImpl sectionImpl) {
     sections.putIfAbsent(line, () => sectionImpl);
   }
-
-  /// List of sections that exist in this document.
-  final sections = <Line, Section>{};
 }
 
 typedef Key = String;

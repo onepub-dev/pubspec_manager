@@ -9,9 +9,13 @@ part of 'internal_parts.dart';
 /// pubspec.name.set('a_new_name');
 /// pubspec.save();
 /// ```
-/// 
-/// 
+///
+///
 class Name implements Section {
+  SectionSingleLine _section;
+
+  static const keyName = 'name';
+
   /// build name from an imported document line
   factory Name._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Name.keyName);
@@ -30,20 +34,15 @@ class Name implements Section {
   Name._missing(Document document)
       : _section = SectionSingleLine.missing(document, 0, keyName);
 
-  SectionSingleLine _section;
-
   /// Set the package's name.
   Name set(String name) {
     _section.value = name;
 
-    // ignore: avoid_returning_this
     return this;
   }
 
   /// Get the package's name.
   String get value => _section.value;
-
-  static const String keyName = 'name';
 
   @override
   Comments get comments => _section.comments;

@@ -2,7 +2,7 @@ import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('pub spec ...', () async {
+  test('pub spec ...', ()  {
     PubSpec(
       name: 'new eric',
     )

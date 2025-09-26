@@ -22,6 +22,10 @@ class StringWriter implements Writer {
 }
 
 class FileWriter implements Writer {
+  String pathTo;
+
+  io.File file;
+
   FileWriter(this.pathTo) : file = io.File(pathTo);
 
   @override
@@ -30,9 +34,6 @@ class FileWriter implements Writer {
       file.deleteSync();
     }
   }
-
-  String pathTo;
-  io.File file;
 
   void close() {}
 
@@ -52,9 +53,11 @@ class FileWriter implements Writer {
 }
 
 class DocumentWriter {
-  DocumentWriter(this.document);
   Document document;
+
   final lines = <int, LineImpl>{};
+
+  DocumentWriter(this.document);
 
   void writeDoc() {}
 

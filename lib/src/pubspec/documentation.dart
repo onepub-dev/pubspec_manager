@@ -2,6 +2,13 @@ part of 'internal_parts.dart';
 
 /// Holds the url for the 'documentation' key.
 class Documentation implements Section {
+  SectionSingleLine _section;
+
+  /// Url to the location of the packages documentation
+  String _url;
+
+  static const keyName = 'documentation';
+
   factory Documentation._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Documentation.keyName);
     if (lineSection.missing) {
@@ -24,17 +31,11 @@ class Documentation implements Section {
     _url = url;
     _section.value = url;
 
-    // ignore: avoid_returning_this
     return this;
   }
 
   /// Returns the url to the package's documetation.
   String get value => _url;
-
-  SectionSingleLine _section;
-
-  /// Url to the location of the packages documentation
-  String _url;
 
   /// List of comments associated (prepended) with this section
   @override
@@ -49,6 +50,4 @@ class Documentation implements Section {
 
   @override
   bool get missing => _section.missing;
-
-  static const String keyName = 'documentation';
 }

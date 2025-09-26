@@ -2,6 +2,22 @@ part of 'internal_parts.dart';
 
 /// A dependency that is hosted in a git repository
 class DependencyGit with DependencyMixin implements Dependency {
+  @override
+  late final SectionImpl _section;
+
+  late final String _name;
+
+  /// The parent dependency key
+  late final Dependencies _dependencies;
+
+  late final _GitDetails _details;
+
+  late final LineImpl _line;
+
+  late final LineImpl _gitLine;
+
+  static const keyName = 'git';
+
   /// Load the git dependency from the [Document]  starting
   /// from [line].
   DependencyGit._fromLine(this._dependencies, LineImpl line)
@@ -36,19 +52,6 @@ class DependencyGit with DependencyMixin implements Dependency {
   }
 
   @override
-  late final SectionImpl _section;
-
-  late final String _name;
-
-  /// The parent dependency key
-  late final Dependencies _dependencies;
-
-  late final _GitDetails _details;
-
-  late final LineImpl _line;
-  late final LineImpl _gitLine;
-
-  @override
   String get name => _name;
 
   set name(String name) {
@@ -58,8 +61,10 @@ class DependencyGit with DependencyMixin implements Dependency {
 
   @visibleForTesting
   String get url => _details.url;
+
   @visibleForTesting
   String? get ref => _details.ref;
+
   @visibleForTesting
   String? get path => _details.path;
 
@@ -68,12 +73,22 @@ class DependencyGit with DependencyMixin implements Dependency {
     _dependencies.add(dependency);
     return this;
   }
-
-  static const keyName = 'git';
 }
 
 /// Holds the details of a git dependency.
 class _GitDetails {
+  late String url;
+
+  String? ref;
+
+  String? path;
+
+  LineImpl? urlLine;
+
+  LineImpl? refLine;
+
+  LineImpl? pathLine;
+
   // GitDetails({this.url, this.ref, this.path});
   _GitDetails(DependencyBuilderGit dependency)
       : url = dependency.url,
@@ -106,14 +121,6 @@ class _GitDetails {
     this.url = url;
   }
 
-  late String url;
-  String? ref;
-  String? path;
-
-  LineImpl? urlLine;
-  LineImpl? refLine;
-  LineImpl? pathLine;
-
   List<Line> get lines => [
         if (urlLine != null) urlLine!,
         if (refLine != null) refLine!,
@@ -141,12 +148,12 @@ class _GitDetails {
       required void Function(LineImpl) inserted}) {
     var attached = false;
     if (value != null) {
-      final _line = LineImpl.forInsertion(
+      final line = LineImpl.forInsertion(
         section.document,
         '      $key: $value',
       );
-      section.document.insertAfter(_line, lineBefore);
-      inserted(_line);
+      section.document.insertAfter(line, lineBefore);
+      inserted(line);
       attached = true;
     }
     return attached;

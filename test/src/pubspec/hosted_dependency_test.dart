@@ -2,7 +2,7 @@ import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('hosted dependency ...', () async {
+  test('hosted dependency ...', ()  {
     const content = '''
 name: one
 description: something : and something else

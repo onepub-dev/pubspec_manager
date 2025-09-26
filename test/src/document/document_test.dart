@@ -3,20 +3,20 @@ import 'package:test/test.dart';
 
 void main() {
   group('document', () {
-    test('empty', () async {
+    test('empty', () {
       final doc = Document.loadFromString('''
 ''');
       expect(doc.lines.length, equals(0));
     });
 
-    test('one blank line', () async {
+    test('one blank line', () {
       final doc = Document.loadFromString('''
 
 ''');
       expect(doc.lines.length, equals(1));
     });
 
-    test('simple', () async {
+    test('simple', () {
       final doc = Document.loadFromString('''
 name: my_package
 

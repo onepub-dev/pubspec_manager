@@ -17,7 +17,7 @@ dev_dependencies:
 
 ''';
 void main() {
-  test('dependency append', () async {
+  test('dependency append', ()  {
     const version = '1.5.1';
     final pubspec = PubSpec.loadFromString(content);
     final devDependencies = pubspec.devDependencies
@@ -43,14 +43,14 @@ void main() {
     expect(pubspec.document.lines.length, equals(15));
   });
 
-  test('dependency remove last', () async {
+  test('dependency remove last', ()  {
     final pubspec = PubSpec.loadFromString(content);
     final dependencies = pubspec.dependencies..remove('money');
     final dcli = dependencies['money'];
     expect(dcli == null, isTrue);
   });
 
-  test('dependency remove first', () async {
+  test('dependency remove first', ()  {
     final pubspec = PubSpec.loadFromString(content);
     final dependencies = pubspec.dependencies..remove('dcli');
     final dcli = dependencies['dcli'];
@@ -58,7 +58,7 @@ void main() {
     print(pubspec);
   });
 
-  test('comment on dependency section', () async {
+  test('comment on dependency section', ()  {
     final pubspec = PubSpec.loadFromString(content);
     final document = pubspec.document;
     const comment = 'A comment on section';

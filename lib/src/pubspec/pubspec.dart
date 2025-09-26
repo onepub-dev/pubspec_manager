@@ -5,6 +5,63 @@ part of 'internal_parts.dart';
 /// All operations start here.
 ///
 class PubSpec {
+  // the path the pubspec.yaml was loaded from (including the filename)
+  // If the pubpsec wasn't loaded from a file then this will be null.
+  String? _loadedFromDirectory;
+
+  String? _loadedFromFilename;
+
+  /// [Document] that holds the lines read from the pubspec.yaml
+  late Document document;
+
+  /// Name of the package.
+  late Name name;
+
+  /// version of the package.
+  late Version version;
+
+  /// package description.
+  late Description description;
+
+  /// The dart and/or flutter sdk version constraints.
+  late Environment environment;
+
+  /// url to the homepage of the package.
+  late final Homepage homepage;
+
+  /// the url of the repository where this package is to
+  /// be published or 'none' if the package should never
+  /// be published.
+  late final PublishTo publishTo;
+
+  /// Url of the source code repository for the package.
+  late final Repository repository;
+
+  /// Url of the issue tracker for the package.
+  late final IssueTracker issueTracker;
+
+  /// Url of the documentation for the package.
+  late final Documentation documentation;
+
+  /// List of dependencies for the package.
+  late final Dependencies dependencies;
+
+  /// List of the dev dependencies for the package.
+  late final Dependencies devDependencies;
+
+  /// During the development process, you might need to temporarily override
+  /// a dependency.
+  /// It is now recommended that you place overrides in a separate file
+  /// pubpsec_overrides.yaml
+  late final Dependencies dependencyOverrides;
+
+  /// List o fthe platforms supported by this package.
+  late final Platforms platforms;
+
+  /// List of the executables that will be added to the path
+  /// when this package is globally activated ('dart pub global activate')
+  late final Executables executables;
+
   /// Create an in memory pubspec.yaml.
   ///
   /// It can be saved to disk by calling [save].
@@ -118,70 +175,6 @@ class PubSpec {
   /// @see [PubSpec.load] to load the project's pubspec.yaml
   factory PubSpec.loadFromPath(String pathTo) =>
       PubSpec.load(directory: dirname(pathTo), filename: basename(pathTo));
-
-  // the path the pubspec.yaml was loaded from (including the filename)
-  // If the pubpsec wasn't loaded from a file then this will be null.
-  String? _loadedFromDirectory;
-  String? _loadedFromFilename;
-
-  /// [Document] that holds the lines read from the pubspec.yaml
-  late Document document;
-
-  // attibutes of the pubspec.yaml follow.
-
-  /// Name of the package.
-  late Name name;
-
-  /// version of the package.
-  late Version version;
-
-  /// package description.
-  late Description description;
-
-  /// The dart and/or flutter sdk version constraints.
-  late Environment environment;
-
-  /// url to the homepage of the package.
-  late final Homepage homepage;
-
-  /// the url of the repository where this package is to
-  /// be published or 'none' if the package should never
-  /// be published.
-  late final PublishTo publishTo;
-
-  /// Url of the source code repository for the package.
-  late final Repository repository;
-
-  /// Url of the issue tracker for the package.
-  late final IssueTracker issueTracker;
-
-  /// Url of the documentation for the package.
-  late final Documentation documentation;
-
-  /// List of dependencies for the package.
-  late final Dependencies dependencies;
-
-  /// List of the dev dependencies for the package.
-  late final Dependencies devDependencies;
-
-  /// During the development process, you might need to temporarily override
-  /// a dependency.
-  /// It is now recommended that you place overrides in a separate file
-  /// pubpsec_overrides.yaml
-  late final Dependencies dependencyOverrides;
-
-  /// List o fthe platforms supported by this package.
-  late final Platforms platforms;
-
-  /// List of the executables that will be added to the path
-  /// when this package is globally activated ('dart pub global activate')
-  late final Executables executables;
-
-  // TODO(bsutton): implement these lists.
-  // late final Section funding;
-  // late final Section falseSecrets;
-  // late final Section screenshots;
-  // late final Section topics;
 
   /// Returns the path that the pubspec was loaded from.
   ///

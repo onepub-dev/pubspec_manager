@@ -5,6 +5,12 @@ part of 'internal_parts.dart';
 /// To stop a package being accidently published you should set the
 /// 'publish_to' value to 'none'.
 class PublishTo implements Section {
+  SectionSingleLine _section;
+
+  static const keyName = 'publish_to';
+
+  static const noneKeyword = 'none';
+
   /// build PublishTo from an imported document line
   factory PublishTo._fromDocument(Document document) {
     final lineSection = document.getLineForKey(PublishTo.keyName);
@@ -20,8 +26,6 @@ class PublishTo implements Section {
   PublishTo._missing(Document document)
       : _section = SectionSingleLine.missing(document, 0, keyName);
 
-  SectionSingleLine _section;
-
   /// Get the url that this package is published to.
   /// Note: the value can be 'none' which indicates that the package
   /// should never be published.
@@ -35,7 +39,6 @@ class PublishTo implements Section {
   /// value to 'none'.
   PublishTo set(String url) {
     _section.value = url;
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -48,13 +51,8 @@ class PublishTo implements Section {
   /// ```
   PublishTo setNone() {
     _section.value = noneKeyword;
-    // ignore: avoid_returning_this
     return this;
   }
-
-  static const String keyName = 'publish_to';
-
-  static const String noneKeyword = 'none';
 
   @override
   Comments get comments => _section.comments;

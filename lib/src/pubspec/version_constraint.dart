@@ -1,9 +1,19 @@
+// low risk.
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
 part of 'internal_parts.dart';
 
 /// Holds a dependency version
 class VersionConstraint extends LineSection {
+  bool _missingValue;
+
+  /// We track if the original constraint was wrapped in quotes
+  /// so that when we write the value back out we can include
+  /// the quotes.
+  var quoted = false;
+
+  late sm.VersionConstraint _versionConstraint;
+
   ///
   /// extract a version from an attached line.
   ///
@@ -30,33 +40,8 @@ class VersionConstraint extends LineSection {
       : _missingValue = true,
         super.missing();
 
-  // @override
-  // factory VersionConstraint._attach(PubSpec pubspec, Line lineBefore,
-  //     VersionConstraintBuilder versionBuilder) {
-  //   final line = Line.forInsertion(
-  //       pubspec.document, '  version: ${versionBuilder._version}');
-  //   pubspec.document.insertAfter(line, lineBefore);
-
-  //   final vc = VersionConstraint._fromLine(line);
-
-  //   // ignore: prefer_foreach
-  //   for (final comment in versionBuilder.comments) {
-  //     vc.comments.append(comment);
-  //   }
-  //   return vc;
-  // }
-
   /// There was no value for the version key in the pubspec.
   bool get isMissingValue => _missingValue;
-
-  bool _missingValue;
-
-  /// We track if the original constraint was wrapped in quotes
-  /// so that when we write the value back out we can include
-  /// the quotes.
-  bool quoted = false;
-
-  late sm.VersionConstraint _versionConstraint;
 
   // The pubspec doc says that a blank version is to be
   // treated as 'any'. We however need to record that the
@@ -139,6 +124,7 @@ class VersionConstraint extends LineSection {
       return VersionConstraintBuilder.parseConstraint(_stripQuotes(value));
     } on VersionException catch (e) {
       e.document = (line as LineImpl)._document;
+      // we are modifiying the exception so we can't use rethrow
       // ignore: use_rethrow_when_possible
       throw e;
     }

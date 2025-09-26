@@ -4,28 +4,6 @@ part of '../pubspec/internal_parts.dart';
 /// expected to be the start of the section. We then identify
 /// associated lines that form that section.
 class SectionImpl implements Section {
-  SectionImpl(this.headerLine, this._children) : missing = false {
-    key = headerLine.key;
-    comments = Comments._(this);
-  }
-
-  SectionImpl.fromLine(this.headerLine) : missing = false {
-    key = headerLine.key;
-    _children = headerLine.childrenOf(descendants: true);
-    comments = Comments._(this);
-  }
-
-  SectionImpl.missing(Document document, this.key)
-      : missing = true,
-        headerLine = LineImpl.missing(document, LineType.key),
-        _children = <Line>[] {
-    comments = Comments._empty(this);
-  }
-
-  //
-  // Fields
-  //
-
   /// Returns the line that marks the start of a section.
   /// When determining the [headerLine] of a section we ignore
   /// any comments and blank lines even though they are considered
@@ -45,6 +23,28 @@ class SectionImpl implements Section {
   /// Does not include the [headerLine] nor any comments
   /// in the section prefix.
   late final List<Line> _children;
+
+  /// List of comments associated (prepended) with this section
+  @override
+  late final Comments comments;
+
+  SectionImpl(this.headerLine, this._children) : missing = false {
+    key = headerLine.key;
+    comments = Comments._(this);
+  }
+
+  SectionImpl.fromLine(this.headerLine) : missing = false {
+    key = headerLine.key;
+    _children = headerLine.childrenOf(descendants: true);
+    comments = Comments._(this);
+  }
+
+  SectionImpl.missing(Document document, this.key)
+      : missing = true,
+        headerLine = LineImpl.missing(document, LineType.key),
+        _children = <Line>[] {
+    comments = Comments._empty(this);
+  }
 
   ///
   /// Methods
@@ -74,10 +74,6 @@ class SectionImpl implements Section {
   /// lines upto the end of the prior segment.
   @override
   List<Line> get lines => [...comments._lines, headerLine, ..._children];
-
-  /// List of comments associated (prepended) with this section
-  @override
-  late final Comments comments;
 
   /// The last line number used by this  section
   int get lastLineNo => lines.last.lineNo;

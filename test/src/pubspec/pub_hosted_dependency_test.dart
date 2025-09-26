@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import '../pubspec_test.dart';
 
 void main() {
-  test('pub hosted dependency ...', () async {
+  test('pub hosted dependency ...', ()  {
     final pubspec = PubSpec.loadFromString(goodContent);
     expect(pubspec.dependencies.length, equals(3));
 

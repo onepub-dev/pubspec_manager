@@ -1,4 +1,8 @@
 
+analyzer:
+  errors:
+    avoid_returning_this: ignore
+    one_member_abstracts: ignore
 include: package:lint_hard/all.yaml
 
 linter:

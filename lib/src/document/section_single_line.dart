@@ -3,6 +3,8 @@ part of '../pubspec/internal_parts.dart';
 /// A section which is a single line with no children
 /// but which can have comments.
 class SectionSingleLine extends SectionImpl implements Section {
+  final int _indent;
+
   SectionSingleLine.fromLine(super.headerLine)
       : _indent = headerLine.indent,
         super.fromLine();
@@ -25,8 +27,6 @@ class SectionSingleLine extends SectionImpl implements Section {
 
   SectionSingleLine.missing(super.document, this._indent, super.key)
       : super.missing();
-
-  final int _indent;
 
   String get value => headerLine.value;
 

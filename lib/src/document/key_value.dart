@@ -1,6 +1,10 @@
 import '../pubspec/internal_parts.dart';
 
 class KeyValue {
+  late final String key;
+
+  late final String value;
+
   KeyValue(this.key, this.value);
 
   factory KeyValue.fromLine(LineImpl line) {
@@ -29,9 +33,6 @@ class KeyValue {
 
   KeyValue copy({String? key, String? value}) =>
       KeyValue(key ?? this.key, value ?? this.value);
-
-  late final String key;
-  late final String value;
 
   @override
   String toString() => '$key: $value';

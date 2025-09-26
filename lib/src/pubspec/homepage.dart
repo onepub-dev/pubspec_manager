@@ -2,6 +2,12 @@ part of 'internal_parts.dart';
 
 /// Defines the url to the package's homepage.
 class Homepage implements Section {
+  SectionSingleLine _section;
+
+  String _url;
+
+  static const keyName = 'homepage';
+
   /// build homepage from an imported document line
   factory Homepage._fromDocument(Document document) {
     final lineSection = document.getLineForKey(Homepage.keyName);
@@ -20,21 +26,15 @@ class Homepage implements Section {
       : _url = '',
         _section = SectionSingleLine.missing(document, 0, keyName);
 
-  SectionSingleLine _section;
-  String _url;
-
   /// Set the url to the package's homepage.
   Homepage set(String url) {
     _url = url;
     _section.value = url;
-    // ignore: avoid_returning_this
     return this;
   }
 
   /// The url of the homepage.
   String get value => _url;
-
-  static const String keyName = 'homepage';
 
   @override
   Comments get comments => _section.comments;

@@ -7,7 +7,13 @@ part of 'internal_parts.dart';
 /// pubspec.description.set('This is my new package');
 /// ```
 class Description implements Section {
+  /// the section that this entry is associated with.
+  MultiLine _multiLine;
+
+  static const keyName = 'description';
+
   Description._fromLine(LineImpl line) : _multiLine = MultiLine.fromLine(line);
+
   Description._missing(Document document)
       : _multiLine = MultiLine.missing(document, keyName);
 
@@ -23,9 +29,6 @@ class Description implements Section {
     return Description._fromLine(line.headerLine);
   }
 
-  /// the section that this entry is associated with.
-  MultiLine _multiLine;
-
   @override
   Comments get comments => _multiLine.comments;
 
@@ -35,12 +38,10 @@ class Description implements Section {
   @override
   bool get missing => _multiLine.missing;
 
-  static const String keyName = 'description';
-
   /// Replace the existing string.
   /// [value] may contain newlines in which case
   /// we will write out a multi-line yaml scalar string.
-  /// ```
+  /// ```yaml
   /// description: |
   ///   first line
   ///   second line

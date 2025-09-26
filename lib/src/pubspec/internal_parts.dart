@@ -1,4 +1,4 @@
-library internal;
+library;
 
 import 'dart:convert';
 import 'dart:io' as io;

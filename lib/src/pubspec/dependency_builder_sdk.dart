@@ -10,16 +10,18 @@ part of 'internal_parts.dart';
 ///     path: ../dcli
 @immutable
 class DependencyBuilderSdk implements DependencyBuilder {
+  @override
+  late final String name;
+
+  late final String path;
+
+  late final List<String> _comments;
+
   DependencyBuilderSdk({
     required this.name,
     required this.path,
     List<String>? comments,
   }) : _comments = comments ?? <String>[];
-
-  @override
-  late final String name;
-  late final String path;
-  late final List<String> _comments;
 
   List<String> get comments => _comments;
 

@@ -9,6 +9,24 @@ part of 'internal_parts.dart';
 ///   flutter:
 ///     sdk: flutter
 class DependencySdk with DependencyMixin implements Dependency {
+  @override
+  late final SectionImpl _section;
+
+  @override
+  late final String name;
+
+  /// The sdk that provides this dependency
+  /// e.g. flutter
+  late final String sdk;
+
+  /// The parent dependency key
+  late final Dependencies _dependencies;
+
+  /// Line that contained the dependency declaration
+  late final LineImpl _line;
+
+  static const keyName = 'sdk';
+
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencySdk._fromLine(this._dependencies, this._line)
@@ -36,21 +54,6 @@ class DependencySdk with DependencyMixin implements Dependency {
   }
 
   @override
-  late final SectionImpl _section;
-  @override
-  late final String name;
-
-  /// The sdk that provides this dependency
-  /// e.g. flutter
-  late final String sdk;
-
-  /// The parent dependency key
-  late final Dependencies _dependencies;
-
-  /// Line that contained the dependency declaration
-  late final LineImpl _line;
-
-  @override
   Dependency add(DependencyBuilder dependency) {
     _dependencies.add(dependency);
     return this;
@@ -58,6 +61,4 @@ class DependencySdk with DependencyMixin implements Dependency {
 
   @override
   String toString() => _section.lines.join('\n');
-
-  static const keyName = 'sdk';
 }

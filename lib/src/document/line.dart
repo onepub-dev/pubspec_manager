@@ -1,6 +1,5 @@
 part of '../pubspec/internal_parts.dart';
 
-// ignore: one_member_abstracts
 abstract class Renderer {
   String render();
 }

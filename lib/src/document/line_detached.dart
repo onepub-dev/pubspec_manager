@@ -1,8 +1,9 @@
 part of '../pubspec/internal_parts.dart';
 
 class LineDetached {
-  LineDetached(this.text);
   String text;
+
+  LineDetached(this.text);
 
   /// If you don't pass the [lineType] then we will try to guess
   /// the line time. Allowing us to guess the line time is

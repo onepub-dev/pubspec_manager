@@ -2,21 +2,21 @@ part of 'internal_parts.dart';
 
 /// A platform that the package supports.
 class PlatformSupport implements Section {
+  final SectionSingleLine _section;
+
+  /// also the key in the pubspec.
+  PlatformEnum _platformEnum;
+
   /// re-hydrate an Platform from a line.
-  PlatformSupport._fromLine(LineImpl _line)
-      : _platformEnum = PlatformEnum.values.byName(_line.key),
-        _section = SectionSingleLine.fromLine(_line);
+  PlatformSupport._fromLine(LineImpl line)
+      : _platformEnum = PlatformEnum.values.byName(line.key),
+        _section = SectionSingleLine.fromLine(line);
 
   PlatformSupport._attach(
       PubSpec pubspec, Line lineBefore, PlatformEnum platform)
       : _platformEnum = platform,
         _section =
             SectionSingleLine.attach(pubspec, lineBefore, 1, platform.name, '');
-
-  final SectionSingleLine _section;
-
-  /// also the key in the pubspec.
-  PlatformEnum _platformEnum;
 
   PlatformEnum get platformEnum => _platformEnum;
 

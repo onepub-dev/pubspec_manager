@@ -1,3 +1,4 @@
+// we may use these later
 // ignore_for_file: unused_local_variable
 
 import 'dart:io';
@@ -132,7 +133,7 @@ With some more text''';
   });
 
   group('description', () {
-    test('simple ...', () async {
+    test('simple ...', ()  {
       final pubspec = PubSpec.loadFromString(simple);
 
       expect(pubspec.description.value,

@@ -34,7 +34,7 @@ executables:
 
 void main() {
   group('pubspec', () {
-    test('update single line attributes', () async {
+    test('update single line attributes', () {
       final pubspec = PubSpec.loadFromString('''
 name: test
 version: 1.1.1
@@ -69,7 +69,7 @@ bad pubspec
       /// have crap in the pubspec.
     }, skip: true);
 
-    test('pubspec ...', () async {
+    test('pubspec ...', () {
       final pubspec = PubSpec.loadFromString(goodContent);
 
       expect(pubspec.name.value, equals('pubspec3'));

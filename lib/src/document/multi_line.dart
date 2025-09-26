@@ -64,7 +64,7 @@ class MultiLine extends SectionImpl implements Section {
   /// Replace the existing string.
   /// [value] may contain newlines in which case
   /// we will write out a multi-line yaml scalar string.
-  /// ```
+  /// ```yaml
   /// description: |
   ///   first line
   ///   second line

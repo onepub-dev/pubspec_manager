@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_returning_this
-
 part of 'internal_parts.dart';
 
 /// Used to hold the comments that prefix a section.
@@ -17,13 +15,17 @@ part of 'internal_parts.dart';
 /// pubspec.name.comments.append('Another comment');
 /// ```
 class Comments {
+  /// The section these comments are attached to.
+  final SectionImpl _section;
+
+  /// All of the lines that make up this comment.
+  late final List<Line> _lines;
+
   Comments._(this._section) {
     _lines = _commentsAsLine();
   }
-  Comments._empty(this._section) : _lines = <Line>[];
 
-  /// The section these comments are attached to.
-  final SectionImpl _section;
+  Comments._empty(this._section) : _lines = <Line>[];
 
   /// Gets the set of comments that prefix the passed in [_section]
   /// This will include any blank lines upto the end of the prior
@@ -62,9 +64,6 @@ class Comments {
     }
     return prefix;
   }
-
-  /// All of the lines that make up this comment.
-  late final List<Line> _lines;
 
   /// The number of comment lines prepended to this section
   int get length => _lines.length;

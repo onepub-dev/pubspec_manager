@@ -7,6 +7,18 @@ part of 'internal_parts.dart';
 class DependencyPubHosted
     with DependencyMixin
     implements Dependency, DependencyVersioned {
+  @override
+  late SectionImpl _section;
+
+  late String _name;
+
+  late String? _version;
+
+  /// The line this dependency is attached to.
+  late final LineImpl _line;
+
+  late final Dependencies _dependencies;
+
   DependencyPubHosted._fromLine(this._dependencies, LineImpl line)
       : _line = line,
         _section = SectionImpl.fromLine(line) {
@@ -31,17 +43,6 @@ class DependencyPubHosted
   }
 
   @override
-  late SectionImpl _section;
-
-  late String _name;
-  late String? _version;
-
-  /// The line this dependency is attached to.
-  late final LineImpl _line;
-
-  late final Dependencies _dependencies;
-
-  @override
   String get name => _name;
 
   set name(String name) {
@@ -57,9 +58,6 @@ class DependencyPubHosted
     _version = version;
     _line.value = version;
   }
-
-  // @override
-  // List<Line> get lines => [...comments.lines, _line];
 
   @override
   Dependency add(DependencyBuilder dependency) {

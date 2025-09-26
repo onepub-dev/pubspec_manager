@@ -16,6 +16,26 @@ part of 'internal_parts.dart';
 class DependencyAltHosted
     with DependencyMixin
     implements Dependency, DependencyVersioned {
+  @override
+  late SectionImpl _section;
+
+  /// The dependency section this dependency belongs to
+  final Dependencies _dependencies;
+
+  late String _name;
+
+  late String _hostedUrl;
+
+  late String? _versionConstraint;
+
+  late final LineImpl _line;
+
+  late final LineImpl _hostedUrlLine;
+
+  late final LineImpl _versionLine;
+
+  static const keyName = 'hosted';
+
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
       : _section = SectionImpl.fromLine(_line) {
@@ -56,20 +76,6 @@ class DependencyAltHosted
   }
 
   @override
-  late SectionImpl _section;
-
-  /// The dependency section this dependency belongs to
-  final Dependencies _dependencies;
-
-  late String _name;
-  late String _hostedUrl;
-  late String? _versionConstraint;
-
-  late final LineImpl _line;
-  late final LineImpl _hostedUrlLine;
-  late final LineImpl _versionLine;
-
-  @override
   String get name => _name;
 
   set name(String name) {
@@ -104,6 +110,4 @@ class DependencyAltHosted
     _dependencies.add(dependency);
     return this;
   }
-
-  static const keyName = 'hosted';
 }

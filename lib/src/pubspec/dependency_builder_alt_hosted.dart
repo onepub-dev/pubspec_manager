@@ -13,13 +13,6 @@ part of 'internal_parts.dart';
 /// ```
 @immutable
 class DependencyBuilderAltHosted implements DependencyBuilder {
-  DependencyBuilderAltHosted({
-    required this.name,
-    required this.hostedUrl,
-    this.versionConstraint,
-    List<String>? comments,
-  }) : _comments = comments ?? <String>[];
-
   @override
   late final String name;
 
@@ -32,6 +25,13 @@ class DependencyBuilderAltHosted implements DependencyBuilder {
   late final String? versionConstraint;
 
   late final List<String> _comments;
+
+  DependencyBuilderAltHosted({
+    required this.name,
+    required this.hostedUrl,
+    this.versionConstraint,
+    List<String>? comments,
+  }) : _comments = comments ?? <String>[];
 
   /// The list of comments to be associated with
   /// the dependency.

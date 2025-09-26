@@ -3,6 +3,36 @@ part of '../pubspec/internal_parts.dart';
 /// Each line read from the pubspec.yaml is stored into a [Line]
 /// and categorised into one of the [LineType]s.
 class LineImpl implements Line, Renderer {
+  late final Document _document;
+
+  /// The text content of the line.
+  String _text;
+
+  @override
+  int lineNo;
+
+  @override
+  late int indent;
+
+  @override
+  late final LineType lineType;
+
+  @override
+  bool missing;
+
+  // If the [type] is [LineType.key] then this will hold the
+  // key/value pair.
+  KeyValue? _keyValue;
+
+  // If the line isn't a full line comment but
+  // contains an inline comment then the comment is stored here.
+  @override
+  String? inlineComment;
+
+  // the column the inline comment starts in
+  @override
+  int? commentOffset;
+
   /// Used when reading
   /// a pubspec.yaml line by line (which ultimately we do no matter
   /// how we loaded the pubspec.yaml)
@@ -81,35 +111,8 @@ class LineImpl implements Line, Renderer {
     return line;
   }
 
-  late final Document _document;
-
-  /// The text content of the line.
-  String _text;
-
-  @override
-  int lineNo;
-  @override
-  late int indent;
-  @override
-  late final LineType lineType;
-
-  @override
-  bool missing;
-
   @override
   String get text => _text;
-
-  // If the [type] is [LineType.key] then this will hold the
-  // key/value pair.
-  KeyValue? _keyValue;
-
-  // If the line isn't a full line comment but
-  // contains an inline comment then the comment is stored here.
-  @override
-  String? inlineComment;
-  // the column the inline comment starts in
-  @override
-  int? commentOffset;
 
   /// calculate how far the line is idented.
   /// zero based.

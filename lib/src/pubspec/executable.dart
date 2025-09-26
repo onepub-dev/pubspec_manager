@@ -3,6 +3,14 @@ part of 'internal_parts.dart';
 /// A package executable that will be added to the user's PATh
 /// when the globally activate the package.
 class Executable implements Section {
+  final SectionSingleLine _section;
+
+  String _name;
+
+  String _script;
+
+  late final LineImpl _line;
+
   /// re-hydrate an executable from a line.
   Executable._fromLine(this._line)
       : _name = _line.key,
@@ -16,13 +24,6 @@ class Executable implements Section {
         _line = LineImpl.forInsertion(pubspec.document, _buildLine(executable)),
         _section = SectionSingleLine.attach(
             pubspec, lineBefore, 1, executable.name, executable.script);
-
-  final SectionSingleLine _section;
-
-  String _name;
-  String _script;
-
-  late final LineImpl _line;
 
   String get name => _name;
 

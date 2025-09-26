@@ -7,6 +7,15 @@ part of 'internal_parts.dart';
 ///
 @immutable
 class DependencyBuilderPubHosted implements DependencyBuilder {
+  @override
+  late final String name;
+
+  /// The version constraint for the dependency
+  /// e.g. ^1.0.0
+  late final String? versionConstraint;
+
+  late final List<String> _comments;
+
   /// If you don't pass in a [versionConstraint] then the version will
   /// be left empty when you save
   /// The [name] of the dependency to add.
@@ -16,14 +25,6 @@ class DependencyBuilderPubHosted implements DependencyBuilder {
     this.versionConstraint,
     List<String>? comments,
   }) : _comments = comments ?? <String>[];
-
-  @override
-  late final String name;
-
-  /// The version constraint for the dependency
-  /// e.g. ^1.0.0
-  late final String? versionConstraint;
-  late final List<String> _comments;
 
   /// List of comments to be prepended to the
   /// dependency.

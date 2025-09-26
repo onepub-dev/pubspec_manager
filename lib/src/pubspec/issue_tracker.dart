@@ -2,6 +2,12 @@ part of 'internal_parts.dart';
 
 /// Describes the url of the package's issue tracker.
 class IssueTracker implements Section {
+  SectionSingleLine _section;
+
+  String _url;
+
+  static const keyName = 'issue_tracker';
+
   factory IssueTracker._fromDocument(Document document) {
     final lineSection = document.getLineForKey(IssueTracker.keyName);
     if (lineSection.missing) {
@@ -19,22 +25,15 @@ class IssueTracker implements Section {
       : _url = '',
         _section = SectionSingleLine.missing(document, 0, keyName);
 
-  SectionSingleLine _section;
-
-  String _url;
-
   /// Set the url of the package's issue tracker.
   IssueTracker set(String url) {
     _url = url;
     _section.value = url;
-    // ignore: avoid_returning_this
     return this;
   }
 
   /// The url to the package's issue tracker.
   String get value => _url;
-
-  static const String keyName = 'issue_tracker';
 
   @override
   Comments get comments => _section.comments;

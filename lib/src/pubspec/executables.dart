@@ -9,6 +9,14 @@ part of 'internal_parts.dart';
 /// pubspec.save();
 /// ```
 class Executables implements Section {
+  final PubSpec _pubspec;
+
+  final SectionImpl _section;
+
+  final _executables = <Executable>[];
+
+  static const keyName = 'executables';
+
   Executables._missing(PubSpec pubspec)
       : _pubspec = pubspec,
         _section = SectionImpl.missing(pubspec.document, keyName);
@@ -16,12 +24,6 @@ class Executables implements Section {
   Executables._fromLine(PubSpec pubspec, LineImpl headerLine)
       : _pubspec = pubspec,
         _section = SectionImpl.fromLine(headerLine);
-
-  final PubSpec _pubspec;
-
-  final SectionImpl _section;
-
-  final List<Executable> _executables = <Executable>[];
 
   /// List of the executables
   List<Executable> get list => List.unmodifiable(_executables);
@@ -60,7 +62,6 @@ class Executables implements Section {
 
     _executables.add(attached);
 
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -106,8 +107,6 @@ class Executables implements Section {
   /// returns true if the list of executables contains an executable
   /// with the given name.
   bool exists(String name) => this[name] != null;
-
-  static const String keyName = 'executables';
 
   @override
   Comments get comments => _section.comments;

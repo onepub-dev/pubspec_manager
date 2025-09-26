@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_returning_this
 
 part of 'internal_parts.dart';
 
@@ -14,15 +13,7 @@ enum PlatformEnum {
 /// Holds a list of supported platforms listed under the
 /// 'platforms' keyword.
 class Platforms {
-  Platforms._missing(this._pubspec)
-      : _section = SectionImpl.missing(_pubspec.document, keyName);
-
-  Platforms._fromLine(this._pubspec, LineImpl line)
-      : _section = SectionImpl.fromLine(line) {
-    name = line.key;
-  }
-
-  static const String keyName = 'platforms';
+  static const keyName = 'platforms';
 
   SectionImpl _section;
 
@@ -33,7 +24,15 @@ class Platforms {
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
 
-  final List<PlatformSupport> _platforms = <PlatformSupport>[];
+  final _platforms = <PlatformSupport>[];
+
+  Platforms._missing(this._pubspec)
+      : _section = SectionImpl.missing(_pubspec.document, keyName);
+
+  Platforms._fromLine(this._pubspec, LineImpl line)
+      : _section = SectionImpl.fromLine(line) {
+    name = line.key;
+  }
 
   /// List of the platform's that this package supports.
   /// to modiify the list use [add], [addAll], [remove] and [removeAll]

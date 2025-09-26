@@ -2,7 +2,7 @@ import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('document ...', () async {
+  test('document ...', ()  {
     const pubspec = '''
 name: pubspec3
 version: 0.0.1

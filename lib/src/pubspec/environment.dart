@@ -8,6 +8,22 @@ part of 'internal_parts.dart';
 /// pubspec.environment.set(sdk: '>3.0.0 <=4.0.0', flutter: '1.0.0')
 /// ```
 class Environment implements Section {
+  SectionImpl _section;
+
+  late VersionConstraint _sdk;
+
+  late VersionConstraint _flutter;
+
+  late LineImpl _sdkLine;
+
+  late LineImpl _flutterLine;
+
+  static const _sdkKey = 'sdk';
+
+  static const _flutterKey = 'flutter';
+
+  static const keyName = 'environment';
+
   Environment._missing(Document document)
       : _sdk = VersionConstraint._missing(document, _sdkKey),
         _flutter = VersionConstraint._missing(document, _flutterKey),
@@ -78,13 +94,6 @@ class Environment implements Section {
     return environment;
   }
 
-  SectionImpl _section;
-  late VersionConstraint _sdk;
-  late VersionConstraint _flutter;
-
-  late LineImpl _sdkLine;
-  late LineImpl _flutterLine;
-
   /// Get the version constraint for the dart sdk.
   String get sdk => _sdk.version;
 
@@ -100,7 +109,6 @@ class Environment implements Section {
     if (flutter != null) {
       this.flutter = flutter;
     }
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -164,18 +172,6 @@ class Environment implements Section {
 
     return sb.toString();
   }
-
-  // @override
-  // List<Line> get lines => [
-  //       _line,
-  //       if (!_sdkLine.missing) _sdkLine,
-  //       if (!_flutterLine.missing) _flutterLine
-  //     ];
-
-  static const _sdkKey = 'sdk';
-  static const _flutterKey = 'flutter';
-
-  static const String keyName = 'environment';
 
   @override
   Comments get comments => _section.comments;

@@ -1,3 +1,4 @@
+// considered low risk.
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
 part of 'internal_parts.dart';
@@ -5,6 +6,14 @@ part of 'internal_parts.dart';
 /// Holds package version (not a dependency package)
 /// as declared in the pubspec.yaml
 class Version implements Section {
+  SectionImpl _section;
+
+  var quoted = false;
+
+  sm.Version _semVersion = sm.Version.none;
+
+  static const keyName = 'version';
+
   ///
   /// extract the version from the underlying document.
 
@@ -26,23 +35,16 @@ class Version implements Section {
     _semVersion = parseSemVersion(_section.headerLine.value);
   }
 
-  SectionImpl _section;
-
   /// There was a version key but no value
   bool get isEmpty => !_section.missing && _semVersion.isEmpty;
 
   /// There was no version in the pubspec.
   bool get isMissing => _section.missing;
 
-  bool quoted = false;
-
-  sm.Version _semVersion = sm.Version.none;
-
   /// If a version has not been specified we return [sm.Version.none]
   sm.Version get semVersion =>
       _semVersion.isEmpty || _section.missing ? sm.Version.none : _semVersion;
 
-  // ignore: avoid_setters_without_getters
   void setSemVersion(sm.Version value) {
     _semVersion = value;
     _section.headerLine.value = value.toString();
@@ -77,11 +79,8 @@ class Version implements Section {
       _section.headerLine.value = _stripQuotes(version);
     }
 
-    // ignore: avoid_returning_this
     return this;
   }
-
-  // void set(String version) => this.version = version;
 
   static bool _isQuoted(String version) =>
       version.contains("'") || version.contains('"');
@@ -123,8 +122,6 @@ class Version implements Section {
 
   static sm.Version parseSemVersion(String value) =>
       sm.Version.parse(_stripQuotes(value));
-
-  static const String keyName = 'version';
 
   @override
   Comments get comments => _section.comments;

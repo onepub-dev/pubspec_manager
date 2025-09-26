@@ -16,6 +16,13 @@ part of 'internal_parts.dart';
 /// i.e. flutter and sdk versions.
 ///
 class EnvironmentBuilder {
+  final String? _sdk;
+
+  final String? _flutter;
+
+  /// True if the 'environment' key is missing from the pubspec.
+  final bool missing;
+
   /// Creates an environment key with an [sdk] version constraint and/or
   /// a [flutter] version constraint.
   /// ```dart
@@ -40,10 +47,4 @@ class EnvironmentBuilder {
     }
     return Environment._insertAfter(pubspec, lineBefore, this);
   }
-
-  final String? _sdk;
-  final String? _flutter;
-
-  /// True if the 'environment' key is missing from the pubspec.
-  final bool missing;
 }

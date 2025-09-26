@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_setters_without_getters
 part of '../pubspec/internal_parts.dart';
 
 /// Used to hold a single line that cannot have
@@ -36,24 +35,24 @@ class LineSection extends SectionImpl implements Section, Line {
   String renderInlineComment(int contentLength) =>
       headerLine.renderInlineComment(contentLength);
 
-  set commentOffset(int? _commentOffset) {
-    headerLine.commentOffset = _commentOffset;
+  set commentOffset(int? commentOffset) {
+    headerLine.commentOffset = commentOffset;
   }
 
-  set indent(int _indent) {
-    headerLine.indent = _indent;
+  set indent(int indent) {
+    headerLine.indent = indent;
   }
 
-  set inlineComment(String? _inlineComment) {
-    headerLine.inlineComment = _inlineComment;
+  set inlineComment(String? inlineComment) {
+    headerLine.inlineComment = inlineComment;
   }
 
-  set lineNo(int _lineNo) {
-    headerLine.lineNo = _lineNo;
+  set lineNo(int lineNo) {
+    headerLine.lineNo = lineNo;
   }
 
-  set lineType(LineType _type) {
-    headerLine.lineType = _type;
+  set lineType(LineType type) {
+    headerLine.lineType = type;
   }
 
   set value(String value) {

@@ -9,6 +9,23 @@ part of 'internal_parts.dart';
 ///   dcli:
 ///     path: ../dcli
 class DependencyPath with DependencyMixin implements Dependency {
+  static const keyName = 'path';
+
+  @override
+  late final SectionImpl _section;
+
+  late final String _name;
+
+  late final String path;
+
+  /// The parent dependency key
+  late final Dependencies _dependencies;
+
+  /// Line that contained the dependency declaration
+  late final LineImpl _line;
+
+  late final LineImpl _pathLine;
+
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencyPath._fromLine(this._dependencies, this._line)
@@ -39,19 +56,6 @@ class DependencyPath with DependencyMixin implements Dependency {
     //   comments.append(comment);
     // }
   }
-  static const keyName = 'path';
-
-  @override
-  late final SectionImpl _section;
-  late final String _name;
-  late final String path;
-
-  /// The parent dependency key
-  late final Dependencies _dependencies;
-
-  /// Line that contained the dependency declaration
-  late final LineImpl _line;
-  late final LineImpl _pathLine;
 
   @override
   String get name => _name;

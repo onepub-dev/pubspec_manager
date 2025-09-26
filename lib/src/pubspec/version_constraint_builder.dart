@@ -1,9 +1,19 @@
+
+// the class is actually immutable
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
 part of 'internal_parts.dart';
 
 /// Holds a dependency version
 class VersionConstraintBuilder {
+  late final bool missing;
+
+  final String key;
+
+  late final sm.VersionConstraint _version;
+
+  late final List<String> _comments;
+
   VersionConstraintBuilder({
     required this.key,
     required sm.VersionConstraint versionConstraint,
@@ -11,10 +21,6 @@ class VersionConstraintBuilder {
   })  : missing = false,
         _version = versionConstraint,
         _comments = comments ?? <String>[];
-
-  // factory VersionConstraintBuilder._fromLine(Line line) =>
-  //     VersionConstraintBuilder(
-  //         key: line.key, versionConstraint: parseConstraint(line.value));
 
   factory VersionConstraintBuilder.parse(
           {required String key, String? versionConstraint}) =>
@@ -41,11 +47,6 @@ class VersionConstraintBuilder {
       : missing = false,
         key = 'empty',
         _version = sm.VersionConstraint.empty;
-
-  late final bool missing;
-  final String key;
-  late final sm.VersionConstraint _version;
-  late final List<String> _comments;
 
   List<String> get comments => _comments;
 
