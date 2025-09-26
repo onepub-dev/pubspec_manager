@@ -1,3 +1,7 @@
+# 2.0.1
+- added isNone method to PublishTo. Publish_to will now return an empty url if there is no publish_to key or it has one but it is empty. Added a new method publish_to.isPubDev to indicate if the package would be publishe to pub.dev.
+- upgraded to lint_hard 6.0 and fixed lints.
+
 # 2.0.0
 - BREAKING removed publishTo.none as this was breaking debug sessions as 
 the 'none' getter was actually settting the url to 'none'. 
