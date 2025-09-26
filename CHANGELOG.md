@@ -2,6 +2,7 @@
 - BREAKING removed publishTo.none as this was breaking debug sessions as 
 the 'none' getter was actually settting the url to 'none'. 
 Check all other getters to ensure we were not doing something equally stupid.
+You will need to change all occurances of publish_to.none to publish_to.setNone()
 
 # 1.0.3
 - Widen `strings` dependency range to include `4.0.0` release (no breaking changes).
