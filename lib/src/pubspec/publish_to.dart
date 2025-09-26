@@ -27,19 +27,6 @@ class PublishTo implements Section {
   /// should never be published.
   String get value => _section.value;
 
-  /// Call this method to prevent the package from being published
-  /// by setting the publish_to key to 'none'.
-  /// ```dart
-  /// final pubspec = PubSpec.load();
-  /// pubspec.publishTo.none;
-  /// pubspec.save();
-  /// ```
-  PublishTo get none {
-    _section.value = noneKeyword;
-    // ignore: avoid_returning_this
-    return this;
-  }
-
   /// Set the url of a repository (e.g. https://onepub.dev) that this
   /// package will be published to.
   /// If the url is not set then any publish attempt will cause
@@ -48,6 +35,19 @@ class PublishTo implements Section {
   /// value to 'none'.
   PublishTo set(String url) {
     _section.value = url;
+    // ignore: avoid_returning_this
+    return this;
+  }
+
+  /// Call this method to prevent the package from being published
+  /// by setting the publish_to key to 'none'.
+  /// ```dart
+  /// final pubspec = PubSpec.load();
+  /// pubspec.publishTo.setNone;
+  /// pubspec.save();
+  /// ```
+  PublishTo setNone() {
+    _section.value = noneKeyword;
     // ignore: avoid_returning_this
     return this;
   }
