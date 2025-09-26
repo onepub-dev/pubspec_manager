@@ -26,5 +26,4 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 .failed_tracker
-pubspec.yaml
 custom_lint.log
