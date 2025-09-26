@@ -7,6 +7,8 @@ part of 'internal_parts.dart';
 class PublishTo implements Section {
   SectionSingleLine _section;
 
+  String _url;
+
   static const keyName = 'publish_to';
 
   static const noneKeyword = 'none';
@@ -21,15 +23,21 @@ class PublishTo implements Section {
     }
   }
 
-  PublishTo._(LineImpl line) : _section = SectionSingleLine.fromLine(line);
+  PublishTo._(LineImpl line)
+      : _url = line.value,
+        _section = SectionSingleLine.fromLine(line);
 
   PublishTo._missing(Document document)
-      : _section = SectionSingleLine.missing(document, 0, keyName);
+      : _url = '',
+        _section = SectionSingleLine.missing(document, 0, keyName);
 
   /// Get the url that this package is published to.
   /// Note: the value can be 'none' which indicates that the package
   /// should never be published.
-  String get value => _section.value;
+  /// If publish_to is missing or the url is empty then an
+  /// empty string is returned. In this case the package would be
+  /// published to the public repo pub.dev.
+  String get value => _url;
 
   /// Set the url of a repository (e.g. https://onepub.dev) that this
   /// package will be published to.
@@ -38,9 +46,18 @@ class PublishTo implements Section {
   /// To prevent the package from being accidently published set this
   /// value to 'none'.
   PublishTo set(String url) {
+    _url = url;
     _section.value = url;
     return this;
   }
+
+  /// Returns true if the publish_to value is set to 'none'
+  /// which indicates that the package should not be published.
+  bool isNone() => _url == noneKeyword;
+
+  /// Returns true if the publish_to value is missing or is an empty string.
+  /// In this case the package would be published to the public repo pub
+  bool isPubDev() => _url.isEmpty;
 
   /// Call this method to prevent the package from being published
   /// by setting the publish_to key to 'none'.
@@ -50,6 +67,7 @@ class PublishTo implements Section {
   /// pubspec.save();
   /// ```
   PublishTo setNone() {
+    _url = noneKeyword;
     _section.value = noneKeyword;
     return this;
   }
