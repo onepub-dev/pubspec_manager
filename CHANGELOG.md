@@ -1,5 +1,8 @@
-# 3.0.0
+# 3.0.1
 - marked the Dependency class as sealed is the pub.dev spec defines a closed set of types.
+
+# 3.0.0
+- was retracted due a couple of issues.
 
 # 2.0.1
 - added isNone method to PublishTo. Publish_to will now return an empty url if there is no publish_to key or it has one but it is empty. Added a new method publish_to.isPubDev to indicate if the package would be publishe to pub.dev.
