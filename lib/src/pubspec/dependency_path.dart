@@ -8,7 +8,7 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class DependencyPath with DependencyMixin implements Dependency {
+class DependencyPath extends Dependency  {
   static const keyName = 'path';
 
   @override
@@ -29,7 +29,8 @@ class DependencyPath with DependencyMixin implements Dependency {
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencyPath._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line) {
+      : _section = SectionImpl.fromLine(_line),
+        super._() {
     _name = _line.key;
     _pathLine = _line.findRequiredKeyChild('path');
     path = _pathLine.value;
@@ -38,7 +39,8 @@ class DependencyPath with DependencyMixin implements Dependency {
   /// Creates a  Path Dependency inserting it into the document after
   /// [lineBefore]
   DependencyPath._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderPath dependency) {
+      PubSpec pubspec, Line lineBefore, DependencyBuilderPath dependency)
+      : super._() {
     _name = dependency.name;
     path = dependency.path;
 
@@ -59,6 +61,23 @@ class DependencyPath with DependencyMixin implements Dependency {
 
   @override
   String get name => _name;
+
+
+  set name(String name) {
+    _name = name;
+    _line.key = name;
+  }
+
+
+  /// List of comments associated with the
+  /// dependency.
+  @override
+  Comments get comments => _section.comments;
+
+  /// The line number within the pubspec.yaml
+  /// where this dependency is located.
+  @override
+  int get lineNo => _section.headerLine.lineNo;
 
   /// Allows cascading calls to append
   @override

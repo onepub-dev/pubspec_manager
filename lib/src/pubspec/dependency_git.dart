@@ -1,7 +1,7 @@
 part of 'internal_parts.dart';
 
 /// A dependency that is hosted in a git repository
-class DependencyGit with DependencyMixin implements Dependency {
+class DependencyGit extends Dependency {
   @override
   late final SectionImpl _section;
 
@@ -22,7 +22,8 @@ class DependencyGit with DependencyMixin implements Dependency {
   /// from [line].
   DependencyGit._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        _section = SectionImpl.fromLine(line) {
+        _section = SectionImpl.fromLine(line),
+        super._() {
     _name = _line.key;
     _gitLine = _line.findRequiredKeyChild(keyName);
     _details = _GitDetails.fromLine(_gitLine, _name);
@@ -30,7 +31,8 @@ class DependencyGit with DependencyMixin implements Dependency {
 
   /// Create a Git dependency and insert it into the document
   DependencyGit._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderGit dependency) {
+      PubSpec pubspec, Line lineBefore, DependencyBuilderGit dependency)
+      : super._() {
     _name = dependency.name;
     final url = dependency.url;
     final isSimple = dependency.isSimple;
@@ -59,14 +61,23 @@ class DependencyGit with DependencyMixin implements Dependency {
     _line.key = name;
   }
 
-  @visibleForTesting
+
+
   String get url => _details.url;
 
-  @visibleForTesting
   String? get ref => _details.ref;
 
-  @visibleForTesting
   String? get path => _details.path;
+  
+  /// List of comments associated with the
+  /// dependency.
+  @override
+  Comments get comments => _section.comments;
+
+  /// The line number within the pubspec.yaml
+  /// where this dependency is located.
+  @override
+  int get lineNo => _section.headerLine.lineNo;
 
   @override
   Dependency add(DependencyBuilder dependency) {

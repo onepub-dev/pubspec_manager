@@ -8,7 +8,7 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   flutter:
 ///     sdk: flutter
-class DependencySdk with DependencyMixin implements Dependency {
+class DependencySdk extends Dependency {
   @override
   late final SectionImpl _section;
 
@@ -30,7 +30,8 @@ class DependencySdk with DependencyMixin implements Dependency {
   /// Creates Path dependency from an existing [Line] in
   /// the document.
   DependencySdk._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line) {
+      : _section = SectionImpl.fromLine(_line),
+        super._() {
     name = _line.key;
     final sdkLine = _line.findRequiredKeyChild(keyName);
     sdk = sdkLine.value;
@@ -39,7 +40,8 @@ class DependencySdk with DependencyMixin implements Dependency {
   /// Creates an Sdk Dependency inserting it into the document after
   /// [lineBefore]
   DependencySdk._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderSdk dependency) {
+      PubSpec pubspec, Line lineBefore, DependencyBuilderSdk dependency)
+      : super._() {
     name = dependency.name;
     sdk = dependency.path;
 
@@ -52,6 +54,16 @@ class DependencySdk with DependencyMixin implements Dependency {
 
     _section = SectionImpl.fromLine(_line);
   }
+
+  /// List of comments associated with the
+  /// dependency.
+  @override
+  Comments get comments => _section.comments;
+
+  /// The line number within the pubspec.yaml
+  /// where this dependency is located.
+  @override
+  int get lineNo => _section.headerLine.lineNo;
 
   @override
   Dependency add(DependencyBuilder dependency) {

@@ -4,9 +4,7 @@ part of 'internal_parts.dart';
 /// A pub hosted dependency is of the form
 /// dependencies:
 ///   dcli: ^3.0.1
-class DependencyPubHosted
-    with DependencyMixin
-    implements Dependency, DependencyVersioned {
+class DependencyPubHosted extends Dependency implements DependencyVersioned {
   @override
   late SectionImpl _section;
 
@@ -21,7 +19,8 @@ class DependencyPubHosted
 
   DependencyPubHosted._fromLine(this._dependencies, LineImpl line)
       : _line = line,
-        _section = SectionImpl.fromLine(line) {
+        _section = SectionImpl.fromLine(line),
+        super._() {
     // the line is of the form '<name>: <version>'
     _name = line.key;
     _version = line.value;
@@ -33,7 +32,7 @@ class DependencyPubHosted
     PubSpec pubspec,
     Line lineBefore,
     DependencyBuilderPubHosted dependency,
-  ) {
+  ) : super._() {
     _name = dependency.name;
     _version = dependency.versionConstraint;
     final line = LineImpl.forInsertion(pubspec.document, '  $_name: $_version');
@@ -58,6 +57,16 @@ class DependencyPubHosted
     _version = version;
     _line.value = version;
   }
+
+  /// List of comments associated with the
+  /// dependency.
+  @override
+  Comments get comments => _section.comments;
+
+  /// The line number within the pubspec.yaml
+  /// where this dependency is located.
+  @override
+  int get lineNo => _section.headerLine.lineNo;
 
   @override
   Dependency add(DependencyBuilder dependency) {

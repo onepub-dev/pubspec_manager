@@ -13,9 +13,7 @@ part of 'internal_parts.dart';
 /// If no version is specified then 'any' is assumed.
 ///
 /// See: for dependencies hosted on pub.dev use [DependencyPubHosted]
-class DependencyAltHosted
-    with DependencyMixin
-    implements Dependency, DependencyVersioned {
+class DependencyAltHosted extends Dependency implements DependencyVersioned {
   @override
   late SectionImpl _section;
 
@@ -38,7 +36,8 @@ class DependencyAltHosted
 
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line) {
+      : _section = SectionImpl.fromLine(_line),
+        super._() {
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
@@ -53,7 +52,8 @@ class DependencyAltHosted
   /// Creates an  [DependencyAltHosted] inserting it into the document after
   /// [lineBefore]
   DependencyAltHosted._insertAfter(this._dependencies, PubSpec pubspec,
-      Line lineBefore, DependencyBuilderAltHosted dependency) {
+      Line lineBefore, DependencyBuilderAltHosted dependency)
+      : super._() {
     _name = dependency.name;
     _hostedUrl = dependency.hostedUrl;
     _versionConstraint = dependency.versionConstraint;
@@ -104,6 +104,16 @@ class DependencyAltHosted
     _versionConstraint = version;
     _versionLine.value = version;
   }
+
+  /// List of comments associated with the
+  /// dependency.
+  @override
+  Comments get comments => _section.comments;
+
+  /// The line number within the pubspec.yaml
+  /// where this dependency is located.
+  @override
+  int get lineNo => _section.headerLine.lineNo;
 
   @override
   Dependency add(DependencyBuilder dependency) {

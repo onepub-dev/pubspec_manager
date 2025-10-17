@@ -110,6 +110,56 @@ void create() {
 
 ```
 
+## Switch on a dependency type
+
+Use pattern matching to process dependencies. 
+In this example we writ the dependencies out to a json file.
+
+```dart
+ switch (dependency) {
+        case DependencyPubHosted(:final name, :final versionConstraint):
+          final vc = versionConstraint;
+          restore
+            ..writeln('  $name:')
+            ..writeln('    source: hosted')
+            ..writeln('    constraint: "$vc"');
+
+        case DependencyAltHosted(:final name, :final versionConstraint, :final hostedUrl):
+          final vc = versionConstraint;
+          restore
+            ..writeln('  $name:')
+            ..writeln('    source: hosted')
+            ..writeln('    url: "$hostedUrl"')
+            ..writeln('    constraint: "$vc"');
+
+        case DependencyGit(:final name, :final url, :final ref, :final path):
+          restore
+            ..writeln('  $name:')
+            ..writeln('    source: git')
+            ..writeln('    url: "$url"');
+          if (ref != null) {
+            restore.writeln('    ref: "$ref"');
+          }
+          if (path != null) {
+            restore.writeln('    path: "$path"');
+          }
+
+        case DependencyPath(:final name, :final path):
+          restore
+            ..writeln('  $name:')
+            ..writeln('    source: path')
+            ..writeln('    path: "$path"');
+
+        case DependencySdk(:final name, :final sdk):
+          restore
+            ..writeln('  $name:')
+            ..writeln('    source: sdk')
+            ..writeln('    sdk: "$sdk"');
+      }
+    
+  ```
+
+
 # update a version
 Updating a pubspec version is a common task:
 
