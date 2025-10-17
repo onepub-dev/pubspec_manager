@@ -2,7 +2,7 @@ part of 'internal_parts.dart';
 
 /// Base class for each of the [Dependency] types.
 /// This is an abstract class that should not  be used directly
-abstract class Dependency {
+sealed class Dependency {
   /// Loads a dependency located at [line].
   factory Dependency._loadFrom(Dependencies dependencies, LineImpl line) {
     final children = line.childrenOf(type: LineType.key);

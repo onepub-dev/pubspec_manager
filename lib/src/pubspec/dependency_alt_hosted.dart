@@ -42,7 +42,7 @@ class DependencyAltHosted
     _name = _line.key;
 
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
-    _hostedUrl = _hostedUrlLine.value;
+    _hostedUrl = _hostedUrlLine.value.trim();
 
     _versionLine = _line.findKeyChild('version');
     if (!_versionLine.missing) {
@@ -62,7 +62,7 @@ class DependencyAltHosted
 
     lineBefore = pubspec.document.insertAfter(_line, lineBefore);
     _hostedUrlLine =
-        LineImpl.forInsertion(pubspec.document, '    hosted: $_hostedUrl');
+        LineImpl.forInsertion(pubspec.document, '    $keyName: $_hostedUrl');
     lineBefore = pubspec.document.insertAfter(_hostedUrlLine, lineBefore);
 
     if (_versionConstraint != null) {
@@ -80,7 +80,7 @@ class DependencyAltHosted
 
   set name(String name) {
     _name = name;
-    _line.value = name;
+    _line.key = name;
   }
 
   /// The url where this package is hosted.
