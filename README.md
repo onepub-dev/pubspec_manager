@@ -12,7 +12,7 @@ There are also a number of other pubspec maintinance packages but none of them
 meet all of my criteria. In particualar none of them are able to preserve 
 comments.
 
-So the aim of pubspec_manager is to fix three problems
+So the aim of pubspec_manager is:
 
 1) simplified API
 2) fully type safe code base to ease maintenance
