@@ -1,5 +1,5 @@
 name: pubspec_manager
-version: 2.0.1
+version: 3.0.0
 description: Read, write and modify a pubspec.yaml with a type safe API including retention and modifications of comments and out of spec content.
 repository: https://github.com/onepub-dev/pubspec_manager
 environment:
