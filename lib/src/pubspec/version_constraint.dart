@@ -46,7 +46,7 @@ class VersionConstraint extends LineSection {
   // The pubspec doc says that a blank version is to be
   // treated as 'any'. We however need to record that the
   // version string was blank so we use emtpy.
-  // However is the user queries the version we return any.
+  // However if the user queries the version we return any.
   sm.VersionConstraint get constraint =>
       _versionConstraint.isEmpty || _missingValue
           ? sm.VersionConstraint.any

@@ -1,3 +1,8 @@
+# 3.1.1
+- changed the environment.sdkConstraint and environment.flutterConstraint to return
+a semver VersionConstraint rather than our interal VersionConstraint for better
+compatibility with the broader dart ecosystem.
+
 # 3.1.0
 - exposed new getters for environment.sdkConstraint and environment.flutterConstraint
 

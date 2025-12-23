@@ -148,6 +148,8 @@ class PubSpec {
   /// If you don't provide a [directory] then we start the search
   /// from the current working directory.
   ///
+  /// Throws [NotFoundException] if the pubspec.yaml file isn't found.
+  ///
   /// ```dart
   /// Pubspec.load()
   ///   ..dependencies
@@ -171,6 +173,8 @@ class PubSpec {
 
   /// Allows you to load the pubspec from path which includes
   /// the directory and filename.
+  ///
+  /// Throws [NotFoundException] if the pubspec.yaml file isn't found.
   ///
   /// @see [PubSpec.load] to load the project's pubspec.yaml
   factory PubSpec.loadFromPath(String pathTo) =>

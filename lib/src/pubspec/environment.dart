@@ -94,15 +94,19 @@ class Environment implements Section {
     return environment;
   }
 
-  /// Get the version constraint for the dart sdk.
+  /// Get the version constraint for the dart sdk as a String
   String get sdk => _sdk.version;
 
-  VersionConstraint get sdkConstraint => _sdk;
+  /// Get the version constraint for the dart sdk.
+  /// If no constraint is specified then VersionConstraint.any is returned.
+  sm.VersionConstraint get sdkConstraint => _sdk.constraint;
 
-  /// Get the version constraint for the flutter sdk.
+  /// Get the version constraint for the flutter sdk as a String
   String get flutter => _flutter.version;
 
-  VersionConstraint get flutterConstraint => _flutter;
+  /// Get the version constraint for the flutter sdk.
+  /// If no constraint is specified then VersionConstraint.any is returned.
+  sm.VersionConstraint get flutterConstraint => _flutter.constraint;
 
   /// Set the sdk and flutter version constraints
   Environment set({String? sdk, String? flutter}) {
