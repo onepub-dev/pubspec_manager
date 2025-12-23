@@ -1,3 +1,6 @@
+# 3.1.0
+- exposed new getters for environment.sdkConstraint and environment.flutterConstraint
+
 # 3.0.1
 - marked the Dependency class as sealed is the pub.dev spec defines a closed set of types.
 
