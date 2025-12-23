@@ -97,8 +97,12 @@ class Environment implements Section {
   /// Get the version constraint for the dart sdk.
   String get sdk => _sdk.version;
 
+  VersionConstraint get sdkConstraint => _sdk;
+
   /// Get the version constraint for the flutter sdk.
   String get flutter => _flutter.version;
+
+  VersionConstraint get flutterConstraint => _flutter;
 
   /// Set the sdk and flutter version constraints
   Environment set({String? sdk, String? flutter}) {
