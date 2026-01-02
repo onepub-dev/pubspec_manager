@@ -1,3 +1,7 @@
+# 3.2.0
+- work to remove move usages of late by moving to factory ctors.
+- fixed a cluster of missing initialisations for fields that were late final.
+
 # 3.1.1
 - changed the environment.sdkConstraint and environment.flutterConstraint to return
 a semver VersionConstraint rather than our interal VersionConstraint for better
