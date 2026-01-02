@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path/path.dart' hide equals;
+import 'package:pub_semver/pub_semver.dart' as sm;
 import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
@@ -103,6 +104,18 @@ executables:
       // any sdk
       environment.sdk = 'any';
       expect(environment.sdk, equals('any'));
+    });
+
+    test('missing flutter constraint defaults to any', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+''');
+
+      final environment = pubspec.environment;
+      expect(environment.flutter, equals(''));
+      expect(environment.flutterConstraint, equals(sm.VersionConstraint.any));
     });
   });
 }

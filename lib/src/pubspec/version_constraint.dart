@@ -38,6 +38,7 @@ class VersionConstraint extends LineSection {
   /// The version key wasn't present in the pubspec
   VersionConstraint._missing(super.document, super.key)
       : _missingValue = true,
+      _versionConstraint = sm.VersionConstraint.empty,
         super.missing();
 
   /// There was no value for the version key in the pubspec.

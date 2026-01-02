@@ -5,10 +5,10 @@ class DependencyGit extends Dependency {
   @override
   late final SectionImpl _section;
 
-  late final String _name;
+  final String _name;
 
   /// The parent dependency key
-  late final Dependencies _dependencies;
+  final Dependencies _dependencies;
 
   late final _GitDetails _details;
 
@@ -23,17 +23,18 @@ class DependencyGit extends Dependency {
   DependencyGit._fromLine(this._dependencies, LineImpl line)
       : _line = line,
         _section = SectionImpl.fromLine(line),
+        _gitLine = line.findRequiredKeyChild(keyName),
+        _name = line.key,
         super._() {
-    _name = _line.key;
-    _gitLine = _line.findRequiredKeyChild(keyName);
-    _details = _GitDetails.fromLine(_gitLine, _name);
+    _details = _GitDetails.fromLine(_gitLine, name);
   }
 
   /// Create a Git dependency and insert it into the document
-  DependencyGit._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderGit dependency)
-      : super._() {
-    _name = dependency.name;
+  DependencyGit._insertAfter(Dependencies dependencies, PubSpec pubspec,
+      Line lineBefore, DependencyBuilderGit dependency)
+      : _name = dependency.name,
+        _dependencies = dependencies,
+        super._() {
     final url = dependency.url;
     final isSimple = dependency.isSimple;
     final directUrl = isSimple ? ' $url' : '';
@@ -61,14 +62,12 @@ class DependencyGit extends Dependency {
     _line.key = name;
   }
 
-
-
   String get url => _details.url;
 
   String? get ref => _details.ref;
 
   String? get path => _details.path;
-  
+
   /// List of comments associated with the
   /// dependency.
   @override

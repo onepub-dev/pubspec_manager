@@ -27,7 +27,8 @@ class Platforms {
   final _platforms = <PlatformSupport>[];
 
   Platforms._missing(this._pubspec)
-      : _section = SectionImpl.missing(_pubspec.document, keyName);
+      : name = keyName,
+        _section = SectionImpl.missing(_pubspec.document, keyName);
 
   Platforms._fromLine(this._pubspec, LineImpl line)
       : _section = SectionImpl.fromLine(line) {

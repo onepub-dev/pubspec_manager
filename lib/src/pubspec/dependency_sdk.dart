@@ -40,8 +40,12 @@ class DependencySdk extends Dependency {
   /// Creates an Sdk Dependency inserting it into the document after
   /// [lineBefore]
   DependencySdk._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderSdk dependency)
+      Dependencies dependencies,
+      PubSpec pubspec,
+      Line lineBefore,
+      DependencyBuilderSdk dependency)
       : super._() {
+    _dependencies = dependencies;
     name = dependency.name;
     sdk = dependency.path;
 

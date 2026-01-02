@@ -50,7 +50,7 @@ class Environment implements Section {
         : VersionConstraint._fromLine(_sdkLine);
 
     _flutter = _flutterLine.missing
-        ? VersionConstraint._missing(_section.document, _sdkKey)
+        ? VersionConstraint._missing(_section.document, _flutterKey)
         : VersionConstraint._fromLine(_flutterLine);
   }
 

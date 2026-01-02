@@ -8,18 +8,18 @@ part of 'internal_parts.dart';
 /// dependencies:
 ///   dcli:
 ///     path: ../dcli
-class DependencyPath extends Dependency  {
+class DependencyPath extends Dependency {
   static const keyName = 'path';
 
   @override
   late final SectionImpl _section;
 
-  late final String _name;
+  final String _name;
 
   late final String path;
 
   /// The parent dependency key
-  late final Dependencies _dependencies;
+   final Dependencies _dependencies;
 
   /// Line that contained the dependency declaration
   late final LineImpl _line;
@@ -30,19 +30,20 @@ class DependencyPath extends Dependency  {
   /// the document.
   DependencyPath._fromLine(this._dependencies, this._line)
       : _section = SectionImpl.fromLine(_line),
+        _name = _line.key,
+        _pathLine = _line.findRequiredKeyChild('path'),
         super._() {
-    _name = _line.key;
-    _pathLine = _line.findRequiredKeyChild('path');
     path = _pathLine.value;
   }
 
   /// Creates a  Path Dependency inserting it into the document after
   /// [lineBefore]
-  DependencyPath._insertAfter(
-      PubSpec pubspec, Line lineBefore, DependencyBuilderPath dependency)
-      : super._() {
-    _name = dependency.name;
-    path = dependency.path;
+  DependencyPath._insertAfter(Dependencies dependencies, PubSpec pubspec,
+      Line lineBefore, DependencyBuilderPath dependency)
+      : _name = dependency.name,
+        path = dependency.path,
+    _dependencies = dependencies,
+        super._() {
 
     _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
     pubspec.document.insertAfter(_line, lineBefore);
@@ -62,12 +63,10 @@ class DependencyPath extends Dependency  {
   @override
   String get name => _name;
 
-
   set name(String name) {
     _name = name;
     _line.key = name;
   }
-
 
   /// List of comments associated with the
   /// dependency.

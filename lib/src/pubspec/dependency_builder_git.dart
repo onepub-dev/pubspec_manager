@@ -12,7 +12,7 @@ class DependencyBuilderGit implements DependencyBuilder {
 
   final String? path;
 
-  late final List<String> _comments;
+  final List<String> _comments;
 
   DependencyBuilderGit({
     required this.name,
@@ -31,5 +31,5 @@ class DependencyBuilderGit implements DependencyBuilder {
   @override
   DependencyGit _attach(
           Dependencies dpendencies, PubSpec pubspec, Line lineBefore) =>
-      DependencyGit._insertAfter(pubspec, lineBefore, this);
+      DependencyGit._insertAfter(dpendencies, pubspec, lineBefore, this);
 }

@@ -11,11 +11,11 @@ part of 'internal_parts.dart';
 @immutable
 class DependencyBuilderPath implements DependencyBuilder {
   @override
-  late final String name;
+  final String name;
 
-  late final String path;
+  final String path;
 
-  late final List<String> _comments;
+  final List<String> _comments;
 
   DependencyBuilderPath({
     required this.name,
@@ -30,5 +30,5 @@ class DependencyBuilderPath implements DependencyBuilder {
   @override
   Dependency _attach(
           Dependencies dependencies, PubSpec pubspec, Line lineBefore) =>
-      DependencyPath._insertAfter(pubspec, lineBefore, this);
+      DependencyPath._insertAfter(dependencies, pubspec, lineBefore, this);
 }

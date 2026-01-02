@@ -20,11 +20,11 @@ class DependencyAltHosted extends Dependency implements DependencyVersioned {
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
 
-  late String _name;
+  String _name;
 
   late String _hostedUrl;
 
-  late String? _versionConstraint;
+  String? _versionConstraint;
 
   late final LineImpl _line;
 
@@ -37,15 +37,16 @@ class DependencyAltHosted extends Dependency implements DependencyVersioned {
   /// build an [DependencyAltHosted] from an existing line in the document
   DependencyAltHosted._fromLine(this._dependencies, this._line)
       : _section = SectionImpl.fromLine(_line),
+        _name = _line.key,
         super._() {
-    _name = _line.key;
-
     _hostedUrlLine = _line.findRequiredKeyChild('hosted');
     _hostedUrl = _hostedUrlLine.value.trim();
 
     _versionLine = _line.findKeyChild('version');
     if (!_versionLine.missing) {
       _versionConstraint = _versionLine.value;
+    } else {
+      _versionConstraint = null;
     }
   }
 
@@ -53,8 +54,8 @@ class DependencyAltHosted extends Dependency implements DependencyVersioned {
   /// [lineBefore]
   DependencyAltHosted._insertAfter(this._dependencies, PubSpec pubspec,
       Line lineBefore, DependencyBuilderAltHosted dependency)
-      : super._() {
-    _name = dependency.name;
+      : _name = dependency.name,
+        super._() {
     _hostedUrl = dependency.hostedUrl;
     _versionConstraint = dependency.versionConstraint;
 

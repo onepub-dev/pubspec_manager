@@ -29,4 +29,20 @@ dependencies:
     // expect((two as HostedDependency).version,
     //     equals(VersionConstraint.parse('2.3.1')));
   });
+
+  test('hosted dependency missing version defaults to any', () {
+    const content = '''
+name: one
+environment:
+  sdk: 1.2.3
+dependencies:
+  dcli:
+    hosted: https://onepub.dev
+''';
+    final pubspec = PubSpec.loadFromString(content);
+    final hosted = pubspec.dependencies.list.first as DependencyAltHosted;
+
+    expect(hosted.versionConstraint, equals('any'));
+    expect(hosted.hostedUrl, equals('https://onepub.dev'));
+  });
 }
