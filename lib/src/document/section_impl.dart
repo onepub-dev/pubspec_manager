@@ -10,7 +10,7 @@ class SectionImpl implements Section {
   /// as part of the section.
   LineImpl headerLine;
 
-  late final String key;
+  final String key;
 
   /// If there is no section with this key in the document
   /// then it is marked as missing.
@@ -22,20 +22,22 @@ class SectionImpl implements Section {
   /// Child lines are indented from the [headerLine]
   /// Does not include the [headerLine] nor any comments
   /// in the section prefix.
-  late final List<Line> _children;
+  final List<Line> _children;
 
   /// List of comments associated (prepended) with this section
   @override
   late final Comments comments;
 
-  SectionImpl(this.headerLine, this._children) : missing = false {
-    key = headerLine.key;
+  SectionImpl(this.headerLine, this._children)
+      : key = headerLine.key,
+        missing = false {
     comments = Comments._(this);
   }
 
-  SectionImpl.fromLine(this.headerLine) : missing = false {
-    key = headerLine.key;
-    _children = headerLine.childrenOf(descendants: true);
+  SectionImpl.fromLine(this.headerLine)
+      : key = headerLine.key,
+        _children = headerLine.childrenOf(descendants: true),
+        missing = false {
     comments = Comments._(this);
   }
 

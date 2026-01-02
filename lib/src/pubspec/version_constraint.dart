@@ -12,7 +12,7 @@ class VersionConstraint extends LineSection {
   /// the quotes.
   var quoted = false;
 
-  late sm.VersionConstraint _versionConstraint;
+  sm.VersionConstraint _versionConstraint = sm.VersionConstraint.empty;
 
   ///
   /// extract a version from an attached line.

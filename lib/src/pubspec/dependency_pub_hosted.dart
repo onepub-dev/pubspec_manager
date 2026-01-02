@@ -6,39 +6,40 @@ part of 'internal_parts.dart';
 ///   dcli: ^3.0.1
 class DependencyPubHosted extends Dependency implements DependencyVersioned {
   @override
-  late SectionImpl _section;
+  final SectionImpl _section;
 
-  late String _name;
+  String _name;
 
-  late String? _version;
+  String? _version;
 
   /// The line this dependency is attached to.
-  late final LineImpl _line;
+  final LineImpl _line;
 
-  late final Dependencies _dependencies;
+  final Dependencies _dependencies;
 
-  DependencyPubHosted._fromLine(this._dependencies, LineImpl line)
-      : _line = line,
-        _section = SectionImpl.fromLine(line),
-        super._() {
-    // the line is of the form '<name>: <version>'
-    _name = line.key;
-    _version = line.value;
-  }
+  DependencyPubHosted._(
+      this._dependencies, this._line, this._section, this._name, this._version)
+      : super._();
+
+  factory DependencyPubHosted._fromLine(
+          Dependencies dependencies, LineImpl line) =>
+      // the line is of the form '<name>: <version>'
+      DependencyPubHosted._(
+          dependencies, line, SectionImpl.fromLine(line), line.key, line.value);
 
   @override
-  DependencyPubHosted._insertAfter(
-    this._dependencies,
+  factory DependencyPubHosted._insertAfter(
+    Dependencies dependencies,
     PubSpec pubspec,
     Line lineBefore,
     DependencyBuilderPubHosted dependency,
-  ) : super._() {
-    _name = dependency.name;
-    _version = dependency.versionConstraint;
-    final line = LineImpl.forInsertion(pubspec.document, '  $_name: $_version');
-    _line = pubspec.document.insertAfter(line, lineBefore);
-
-    _section = SectionImpl.fromLine(_line);
+  ) {
+    final name = dependency.name;
+    final version = dependency.versionConstraint;
+    final line = LineImpl.forInsertion(pubspec.document, '  $name: $version');
+    final inserted = pubspec.document.insertAfter(line, lineBefore);
+    return DependencyPubHosted._(
+        dependencies, inserted, SectionImpl.fromLine(inserted), name, version);
   }
 
   @override

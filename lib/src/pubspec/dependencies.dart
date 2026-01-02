@@ -7,11 +7,11 @@ part of 'internal_parts.dart';
 /// the 'dev_dependencies' in pubspec.yaml
 class Dependencies {
   /// The [Document] [Section] that holds the dependencies
-  late SectionImpl _section;
+  SectionImpl _section;
 
   /// The name of the dependency section such as
   /// dev_dependencies
-  late final String name;
+  final String name;
 
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
@@ -21,10 +21,9 @@ class Dependencies {
   Dependencies._missing(this._pubspec, this.name)
       : _section = SectionImpl.missing(_pubspec.document, name);
 
-  Dependencies._fromLine(this._pubspec, LineImpl line) {
-    name = line.key;
-    _section = SectionImpl.fromLine(line);
-  }
+  Dependencies._fromLine(this._pubspec, LineImpl line)
+      : name = line.key,
+        _section = SectionImpl.fromLine(line);
 
   /// List of the dependencies as an unmodifiable list.
   ///

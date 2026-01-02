@@ -9,7 +9,7 @@ class Executable implements Section {
 
   String _script;
 
-  late final LineImpl _line;
+  final LineImpl _line;
 
   /// re-hydrate an executable from a line.
   Executable._fromLine(this._line)

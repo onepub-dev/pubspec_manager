@@ -19,7 +19,7 @@ class Platforms {
 
   /// The name of the dependency section such as
   /// dev_dpendencies
-  late final String name;
+  final String name;
 
   /// reference to the pubspec that has these dependencies.
   final PubSpec _pubspec;
@@ -31,9 +31,8 @@ class Platforms {
         _section = SectionImpl.missing(_pubspec.document, keyName);
 
   Platforms._fromLine(this._pubspec, LineImpl line)
-      : _section = SectionImpl.fromLine(line) {
-    name = line.key;
-  }
+      : name = line.key,
+        _section = SectionImpl.fromLine(line);
 
   /// List of the platform's that this package supports.
   /// to modiify the list use [add], [addAll], [remove] and [removeAll]

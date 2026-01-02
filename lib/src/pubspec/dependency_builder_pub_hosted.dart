@@ -8,13 +8,13 @@ part of 'internal_parts.dart';
 @immutable
 class DependencyBuilderPubHosted implements DependencyBuilder {
   @override
-  late final String name;
+  final String name;
 
   /// The version constraint for the dependency
   /// e.g. ^1.0.0
-  late final String? versionConstraint;
+  final String? versionConstraint;
 
-  late final List<String> _comments;
+  final List<String> _comments;
 
   /// If you don't pass in a [versionConstraint] then the version will
   /// be left empty when you save

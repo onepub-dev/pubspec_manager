@@ -3,62 +3,70 @@ part of 'internal_parts.dart';
 /// A dependency that is hosted in a git repository
 class DependencyGit extends Dependency {
   @override
-  late final SectionImpl _section;
+  final SectionImpl _section;
 
-  final String _name;
+  String _name;
 
   /// The parent dependency key
   final Dependencies _dependencies;
 
-  late final _GitDetails _details;
+  final _GitDetails _details;
 
-  late final LineImpl _line;
+  final LineImpl _line;
 
-  late final LineImpl _gitLine;
+  /// For future use - maybe
+  // ignore: unused_field
+  final LineImpl _gitLine;
 
   static const keyName = 'git';
 
   /// Load the git dependency from the [Document]  starting
-  /// from [line].
-  DependencyGit._fromLine(this._dependencies, LineImpl line)
-      : _line = line,
-        _section = SectionImpl.fromLine(line),
-        _gitLine = line.findRequiredKeyChild(keyName),
-        _name = line.key,
-        super._() {
-    _details = _GitDetails.fromLine(_gitLine, name);
+  /// from [_line].
+  DependencyGit._(this._dependencies, this._line, this._gitLine, this._section,
+      this._name, this._details)
+      : super._();
+
+  factory DependencyGit._fromLine(Dependencies dependencies, LineImpl line) {
+    final gitLine = line.findRequiredKeyChild(keyName);
+    return DependencyGit._(
+        dependencies,
+        line,
+        gitLine,
+        SectionImpl.fromLine(line),
+        line.key,
+        _GitDetails.fromLine(gitLine, line.key));
   }
 
   /// Create a Git dependency and insert it into the document
-  DependencyGit._insertAfter(Dependencies dependencies, PubSpec pubspec,
-      Line lineBefore, DependencyBuilderGit dependency)
-      : _name = dependency.name,
-        _dependencies = dependencies,
-        super._() {
+  factory DependencyGit._insertAfter(Dependencies dependencies, PubSpec pubspec,
+      Line lineBefore, DependencyBuilderGit dependency) {
     final url = dependency.url;
     final isSimple = dependency.isSimple;
     final directUrl = isSimple ? ' $url' : '';
 
-    _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insertAfter(_line, lineBefore);
+    final line =
+        LineImpl.forInsertion(pubspec.document, '  ${dependency.name}:');
+    pubspec.document.insertAfter(line, lineBefore);
 
-    _section = SectionImpl.fromLine(_line);
-    _details = _GitDetails(dependency);
+    final section = SectionImpl.fromLine(line);
+    final details = _GitDetails(dependency);
 
-    _gitLine =
+    final gitLine =
         LineImpl.forInsertion(pubspec.document, '    $keyName:$directUrl');
-    pubspec.document.insertAfter(_gitLine, _line);
+    pubspec.document.insertAfter(gitLine, line);
 
     if (!isSimple) {
-      _details._attach(_section, _gitLine);
+      details._attach(section, gitLine);
     }
+    return DependencyGit._(
+        dependencies, line, gitLine, section, dependency.name, details);
   }
 
   @override
   String get name => _name;
 
   set name(String name) {
-    this.name = name;
+    _name = name;
     _line.key = name;
   }
 
@@ -87,11 +95,11 @@ class DependencyGit extends Dependency {
 
 /// Holds the details of a git dependency.
 class _GitDetails {
-  late String url;
+  final String url;
 
-  String? ref;
+  final String? ref;
 
-  String? path;
+  final String? path;
 
   LineImpl? urlLine;
 
@@ -100,21 +108,25 @@ class _GitDetails {
   LineImpl? pathLine;
 
   // GitDetails({this.url, this.ref, this.path});
-  _GitDetails(DependencyBuilderGit dependency)
-      : url = dependency.url,
-        ref = dependency.ref,
-        path = dependency.path;
+  factory _GitDetails(DependencyBuilderGit dependency) => _GitDetails._(
+        dependency.url,
+        dependency.ref,
+        dependency.path,
+      );
+
+  _GitDetails._(this.url, this.ref, this.path,
+      {this.urlLine, this.refLine, this.pathLine});
 
   /// Load the git details associated with the git dependency
   /// at [line]
-  _GitDetails.fromLine(LineImpl line, String name)
-      : urlLine = line.findKeyChild('url'),
-        refLine = line.findKeyChild('ref'),
-        pathLine = line.findKeyChild('path') {
-    String? url;
-    path = !pathLine!.missing ? pathLine!.value : null;
-    ref = !refLine!.missing ? refLine!.value : null;
-    url = !urlLine!.missing ? urlLine!.value : null;
+  factory _GitDetails.fromLine(LineImpl line, String name) {
+    final urlLine = line.findKeyChild('url');
+    final refLine = line.findKeyChild('ref');
+    final pathLine = line.findKeyChild('path');
+
+    final path = !pathLine.missing ? pathLine.value : null;
+    final ref = !refLine.missing ? refLine.value : null;
+    var url = !urlLine.missing ? urlLine.value : null;
 
     if (Strings.isNotBlank(line.value) && Strings.isNotBlank(url)) {
       throw PubSpecException(line,
@@ -128,7 +140,8 @@ class _GitDetails {
           '''The git dependency for '$name' requires a value or a 'url' key.''');
     }
 
-    this.url = url;
+    return _GitDetails._(url, ref, path,
+        urlLine: urlLine, refLine: refLine, pathLine: pathLine);
   }
 
   List<Line> get lines => [

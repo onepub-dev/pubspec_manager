@@ -15,65 +15,75 @@ part of 'internal_parts.dart';
 /// See: for dependencies hosted on pub.dev use [DependencyPubHosted]
 class DependencyAltHosted extends Dependency implements DependencyVersioned {
   @override
-  late SectionImpl _section;
+  final SectionImpl _section;
 
   /// The dependency section this dependency belongs to
   final Dependencies _dependencies;
 
   String _name;
 
-  late String _hostedUrl;
+  String _hostedUrl;
 
   String? _versionConstraint;
 
-  late final LineImpl _line;
+  final LineImpl _line;
 
-  late final LineImpl _hostedUrlLine;
+  final LineImpl _hostedUrlLine;
 
-  late final LineImpl _versionLine;
+  final LineImpl _versionLine;
 
   static const keyName = 'hosted';
 
-  /// build an [DependencyAltHosted] from an existing line in the document
-  DependencyAltHosted._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line),
-        _name = _line.key,
-        super._() {
-    _hostedUrlLine = _line.findRequiredKeyChild('hosted');
-    _hostedUrl = _hostedUrlLine.value.trim();
+  DependencyAltHosted._(
+      this._dependencies,
+      this._line,
+      this._hostedUrlLine,
+      this._versionLine,
+      this._section,
+      this._name,
+      this._hostedUrl,
+      this._versionConstraint)
+      : super._();
 
-    _versionLine = _line.findKeyChild('version');
-    if (!_versionLine.missing) {
-      _versionConstraint = _versionLine.value;
-    } else {
-      _versionConstraint = null;
-    }
+  /// build an [DependencyAltHosted] from an existing line in the document
+  factory DependencyAltHosted._fromLine(
+      Dependencies dependencies, LineImpl line) {
+    final section = SectionImpl.fromLine(line);
+    final name = line.key;
+    final hostedUrlLine = line.findRequiredKeyChild('hosted');
+    final hostedUrl = hostedUrlLine.value.trim();
+    final versionLine = line.findKeyChild('version');
+    final versionConstraint = versionLine.missing ? null : versionLine.value;
+    return DependencyAltHosted._(dependencies, line, hostedUrlLine, versionLine,
+        section, name, hostedUrl, versionConstraint);
   }
 
   /// Creates an  [DependencyAltHosted] inserting it into the document after
   /// [lineBefore]
-  DependencyAltHosted._insertAfter(this._dependencies, PubSpec pubspec,
-      Line lineBefore, DependencyBuilderAltHosted dependency)
-      : _name = dependency.name,
-        super._() {
-    _hostedUrl = dependency.hostedUrl;
-    _versionConstraint = dependency.versionConstraint;
+  factory DependencyAltHosted._insertAfter(Dependencies dependencies,
+      PubSpec pubspec, Line lineBefore, DependencyBuilderAltHosted dependency) {
+    final name = dependency.name;
+    final hostedUrl = dependency.hostedUrl;
+    final versionConstraint = dependency.versionConstraint;
 
-    _line = LineImpl.forInsertion(pubspec.document, '  $_name: ');
+    final line = LineImpl.forInsertion(pubspec.document, '  $name: ');
 
-    lineBefore = pubspec.document.insertAfter(_line, lineBefore);
-    _hostedUrlLine =
-        LineImpl.forInsertion(pubspec.document, '    $keyName: $_hostedUrl');
-    lineBefore = pubspec.document.insertAfter(_hostedUrlLine, lineBefore);
+    lineBefore = pubspec.document.insertAfter(line, lineBefore);
+    final hostedUrlLine =
+        LineImpl.forInsertion(pubspec.document, '    $keyName: $hostedUrl');
+    lineBefore = pubspec.document.insertAfter(hostedUrlLine, lineBefore);
 
-    if (_versionConstraint != null) {
-      _versionLine = LineImpl.forInsertion(
-          pubspec.document, '    version: $_versionConstraint');
-      lineBefore = pubspec.document.insertAfter(_versionLine, lineBefore);
+    LineImpl versionLine;
+    if (versionConstraint != null) {
+      versionLine = LineImpl.forInsertion(
+          pubspec.document, '    version: $versionConstraint');
+      lineBefore = pubspec.document.insertAfter(versionLine, lineBefore);
     } else {
-      _versionLine = LineImpl.missing(pubspec.document, LineType.key);
+      versionLine = LineImpl.missing(pubspec.document, LineType.key);
     }
-    _section = SectionImpl.fromLine(_line);
+
+    return DependencyAltHosted._(dependencies, line, hostedUrlLine, versionLine,
+        SectionImpl.fromLine(line), name, hostedUrl, versionConstraint);
   }
 
   @override

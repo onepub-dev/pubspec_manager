@@ -1,9 +1,9 @@
 import '../pubspec/internal_parts.dart';
 
 class KeyValue {
-  late final String key;
+  final String key;
 
-  late final String value;
+  final String value;
 
   KeyValue(this.key, this.value);
 
@@ -20,15 +20,16 @@ class KeyValue {
     }
   }
 
-  KeyValue.fromText(String text) {
+  factory KeyValue.fromText(String text) {
     final delimiter = text.indexOf(':');
 
     if (delimiter == -1) {
       throw PubSpecException(
           null, 'Line contained invalid key format - missing colon(:)');
     }
-    key = text.substring(0, delimiter).trim();
-    value = text.substring(delimiter + 1).trim();
+    final key = text.substring(0, delimiter).trim();
+    final value = text.substring(delimiter + 1).trim();
+    return KeyValue(key, value);
   }
 
   KeyValue copy({String? key, String? value}) =>

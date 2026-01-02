@@ -12,47 +12,50 @@ class DependencyPath extends Dependency {
   static const keyName = 'path';
 
   @override
-  late final SectionImpl _section;
+  final SectionImpl _section;
 
-  final String _name;
+  String _name;
 
-  late final String path;
+  final String path;
 
   /// The parent dependency key
-   final Dependencies _dependencies;
+  final Dependencies _dependencies;
 
   /// Line that contained the dependency declaration
-  late final LineImpl _line;
+  final LineImpl _line;
 
-  late final LineImpl _pathLine;
+  /// For future use - maybe
+  // ignore: unused_field
+  final LineImpl _pathLine;
 
   /// Creates Path dependency from an existing [Line] in
   /// the document.
-  DependencyPath._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line),
-        _name = _line.key,
-        _pathLine = _line.findRequiredKeyChild('path'),
-        super._() {
-    path = _pathLine.value;
+  DependencyPath._(this._dependencies, this._line, this._pathLine,
+      this._section, this._name, this.path)
+      : super._();
+
+  factory DependencyPath._fromLine(Dependencies dependencies, LineImpl line) {
+    final pathLine = line.findRequiredKeyChild('path');
+    return DependencyPath._(dependencies, line, pathLine,
+        SectionImpl.fromLine(line), line.key, pathLine.value);
   }
 
   /// Creates a  Path Dependency inserting it into the document after
   /// [lineBefore]
-  DependencyPath._insertAfter(Dependencies dependencies, PubSpec pubspec,
-      Line lineBefore, DependencyBuilderPath dependency)
-      : _name = dependency.name,
-        path = dependency.path,
-    _dependencies = dependencies,
-        super._() {
+  factory DependencyPath._insertAfter(Dependencies dependencies,
+      PubSpec pubspec, Line lineBefore, DependencyBuilderPath dependency) {
+    final name = dependency.name;
+    final path = dependency.path;
 
-    _line = LineImpl.forInsertion(pubspec.document, '  $_name:');
-    pubspec.document.insertAfter(_line, lineBefore);
+    final line = LineImpl.forInsertion(pubspec.document, '  $name:');
+    pubspec.document.insertAfter(line, lineBefore);
 
-    _pathLine = LineImpl.forInsertion(
-        pubspec.document, '${_line.childIndent}path: $path');
-    pubspec.document.insertAfter(_pathLine, _line);
+    final pathLine = LineImpl.forInsertion(
+        pubspec.document, '${line.childIndent}path: $path');
+    pubspec.document.insertAfter(pathLine, line);
 
-    _section = SectionImpl.fromLine(_line);
+    final section = SectionImpl.fromLine(line);
+    return DependencyPath._(dependencies, line, pathLine, section, name, path);
 
     // // ignore: prefer_foreach
     // for (final comment in dependency.comments) {

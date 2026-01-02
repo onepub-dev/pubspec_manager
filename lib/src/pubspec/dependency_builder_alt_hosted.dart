@@ -14,17 +14,17 @@ part of 'internal_parts.dart';
 @immutable
 class DependencyBuilderAltHosted implements DependencyBuilder {
   @override
-  late final String name;
+  final String name;
 
   /// The url describing the location where the dependency is hosted.
   /// e.g. `https://onepub.dev/packages/dcli`
-  late final String hostedUrl;
+  final String hostedUrl;
 
   /// The version constraint for the dependency
   /// e.g. ^1.0.0
-  late final String? versionConstraint;
+  final String? versionConstraint;
 
-  late final List<String> _comments;
+  final List<String> _comments;
 
   DependencyBuilderAltHosted({
     required this.name,

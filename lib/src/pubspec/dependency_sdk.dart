@@ -10,53 +10,56 @@ part of 'internal_parts.dart';
 ///     sdk: flutter
 class DependencySdk extends Dependency {
   @override
-  late final SectionImpl _section;
+  final SectionImpl _section;
 
   @override
-  late final String name;
+  final String name;
 
   /// The sdk that provides this dependency
   /// e.g. flutter
-  late final String sdk;
+  final String sdk;
 
   /// The parent dependency key
-  late final Dependencies _dependencies;
+  final Dependencies _dependencies;
 
   /// Line that contained the dependency declaration
-  late final LineImpl _line;
+  /// For future use - maybe
+  // ignore: unused_field
+  final LineImpl _line;
 
   static const keyName = 'sdk';
 
   /// Creates Path dependency from an existing [Line] in
   /// the document.
-  DependencySdk._fromLine(this._dependencies, this._line)
-      : _section = SectionImpl.fromLine(_line),
-        super._() {
-    name = _line.key;
-    final sdkLine = _line.findRequiredKeyChild(keyName);
-    sdk = sdkLine.value;
+  DependencySdk._(this._dependencies, this._line, this._section, this.name,
+      this.sdk)
+      : super._();
+
+  factory DependencySdk._fromLine(Dependencies dependencies, LineImpl line) {
+    final sdkLine = line.findRequiredKeyChild(keyName);
+    return DependencySdk._(dependencies, line, SectionImpl.fromLine(line),
+        line.key, sdkLine.value);
   }
 
   /// Creates an Sdk Dependency inserting it into the document after
   /// [lineBefore]
-  DependencySdk._insertAfter(
+  factory DependencySdk._insertAfter(
       Dependencies dependencies,
       PubSpec pubspec,
       Line lineBefore,
-      DependencyBuilderSdk dependency)
-      : super._() {
-    _dependencies = dependencies;
-    name = dependency.name;
-    sdk = dependency.path;
+      DependencyBuilderSdk dependency) {
+    final name = dependency.name;
+    final sdk = dependency.path;
 
-    _line = LineImpl.forInsertion(pubspec.document, '  $name:');
-    pubspec.document.insertAfter(_line, lineBefore);
+    final line = LineImpl.forInsertion(pubspec.document, '  $name:');
+    pubspec.document.insertAfter(line, lineBefore);
 
     final sdkLine = LineImpl.forInsertion(
-        pubspec.document, '${_line.childIndent}$keyName: $sdk');
-    pubspec.document.insertAfter(sdkLine, _line);
+        pubspec.document, '${line.childIndent}$keyName: $sdk');
+    pubspec.document.insertAfter(sdkLine, line);
 
-    _section = SectionImpl.fromLine(_line);
+    return DependencySdk._(
+        dependencies, line, SectionImpl.fromLine(line), name, sdk);
   }
 
   /// List of comments associated with the
