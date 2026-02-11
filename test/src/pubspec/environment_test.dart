@@ -116,6 +116,28 @@ environment:
       final environment = pubspec.environment;
       expect(environment.flutter, equals(''));
       expect(environment.flutterConstraint, equals(sm.VersionConstraint.any));
+      expect(environment.isFlutterPackage, isFalse);
+    });
+
+    test('isFlutter true when flutter sdk dependency is declared', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+dependencies:
+  flutter:
+    sdk: flutter
+''');
+
+      expect(pubspec.environment.isFlutterPackage, isTrue);
+    });
+
+    test('isFlutter false when flutter dependency is missing', () {
+      final pubspec = PubSpec.loadFromString('''
+name: test
+dependencies:
+  args: ^2.6.0
+''');
+
+      expect(pubspec.environment.isFlutterPackage, isFalse);
     });
   });
 }

@@ -108,6 +108,25 @@ class Environment implements Section {
   /// If no constraint is specified then VersionConstraint.any is returned.
   sm.VersionConstraint get flutterConstraint => _flutter.constraint;
 
+  /// Returns true when dependencies contains:
+  /// flutter:
+  ///   sdk: flutter
+  bool get isFlutterPackage {
+    final dependenciesLine = _section.document.findTopLevelKey('dependencies');
+    if (dependenciesLine.missing) {
+      return false;
+    }
+
+    final flutterDependencyLine =
+        _section.document.findKeyChild(dependenciesLine, 'flutter');
+    if (flutterDependencyLine.missing) {
+      return false;
+    }
+
+    final sdkLine = flutterDependencyLine.findKeyChild('sdk');
+    return !sdkLine.missing && sdkLine.value == 'flutter';
+  }
+
   /// Set the sdk and flutter version constraints
   Environment set({String? sdk, String? flutter}) {
     if (sdk != null) {

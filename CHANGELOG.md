@@ -1,3 +1,8 @@
+# 3.2.1
+- Added method Environent.isFlutterPackage which returns true if the loaded
+pubspec.yaml is a flutter package. We look for the 'flutter' dependency
+in the pubspec.yaml.
+
 # 3.2.0
 - work to remove move usages of late by moving to factory ctors.
 - fixed a cluster of missing initialisations for fields that were late final.
