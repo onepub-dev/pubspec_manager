@@ -1,5 +1,9 @@
+import 'dart:io' as io;
+
 import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
+
+import '../util/with_temp_file.dart';
 
 const content = '''
 name: pubspec3
@@ -136,5 +140,43 @@ dependencies:
       version: ^1.0.1
       ''';
     PubSpec.loadFromString(pubspec);
+  });
+
+  test('misindented comment attaches to subsequent key', () {
+    const pubspec = '''
+name: pubspec3
+dependencies:
+  dcli:
+# comment should attach to path despite indent level
+    path: ../dcli
+''';
+
+    final loaded = PubSpec.loadFromString(pubspec);
+    final dep = loaded.dependencies['dcli'];
+    expect(dep, isA<DependencyPath>());
+
+    final pathSection = loaded.document.findSectionForKey('path');
+    expect(pathSection.comments.length, equals(1));
+    expect(pathSection.lines.first.lineType, equals(LineType.comment));
+    expect(pathSection.lines.first.text,
+        equals('# comment should attach to path despite indent level'));
+  });
+
+  test('misindented comment is preserved when writing yaml', () async {
+    const pubspec = '''
+name: pubspec3
+dependencies:
+  dcli:
+# comment should attach to path despite indent level
+    path: ../dcli
+''';
+
+    final loaded = PubSpec.loadFromString(pubspec);
+
+    await withTempFile((tempFile) async {
+      loaded.saveTo(tempFile);
+      final written = await io.File(tempFile).readAsString();
+      expect(written, equals(pubspec));
+    });
   });
 }
