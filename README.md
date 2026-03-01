@@ -1,48 +1,40 @@
 # pubspec_manager
 
-pubspec_manager allows you to read, modify and write pubspec.yaml files.
+pubspec_manager (PBM) allows you to read, modify and write pubspec.yaml files.
 
-Why another pubspec.yaml manipulation file?
+PBM supports the full set of documented pubspec keys and provides
+an easy to use API to manger your puspec.yaml.
 
-As a sometimes maintainer of the pubspec package and the creator of the fork
-pubspec2, I've long been unhappy with the usability and maintainability of 
-the pubspec package.
+A core feature that sets PBM aside from other pubspec packages is that
+PBM will retain any comments within the pubspec.yaml as well as
+allow you to add additional comments via the api. 
 
-There are also a number of other pubspec maintinance packages but none of them
-meet all of my criteria. In particualar none of them are able to preserve 
-comments.
+PMB also gives you access to elements outside of the pubspec specification 
+via the underlying Document view `PubSpec.load().document` which provides 
+line level access.
+
 
 So the aim of pubspec_manager is:
 
 1) simplified API
 2) fully type safe code base to ease maintenance
-3) preservation of comments when modifying an existing pubspec.yaml
-4) abiltity to modify every elment of a pubspec.yaml including comments.
-5) retention of non pubspec specific content
-
-## Recent additions
-
-- More tolerant parsing for comments with unexpected indentation.
-  - Misindented comments no longer break parsing.
-  - Those comments are attached to the subsequent yaml element.
-  - Original comment indentation is preserved on write.
-- Added support for additional documented pubspec keys:
-  - `funding`
-  - `false_secrets`
-  - `topics`
-  - `ignored_advisories`
-  - `screenshots`
+3) support for all documented keys
+4) preservation of comments when modifying an existing pubspec.yaml
+5) abiltity to modify every elment of a pubspec.yaml including comments.
+6) retention and read/write access to non pubspec specific content
 
 
 # Support
+Maintained by the OnePub team.
 
-The pubspec_manager package is supported by OnePub - the Dart private repository.
+OnePub is a private Dart package repository for hosting and sharing internal packages.
 
-Register on [OnePub](https://onepub.dev) for a free two user license - no credit card required.
+For questions or issues:
+- Open an issue on GitHub
+- Check the package docs and examples in this repository
 
-Pubspec Manager gives you access to all of the pubspec attributes with the ability to add, modify and delete any ellement.
+OnePub: [https://onepub.dev](https://onepub.dev)
 
-You can also get access to elements outside of the pubspec specification via the underlying Document view `pubspec.document` which provides line level access.
 
 # See also
 Developers often use the [pub_semver](https://pub.dev/packages/pub_semver) package with Pubspec Manager as it will allow you to perform operations on the version such as 'next major version'.
@@ -126,7 +118,7 @@ void create() {
 ## Switch on a dependency type
 
 Use pattern matching to process dependencies. 
-In this example we writ the dependencies out to a json file.
+In this example we write the dependencies out to a json file.
 
 ```dart
  switch (dependency) {
@@ -204,8 +196,9 @@ void replaceDependency() {
 # load and save pubspec to a specific file.
 
 ```dart
-/// Or load from a specific file and save to a different file
-/// change the projects name and add a comment above the name.
+/// Or load from the pubspec.yaml from a specific file 
+/// and save to a different file.
+/// Change the projects name and add a comment above the name.
 void explicitPath() {
   final pubspec =
       PubSpec.loadFromPath(join('/', 'some', 'path', 'pubspec.yaml'));
@@ -216,8 +209,6 @@ void explicitPath() {
 }
 
 ```
-
-
 
 
 

@@ -1,3 +1,6 @@
+# 4.0.1
+- Improve the readme.
+
 # 4.0.0
 - Fixed comment parsing when a comment appears at a lower indentation level than expected before a child key.
 - Misindented comments are now attached to the subsequent yaml element and
