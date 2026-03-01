@@ -20,6 +20,19 @@ So the aim of pubspec_manager is:
 4) abiltity to modify every elment of a pubspec.yaml including comments.
 5) retention of non pubspec specific content
 
+## Recent additions
+
+- More tolerant parsing for comments with unexpected indentation.
+  - Misindented comments no longer break parsing.
+  - Those comments are attached to the subsequent yaml element.
+  - Original comment indentation is preserved on write.
+- Added support for additional documented pubspec keys:
+  - `funding`
+  - `false_secrets`
+  - `topics`
+  - `ignored_advisories`
+  - `screenshots`
+
 
 # Support
 
@@ -203,7 +216,6 @@ void explicitPath() {
 }
 
 ```
-
 
 
 

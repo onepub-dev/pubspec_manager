@@ -1,3 +1,25 @@
+# 4.0.0
+- Fixed comment parsing when a comment appears at a lower indentation level than expected before a child key.
+- Misindented comments are now attached to the subsequent yaml element and
+  their original indentation is preserved when writing.
+- Added support for additional documented pubspec keys:
+  - `funding`
+  - `false_secrets`
+  - `topics`
+  - `ignored_advisories`
+  - `screenshots`
+- Fixed #20: `dev_dependencies.exists(...)` could miss some dependencies when
+  comments/blank lines appeared around path dependencies, which could lead to
+  duplicate insertion logic in callers.
+- Added regression coverage for #20.
+- Thanks to @jonpittock for reporting issue #20.
+- Expanded tests for new keys, including:
+  - read/write round trips
+  - existence checks
+  - keys with no values
+  - empty list item values
+  - descendant-line removal behavior
+
 # 3.2.1
 - Added method Environent.isFlutterPackage which returns true if the loaded
 pubspec.yaml is a flutter package. We look for the 'flutter' dependency
