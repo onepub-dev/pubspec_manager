@@ -62,4 +62,104 @@ screenshots:
       expect(reloaded.screenshots.list.first.path, equals('assets/home.png'));
     });
   });
+
+  test('exists semantics for new list keys', () {
+    final pubspec = PubSpec(name: 'sample')
+      ..funding.add('https://example.com/sponsor')
+      ..falseSecrets.add('/test/fixtures/not_a_secret.txt')
+      ..topics.add('tooling')
+      ..ignoredAdvisories.add('GHSA-4rgh-jx4f-qfcq');
+
+    expect(pubspec.funding.exists('https://example.com/sponsor'), isTrue);
+    expect(pubspec.funding.exists('https://example.com/other'), isFalse);
+
+    expect(pubspec.falseSecrets.exists('/test/fixtures/not_a_secret.txt'),
+        isTrue);
+    expect(pubspec.falseSecrets.exists('/tmp/other.txt'), isFalse);
+
+    expect(pubspec.topics.exists('tooling'), isTrue);
+    expect(pubspec.topics.exists('backend'), isFalse);
+
+    expect(pubspec.ignoredAdvisories.exists('GHSA-4rgh-jx4f-qfcq'), isTrue);
+    expect(pubspec.ignoredAdvisories.exists('GHSA-missing-id'), isFalse);
+  });
+
+  test('new keys with no values load and round-trip', () async {
+    const content = '''
+name: sample
+funding:
+false_secrets:
+topics:
+ignored_advisories:
+screenshots:
+''';
+
+    final pubspec = PubSpec.loadFromString(content);
+    expect(pubspec.funding.missing, isFalse);
+    expect(pubspec.falseSecrets.missing, isFalse);
+    expect(pubspec.topics.missing, isFalse);
+    expect(pubspec.ignoredAdvisories.missing, isFalse);
+    expect(pubspec.screenshots.missing, isFalse);
+
+    expect(pubspec.funding.list, isEmpty);
+    expect(pubspec.falseSecrets.list, isEmpty);
+    expect(pubspec.topics.list, isEmpty);
+    expect(pubspec.ignoredAdvisories.list, isEmpty);
+    expect(pubspec.screenshots.list, isEmpty);
+
+    await withTempFile((tempFile) async {
+      pubspec.saveTo(tempFile);
+      expect(readFile(tempFile), equals(content));
+    });
+  });
+
+  test('new keys allow empty list item values', () async {
+    const content = '''
+name: sample
+funding:
+  -
+screenshots:
+  - description:
+    path:
+''';
+
+    final pubspec = PubSpec.loadFromString(content);
+    expect(pubspec.funding.list, equals(['']));
+    expect(pubspec.screenshots.length, equals(1));
+    expect(pubspec.screenshots.list.first.description, equals(''));
+    expect(pubspec.screenshots.list.first.path, equals(''));
+
+    final generated = PubSpec(name: 'sample')
+      ..funding.add('')
+      ..screenshots.add(description: '', path: '');
+
+    await withTempFile((tempFile) async {
+      generated.saveTo(tempFile);
+      const generatedContent = '''
+name: sample
+funding:
+  -
+screenshots:
+  - description: 
+    path:
+''';
+      expect(readFile(tempFile), equals(generatedContent));
+    });
+  });
+
+  test('existing single-line key with no value is preserved', () async {
+    const content = '''
+name: sample
+homepage:
+''';
+
+    final pubspec = PubSpec.loadFromString(content);
+    expect(pubspec.homepage.value, isEmpty);
+    expect(pubspec.homepage.missing, isFalse);
+
+    await withTempFile((tempFile) async {
+      pubspec.saveTo(tempFile);
+      expect(readFile(tempFile), equals(content));
+    });
+  });
 }
