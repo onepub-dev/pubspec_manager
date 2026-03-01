@@ -155,10 +155,26 @@ class Document {
     for (final line in _lines) {
       /// wait until we see a line that is after the parent.
       if (line.lineNo > parent.lineNo) {
+        final isCommentOrBlank = line.lineType == LineType.comment ||
+            line.lineType == LineType.blank;
+
         /// If the ident decreases then we have passed all
         /// of the parent's children.
-        if (line.indent <= parent.indent) {
+        if (!isCommentOrBlank && line.indent <= parent.indent) {
           break;
+        }
+
+        // Comments/blanks that are not indented as children don't belong to
+        // this section, but they should not terminate child scanning.
+        if (isCommentOrBlank && line.indent <= parent.indent) {
+          continue;
+        }
+
+        // Descendant traversal is used to compose section line ownership.
+        // Comments/blanks are owned via the Comments model, so including them
+        // here can cause a line to belong to multiple sections.
+        if (descendants && isCommentOrBlank) {
+          continue;
         }
 
         /// filter out children that don't match the key [type]

@@ -43,6 +43,21 @@ class PubSpec {
   /// Url of the documentation for the package.
   late final Documentation documentation;
 
+  /// List of URLs where users can support the package maintainers.
+  late final StringListSection funding;
+
+  /// List of false-positive paths for accidental secret scanning.
+  late final StringListSection falseSecrets;
+
+  /// List of package topics.
+  late final StringListSection topics;
+
+  /// List of advisory IDs that are intentionally ignored.
+  late final StringListSection ignoredAdvisories;
+
+  /// Screenshots shown on pub.dev.
+  late final Screenshots screenshots;
+
   /// List of dependencies for the package.
   late final Dependencies dependencies;
 
@@ -88,15 +103,16 @@ class PubSpec {
     repository = Repository.missing(document);
     issueTracker = IssueTracker._missing(document);
     documentation = Documentation._missing(document);
+    funding = StringListSection._missing(this, 'funding');
+    falseSecrets = StringListSection._missing(this, 'false_secrets');
+    topics = StringListSection._missing(this, 'topics');
+    ignoredAdvisories = StringListSection._missing(this, 'ignored_advisories');
+    screenshots = Screenshots._missing(this);
     dependencies = Dependencies._missing(this, 'dependencies');
     devDependencies = Dependencies._missing(this, 'dev_dependencies');
     dependencyOverrides = Dependencies._missing(this, 'dependency_overrides');
     platforms = Platforms._missing(this);
     executables = Executables._missing(this);
-    // funding = SectionImpl.missing(document, 'funding');
-    // falseSecrets = SectionImpl.missing(document, 'false_secrets');
-    // screenshots = SectionImpl.missing(document, 'screenshots');
-    // topics = SectionImpl.missing(document, 'topics');
   }
 
   /// Loads the content of a pubspec.yaml from [content].
@@ -116,6 +132,11 @@ class PubSpec {
     repository = Repository._fromDocument(document);
     issueTracker = IssueTracker._fromDocument(document);
     documentation = Documentation._fromDocument(document);
+    funding = _initStringList('funding');
+    falseSecrets = _initStringList('false_secrets');
+    topics = _initStringList('topics');
+    ignoredAdvisories = _initStringList('ignored_advisories');
+    screenshots = _initScreenshots();
 
     dependencies = _initDependencies('dependencies');
     devDependencies = _initDependencies('dev_dependencies');
@@ -123,12 +144,24 @@ class PubSpec {
     platforms = _initPlatforms();
 
     executables = _initExecutables();
-    // funding = document.findSectionForKey('funding');
-    // falseSecrets = document.findSectionForKey('falseSecrets');
-    // screenshots = document.findSectionForKey('screenshots');
-    // topics = document.findSectionForKey('topics');
 
     _validate();
+  }
+
+  StringListSection _initStringList(String key) {
+    final line = document.findTopLevelKey(key);
+    if (line.missing) {
+      return StringListSection._missing(this, key);
+    }
+    return StringListSection._fromLine(this, line);
+  }
+
+  Screenshots _initScreenshots() {
+    final line = document.findTopLevelKey(Screenshots.keyName);
+    if (line.missing) {
+      return Screenshots._missing(this);
+    }
+    return Screenshots._fromLine(this, line);
   }
 
   /// Loads the pubspec.yaml file from the given [directory] or
@@ -284,15 +317,16 @@ class PubSpec {
       ..render(repository)
       ..render(issueTracker)
       ..render(documentation)
+      ..render(funding)
+      ..render(falseSecrets)
+      ..render(topics)
+      ..render(ignoredAdvisories)
+      ..render(screenshots)
       ..render(dependencies._section)
       ..render(devDependencies._section)
       ..render(dependencyOverrides._section)
       ..render(executables)
       ..render(platforms._section)
-      // ..render(funding)
-      // ..render(falseSecrets)
-      // ..render(screenshots)
-      // ..render(topics)
       ..renderMissing()
       ..write(writer);
   }
