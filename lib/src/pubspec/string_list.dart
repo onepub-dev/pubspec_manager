@@ -15,8 +15,8 @@ class StringListSection implements Section {
       : keyName = line.key,
         _section = SectionImpl.fromLine(line) {
     for (final child in line.childrenOf(type: LineType.indexed)) {
-      _entries.add(
-          _StringListEntry(_parseIndexedValue(child), _collectEntryLines(child)));
+      _entries.add(_StringListEntry(
+          _parseIndexedValue(child), _collectEntryLines(child)));
     }
   }
 

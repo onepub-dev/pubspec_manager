@@ -2,7 +2,8 @@ import 'package:pubspec_manager/pubspec_manager.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('issue #20 repro - flutter_lints detected after path dep + comments', () {
+  test('issue #20 repro - flutter_lints detected after path dep + comments',
+      () {
     const content = '''
 name: sample
 dev_dependencies:
