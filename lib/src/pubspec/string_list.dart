@@ -2,6 +2,8 @@ part of 'internal_parts.dart';
 
 class StringListSection implements Section {
   SectionImpl _section;
+  // We pass pubpsec to every element for consistency
+  // ignore: unused_field
   final PubSpec _pubspec;
   final String keyName;
   final _entries = <_StringListEntry>[];
@@ -13,7 +15,8 @@ class StringListSection implements Section {
       : keyName = line.key,
         _section = SectionImpl.fromLine(line) {
     for (final child in line.childrenOf(type: LineType.indexed)) {
-      _entries.add(_StringListEntry(_parseIndexedValue(child), child));
+      _entries.add(
+          _StringListEntry(_parseIndexedValue(child), _collectEntryLines(child)));
     }
   }
 
@@ -32,9 +35,9 @@ class StringListSection implements Section {
         : '${_section.headerLine.childIndent}- $value';
     final line = LineImpl.forInsertion(_section.document, text);
     final lineBefore =
-        _entries.isEmpty ? _section.headerLine : _entries.last.line;
+        _entries.isEmpty ? _section.headerLine : _entries.last.lines.last;
     _section.document.insertAfter(line, lineBefore);
-    _entries.add(_StringListEntry(value, line));
+    _entries.add(_StringListEntry(value, [line]));
     return this;
   }
 
@@ -59,11 +62,17 @@ class StringListSection implements Section {
       throw RangeError.range(index, 0, _entries.length - 1);
     }
     final removed = _entries.removeAt(index);
-    _section.document.removeAll([removed.line]);
+    for (final line in removed.lines.reversed) {
+      _section._removeChild(line);
+    }
   }
 
   void removeAll() {
-    _section.document.removeAll(_entries.map((entry) => entry.line).toList());
+    for (final entry in _entries.reversed) {
+      for (final line in entry.lines.reversed) {
+        _section._removeChild(line);
+      }
+    }
     _entries.clear();
   }
 
@@ -73,6 +82,32 @@ class StringListSection implements Section {
       throw PubSpecException(line, 'Expected a list entry starting with "-"');
     }
     return trimmed.substring(1).trimLeft();
+  }
+
+  static List<LineImpl> _collectEntryLines(LineImpl indexedLine) {
+    final lines = <LineImpl>[indexedLine];
+    final document = indexedLine._document;
+
+    for (final line in document._lines) {
+      if (line.lineNo <= indexedLine.lineNo) {
+        continue;
+      }
+
+      final isCommentOrBlank =
+          line.lineType == LineType.comment || line.lineType == LineType.blank;
+
+      if (!isCommentOrBlank && line.indent <= indexedLine.indent) {
+        break;
+      }
+
+      if (isCommentOrBlank && line.indent <= indexedLine.indent) {
+        continue;
+      }
+
+      lines.add(line);
+    }
+
+    return lines;
   }
 
   void _ensureSectionExists() {
@@ -94,7 +129,7 @@ class StringListSection implements Section {
 
 class _StringListEntry {
   final String value;
-  final LineImpl line;
+  final List<LineImpl> lines;
 
-  _StringListEntry(this.value, this.line);
+  _StringListEntry(this.value, this.lines);
 }

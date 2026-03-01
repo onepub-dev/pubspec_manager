@@ -162,4 +162,55 @@ homepage:
       expect(readFile(tempFile), equals(content));
     });
   });
+
+  test('removing screenshot removes descendant lines', () async {
+    const content = '''
+name: sample
+screenshots:
+  - description: Home screen
+    path: assets/home.png
+    # screenshot comment
+    extra: custom
+''';
+
+    final pubspec = PubSpec.loadFromString(content);
+    expect(pubspec.screenshots.length, equals(1));
+
+    pubspec.screenshots.removeAt(0);
+    expect(pubspec.screenshots.list, isEmpty);
+
+    await withTempFile((tempFile) async {
+      pubspec.saveTo(tempFile);
+      const expected = '''
+name: sample
+screenshots:
+''';
+      expect(readFile(tempFile), equals(expected));
+    });
+  });
+
+  test('removing list entry removes descendant lines for list keys', () async {
+    const content = '''
+name: sample
+funding:
+  - https://example.com/sponsor
+    # funding comment
+    extra: custom
+''';
+
+    final pubspec = PubSpec.loadFromString(content);
+    expect(pubspec.funding.length, equals(1));
+
+    pubspec.funding.removeAt(0);
+    expect(pubspec.funding.list, isEmpty);
+
+    await withTempFile((tempFile) async {
+      pubspec.saveTo(tempFile);
+      const expected = '''
+name: sample
+funding:
+''';
+      expect(readFile(tempFile), equals(expected));
+    });
+  });
 }

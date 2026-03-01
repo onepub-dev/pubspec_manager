@@ -4,6 +4,8 @@ class Screenshots implements Section {
   static const keyName = 'screenshots';
 
   SectionImpl _section;
+  // We pass pubpsec to every element for consistency
+  // ignore: unused_field
   final PubSpec _pubspec;
   final _screenshots = <Screenshot>[];
 
@@ -45,15 +47,17 @@ class Screenshots implements Section {
       throw RangeError.range(index, 0, _screenshots.length - 1);
     }
     final screenshot = _screenshots.removeAt(index);
-    _section.document.removeAll(screenshot._lines);
+    for (final line in screenshot._lines) {
+      _section._removeChild(line);
+    }
   }
 
   void removeAll() {
-    final lines = <Line>[];
-    for (final screenshot in _screenshots) {
-      lines.addAll(screenshot._lines);
+    for (final screenshot in _screenshots.reversed) {
+      for (final line in screenshot._lines.reversed) {
+        _section._removeChild(line);
+      }
     }
-    _section.document.removeAll(lines);
     _screenshots.clear();
   }
 
@@ -89,7 +93,7 @@ class Screenshot {
   factory Screenshot._fromIndexedLine(LineImpl indexedLine) {
     String? description;
     String? path;
-    final lines = <LineImpl>[indexedLine];
+    final lines = _collectEntryLines(indexedLine);
 
     final inline = _extractInlineKeyValue(indexedLine);
     if (inline != null) {
@@ -102,7 +106,6 @@ class Screenshot {
     }
 
     for (final child in indexedLine.childrenOf(type: LineType.key)) {
-      lines.add(child);
       switch (child.key) {
         case 'description':
           description = child.value;
@@ -147,5 +150,32 @@ class Screenshot {
           line, 'Invalid screenshot entry, expected key: $requiredKey.');
     }
     return keyValue.value;
+  }
+
+  static List<LineImpl> _collectEntryLines(LineImpl indexedLine) {
+    final lines = <LineImpl>[indexedLine];
+    final document = indexedLine._document;
+
+    for (final line in document._lines) {
+      if (line.lineNo <= indexedLine.lineNo) {
+        continue;
+      }
+
+      final isCommentOrBlank =
+          line.lineType == LineType.comment || line.lineType == LineType.blank;
+
+      if (!isCommentOrBlank && line.indent <= indexedLine.indent) {
+        break;
+      }
+
+      // Misindented comments/blanks should not be treated as children.
+      if (isCommentOrBlank && line.indent <= indexedLine.indent) {
+        continue;
+      }
+
+      lines.add(line);
+    }
+
+    return lines;
   }
 }
